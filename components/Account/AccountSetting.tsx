@@ -11,13 +11,39 @@ import {
 import { Person } from "@mui/icons-material";
 import { user } from "@nextui-org/react";
 import { useIntl, FormattedMessage } from "react-intl";
+type Staff = {
+  active: boolean;
+  agency_id: string;
+  avatar: string;
+  bank: string;
+  bin: string;
+  cccd: string;
+  date_of_birth: string;
+  deposit: number;
+  detail_address: string;
+  district: string;
+  email: string;
+  fullname: string;
+  id: number;
+  paid_salary: number;
+  password: string;
+  phone_number: string;
+  position: string;
+  privileges: string[];
+  province: string;
+  role: string;
+  salary: number;
+  staff_id: string;
+  town: string;
+  username: string;
+};
 const AccountSetting = (info) => {
   const intl = useIntl();
   const staff_id = new String(info.info.staff_id);
   console.log("staff_id", staff_id);
   const userOp2 = new StaffsOperation();
 
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState<Staff>(null);
   const [Update, setUpdate] = useState({
     fullname: "",
     username: "",
@@ -114,7 +140,6 @@ const AccountSetting = (info) => {
     setIsEditInfo(!isEditInfo);
   };
   const handleUpdateInfo = async () => {
-    console.log("iddddd", userInfo.staff_id);
     console.log("update", Update);
     const Staffcondition: UpdatingStaffCondition = {
       staff_id: userInfo.staff_id,
@@ -129,7 +154,10 @@ const AccountSetting = (info) => {
     setIsEditInfo(!isEditInfo);
   };
   const handleChangePassword = async () => {
-    const reponse = await userOp2.updatePassword(passwordInfo, staff_id);
+    const Staffcondition: UpdatingStaffCondition = {
+      staff_id: info.info.staff_id,
+    };
+    const reponse = await userOp2.updatePassword(passwordInfo, Staffcondition);
     console.log("reponse", reponse);
     if (reponse.error === false) {
       alert("Đổi mật khẩu thành công");

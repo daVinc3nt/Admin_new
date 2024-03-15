@@ -365,13 +365,19 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, socket }) =>
                     placeholder="COD"
                     onChange={(e) => handleInputChange("COD", e.target.value, "number")}
                   />
-                  <input
-                    type="service_type"
-                    className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                  <select 
+                    name="service_type"
+                    className={`text-xs text-center md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
                     ${checkmissing.bin ? "border-red-500" : ""}`}
-                    placeholder="Loại hình vận chuyển"
                     onChange={(e) => handleInputChange("service_type", e.target.value)}
-                  />
+                    value ={orderData.service_type}
+                  >
+                    <option value="">Chọn</option>
+                    <option value="CPN">CPN</option>
+                    <option value="TTK">TTK</option>
+                    <option value="HHT">HHT</option>
+                    <option value="T60">T60</option>
+                </select>
                 </div>
             </div>          
           </div>
