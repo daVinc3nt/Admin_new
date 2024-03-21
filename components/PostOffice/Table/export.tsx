@@ -16,6 +16,7 @@ async function getRole(): Promise<any> {
   const staff = new StaffsOperation();
   const res = await staff.getAuthenticatedStaffInfo();
   const role = res.data.role;
+  console.log(role);
   return role;
 }
 async function getData(): Promise<any> {
@@ -39,6 +40,7 @@ async function getData(): Promise<any> {
 
 export default async function DemoPage(reloadData) {
   const data = await getData();
+  console.log("Data", data);
   const role = await getRole();
   if (
     role === "ADMIN" ||

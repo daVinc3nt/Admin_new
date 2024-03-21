@@ -3,6 +3,7 @@ import React from "react";
 import { TbMinusVertical } from "react-icons/tb";
 import { useState } from "react";
 import AddOffice from "./AddOffice/addoffice";
+import AddOffice2 from "./AddOffice/addoffice2";
 import {
   ColumnDef,
   SortingState,
@@ -81,6 +82,16 @@ export function DataTable<TData, TValue>({
 
   const closeModal = () => {
     setModalIsOpen(false);
+  };
+
+  const [modal2IsOpen, setModal2IsOpen] = useState(false);
+
+  const openModal2 = () => {
+    setModal2IsOpen(true);
+  };
+
+  const closeModal2 = () => {
+    setModal2IsOpen(false);
   };
 
   const deleteAgency = new AgencyOperation();
@@ -203,15 +214,47 @@ export function DataTable<TData, TValue>({
             />
           </BasicPopover>
           <div className="flex-grow h-10 flex mt-4 sm:mt-0 justify-center sm:justify-end">
-            <Button
-              className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 w-full sm:w-44 text-center h-full"
-              onClick={openModal}
-            >
-              <FormattedMessage id="PostOffice.AddButton" />
-            </Button>
-            {modalIsOpen && (
+            <Dropdown className="z-30">
+              <DropdownTrigger>
+                <button
+                  className="text-xs md:text-base border border-gray-600 rounded w-48 text-center"
+                  aria-label="Show items per page"
+                >
+                  Thêm Bưu cục-Đại lý
+                </button>
+              </DropdownTrigger>
+              <DropdownMenu
+                className="dark:bg-[#1a1b23] bg-white border border-black dark:border-gray-300 rounded w-48"
+                aria-labelledby="dropdownMenuButton"
+              >
+                <DropdownItem textValue="Add Office">
+                  <Button
+                    onClick={openModal}
+                    variant="bordered"
+                    aria-label="Add Office"
+                    className="text-center dark:text-white w-full"
+                  >
+                    Cá nhân
+                  </Button>
+                </DropdownItem>
+                <DropdownItem textValue="Add Office2">
+                  <Button
+                    onClick={openModal2}
+                    variant="bordered"
+                    aria-label="Add Office2"
+                    className="text-center dark:text-white w-full"
+                  >
+                    Tập thể
+                  </Button>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            {modalIsOpen ? (
               <AddOffice onClose={closeModal} reloadData={reloadData} />
-            )}
+            ) : null}
+            {modal2IsOpen ? (
+              <AddOffice2 onClose={closeModal2} reloadData={reloadData} />
+            ) : null}
           </div>
         </div>
       </div>
