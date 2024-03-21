@@ -35,34 +35,12 @@ interface Ward {
   Id: string;
   Name: string;
 }
-const staff = new StaffsOperation();
-
-const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
-  const [MapIsOpen, setMapIsOpen] = useState(false);
-
-  const openMap = () => {
-    setMapIsOpen(true);
-  };
-
-  const closeMap = () => {
-    setMapIsOpen(false);
-  };
-
+const AddOffice2: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
+  // const [PaperUpload, setPaperUpload] = useState(null);
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [type, setType] = useState();
   const intl = useIntl();
-
-  const openModal = (type) => {
-    setType(type);
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
 
   const [OfficeData, setOfficeData] = useState({
     user_fullname: "",
@@ -81,7 +59,10 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     user_town: "",
     user_detail_address: "",
 
-    invidual_company: 0,
+    invidual_company: 1,
+    company_name: "",
+    tax_number: "",
+    business_number: "",
     type: "",
     level: 0,
     postal_code: "",
@@ -262,6 +243,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     user_detail_address: false,
 
     invidual_company: true,
+    company_name: false,
+    tax_number: false,
+    business_number: false,
     type: false,
     level: false,
     postal_code: false,
@@ -342,7 +326,10 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
           user_town: "",
           user_detail_address: "",
 
-          invidual_company: 0,
+          invidual_company: 1,
+          company_name: "",
+          tax_number: "",
+          business_number: "",
           type: "",
           level: 0,
           postal_code: "",
@@ -397,7 +384,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
       >
         <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
           <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">
-            <FormattedMessage id="PostOffice.AddButton" />
+            Thêm bưu cục-đại lý (Tập thể)
           </div>
           <Button
             className="absolute right-0 w-8 h-8 rounded-full mb-2 hover:bg-gray-300"
@@ -590,7 +577,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
                     onChange={handleConfirmPasswordChange}
                     className=" text-xs mt-3 w-full md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 focus:ring-blue-500 focus:border-blue-500 focus:ring-1"
                   />
-
                   <p
                     id="validation"
                     className="text-center text-orange-500 italic text-sm"
@@ -625,6 +611,53 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
             <h1 className="font-semibold pb-2 text-center">
               <FormattedMessage id="PostOffice.Infomation" />
             </h1>
+            <div className="flex gap-3 mt-3 ">
+              <input
+                type=""
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.business_number ? "border-red-500" : ""}`}
+                placeholder="Mã số doanh nghiệp"
+                onChange={(e) =>
+                  handleInputChange("business_number", e.target.value)
+                }
+              />
+              <input
+                type=""
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.tax_number ? "border-red-500" : ""}`}
+                placeholder="Mã số thuế"
+                onChange={(e) =>
+                  handleInputChange("tax_number", e.target.value)
+                }
+              />
+              <input
+                type=""
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.company_name ? "border-red-500" : ""}`}
+                placeholder="Tên công ty"
+                onChange={(e) =>
+                  handleInputChange("company_name", e.target.value)
+                }
+              />
+            </div>
+            {/* <div className="flex gap-3 mt-3 ">
+              <label className="flex flex-row place-content-between text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full">
+                <p className="">Giấy chứng nhận doanh nghiệp</p>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) =>
+                    handleInputChange("license", e.target.files[0])
+                  }
+                ></input>
+                {OfficeData.license && (
+                  <div className=" font-bold ">{OfficeData.license.name}</div>
+                )}
+                {!OfficeData.license && (
+                  <div className=" font-bold ">Tải ảnh lên</div>
+                )}
+              </label>
+            </div> */}
             <div className="flex gap-3 mt-3">
               <input
                 type=""
@@ -852,4 +885,4 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
   );
 };
 
-export default AddOffice;
+export default AddOffice2;

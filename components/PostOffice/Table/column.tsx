@@ -10,8 +10,13 @@ import DetailPost from "./detailPost";
 import { Checkbox } from "@/components/TableUI/checkbox";
 import { FormattedMessage } from "react-intl";
 import { FindingAgencyByAdminInfo } from "@/TDLib/tdlogistics";
+import DetailPost2 from "./detailPost2";
 
-interface Postdetail {
+interface Postdetail2 {
+  invidual_company: number;
+  company_name: string;
+  tax_number: string;
+  business_number: string;
   agency_id: string;
   agency_name: string;
   bank: string;
@@ -31,7 +36,31 @@ interface Postdetail {
   town: string;
   revenue: string;
 }
-export const columns: ColumnDef<Postdetail>[] = [
+interface Postdetail1 {
+  invidual_company: number;
+  company_name: string;
+  tax_number: string;
+  business_number: string;
+  agency_id: string;
+  agency_name: string;
+  bank: string;
+  bin: string;
+  commission_rate: string;
+  contract: string;
+  detail_address: string;
+  district: string;
+  email: string;
+  latitude: string;
+  level: string;
+  longitude: string;
+  managed_wards: string[];
+  phone_number: string;
+  postal_code: string;
+  province: string;
+  town: string;
+  revenue: string;
+}
+export const columns: ColumnDef<Postdetail1>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -152,8 +181,15 @@ export const columns: ColumnDef<Postdetail>[] = [
           >
             +
           </Button>
-          {modalIsOpen && (
+          {modalIsOpen && row.original.invidual_company === 1 ? (
+            <DetailPost2 onClose={closeModal} dataInitial={row.original} />
+          ) : (
+            ""
+          )}
+          {modalIsOpen && row.original.invidual_company === 0 ? (
             <DetailPost onClose={closeModal} dataInitial={row.original} />
+          ) : (
+            ""
           )}
         </div>
       );

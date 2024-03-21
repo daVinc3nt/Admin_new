@@ -16,27 +16,7 @@ interface Postdetail2 {
   invidual_company: number;
   company_name: string;
   tax_number: string;
-  bussiness_number: string;
-  agency_id: string;
-  agency_name: string;
-  bank: string;
-  bin: string;
-  commission_rate: string;
-  contract: string;
-  detail_address: string;
-  district: string;
-  email: string;
-  latitude: string;
-  level: string;
-  longitude: string;
-  managed_wards: string[];
-  phone_number: string;
-  postal_code: string;
-  province: string;
-  town: string;
-  revenue: string;
-}
-interface Postdetail {
+  business_number: string;
   agency_id: string;
   agency_name: string;
   bank: string;
@@ -77,10 +57,10 @@ const staff = new StaffsOperation();
 
 interface DetailAgencyProps {
   onClose: () => void;
-  dataInitial: Postdetail;
+  dataInitial: Postdetail2;
 }
 
-const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
+const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const intl = useIntl();
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -109,6 +89,10 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     fetchCities();
   }, []);
   const [Agencydata, setAgencydata] = useState({
+    invidual_company: dataInitial.invidual_company,
+    company_name: dataInitial.company_name,
+    tax_number: dataInitial.tax_number,
+    business_number: dataInitial.business_number,
     agency_id: dataInitial.agency_id,
     agency_name: dataInitial.agency_name,
     bank: dataInitial.bank,
@@ -128,7 +112,6 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     town: dataInitial.town,
     revenue: dataInitial.revenue,
   });
-
   const handleInputChange = (key: string, value: string) => {
     setAgencydata((prevState) => ({
       ...prevState,
@@ -404,6 +387,18 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 <div>{Agencydata.revenue}</div>
               )}
             </div>
+            <div className="flex gap-5">
+              <div className="font-bold text-base">Tên công ty:</div>
+              <div>{Agencydata.company_name}</div>
+            </div>
+            <div className="flex gap-5">
+              <div className="font-bold text-base">Mã số thuế:</div>
+              <div>{Agencydata.tax_number}</div>
+            </div>
+            <div className="flex gap-5">
+              <div className="font-bold text-base">Mã số doanh nghiệp:</div>
+              <div>{Agencydata.business_number}</div>
+            </div>
             <div className="flex gap-3 mt-3">
               {!isEditing ? (
                 <div className="flex gap-3">
@@ -527,4 +522,4 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   );
 };
 
-export default DetailPost;
+export default DetailPost2;
