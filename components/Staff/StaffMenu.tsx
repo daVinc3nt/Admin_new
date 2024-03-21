@@ -21,7 +21,7 @@ const StaffMenu = () => {
   }, [info]);
   return (
     <div className="h-[calc(100vh-3rem)] content-center overflow-y-hidden flex flex-col w-full">
-      <div className="h-full items-center w-full left-0 right-0 overflow-y-scroll no-scrollbar">
+      <div className="h-full  items-center w-full left-0 right-0 overflow-y-scroll no-scrollbar">
         <section className="p-2 flex justify-center">
           <div className="container shadow-sm rounded-xl px-3 bg-white dark:text-white dark:bg-[#1a1b23]">
             <div className="relative text-3xl font-bold border-b-[1px] border-gray-600">
