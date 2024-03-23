@@ -15,6 +15,7 @@ import {
   LogoutOutlined,
   Handshake,
   AccountBox,
+  BusinessCenterOutlined,
 } from "@mui/icons-material";
 import { FormattedMessage } from "react-intl";
 import MenuHambuger from "./MenuHambuger";
@@ -71,6 +72,12 @@ const SideItemData = [
         title: "Đối tác vận tải",
         url: "/dashboard/partner",
         icon: <Handshake className="scale-75 lg:block" />,
+      },
+      {
+        id: 12,
+        title: "Doanh nghiệp",
+        url: "/dashboard/business",
+        icon: <BusinessCenter className="scale-75 lg:block" />,
       },
     ],
   },
