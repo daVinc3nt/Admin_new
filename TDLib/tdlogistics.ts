@@ -22,7 +22,7 @@ class UsersAuthenticate {
     private baseUrl: string;
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/users";
-        this.baseUrl = "http://localhost:4000/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
 
     async sendOTP(phoneNumber: string, email: string): Promise<any> {
@@ -37,9 +37,8 @@ class UsersAuthenticate {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error sending OTP: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error sending OTP: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -55,9 +54,8 @@ class UsersAuthenticate {
             const data = response.data;
             return { error: data.error, valid: data.valid, message: data.message };
         } catch (error: any) {
-            console.log("Error verifying OTP:", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error verifying OTP:", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -66,7 +64,7 @@ class StaffsAuthenticate {
     private baseUrl: string;
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/staffs";
-        this.baseUrl = "http://localhost:4000/api/v1/staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/staffs";
     }
 
     async login(username: string, password: string): Promise<any> {
@@ -81,9 +79,8 @@ class StaffsAuthenticate {
             const data = response.data;
             return { error: data.error, valid: data.valid, message: data.message };
         } catch (error: any) {
-            console.log("Error logging in: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error logging in: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -99,9 +96,8 @@ class StaffsAuthenticate {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error sending OTP: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error sending OTP: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -118,9 +114,8 @@ class StaffsAuthenticate {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error verify OTP", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error verify OTP", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -129,7 +124,7 @@ class BusinessAuthenticate {
     private baseUrl: string;
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/business";
-        this.baseUrl = "http://localhost:4000/api/v1/business";
+        this.baseUrl = "http://localhost:5000/api/v1/business";
     }
 
     async login(username: string, password: string): Promise<any> {
@@ -144,9 +139,8 @@ class BusinessAuthenticate {
             const data = response.data;
             return { error: data.error, valid: data.valid, message: data.message };
         } catch (error: any) {
-            console.log("Error logging in: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error logging in: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -156,7 +150,7 @@ class PartnerStaffAuthenticate {
     private baseUrl: string;
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/partner_staffs";
-        this.baseUrl = "http://localhost:4000/api/v1/partner_staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
     }
 
     async login(username: string, password: string) : Promise<any> {
@@ -171,9 +165,8 @@ class PartnerStaffAuthenticate {
             const data = response.data;
             return { error: data.error, valid: data.valid, message: data.message };
         } catch (error: any) {
-            console.log("Error logging in: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error logging in: ", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -196,8 +189,8 @@ export interface FindingUserByAdminConditions {
 }
 
 export interface UpdatingUserInfo {
-    fullname?: string,
-    email?: string,
+    fullname: string,
+    email: string,
 }
 
 export interface UpdatingUserCondition {
@@ -209,7 +202,7 @@ class UsersOperation {
 
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/users";
-        this.baseUrl = "http://localhost:4000/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
 
     async findByUser(condition: FindingUserByUserCondition) : Promise<any> {
@@ -221,9 +214,8 @@ class UsersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error get one user: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error get one user: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -236,9 +228,8 @@ class UsersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error get one user: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error get one user: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -251,9 +242,8 @@ class UsersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error create new user: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error create new user: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -266,9 +256,8 @@ class UsersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error update new user: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error update new user: ", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -330,19 +319,19 @@ export interface FindingAgencyByAdminInfo {
 }
 
 export interface UpdatingAgencyInfo {
-    agency_name?: string,
-    province?: string,
-    district?: string,
-    town?: string,
-    detail_address?: string,
-    latitude?: string,
-    longitude?: string,
-    email?: string,
-    phone_number?: string,
-    revenue?: string,
-    commission_rate?: string,
-    bin?: string,
-    bank?: string,
+    agency_name: string,
+    province: string,
+    district: string,
+    town: string,
+    detail_address: string,
+    latitude: string,
+    longitude: string,
+    email: string,
+    phone_number: string,
+    revenue: string,
+    commission_rate: string,
+    bin: string,
+    bank: string,
 }
 
 export interface UpdatingAgencyCondition {
@@ -357,7 +346,7 @@ class AgencyOperation {
     private baseUrl: string;
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/agencies";
-        this.baseUrl = "http://localhost:4000/api/v1/agencies";
+        this.baseUrl = "http://localhost:5000/api/v1/agencies";
     }
 
     async checkExist(condition: CheckingExistAgencyCondition) {
@@ -369,9 +358,8 @@ class AgencyOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error checking exist agency: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error checking exist agency: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -384,9 +372,8 @@ class AgencyOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error creating agency: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error creating agency: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -399,9 +386,8 @@ class AgencyOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding agency: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding agency: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -414,9 +400,8 @@ class AgencyOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding agency: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding agency: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -429,9 +414,8 @@ class AgencyOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding agency: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding agency: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -444,9 +428,8 @@ class AgencyOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding agency: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding agency: ", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -531,17 +514,17 @@ export interface FindingTransportPartnerByAdminConditions {
 }
 
 export interface UpdatingTransportPartnerInfo {
-    tax_code?: string,
-    transport_partner_name?: string,
-    province?: string,
-    district?: string,
-    town?: string,
-    detail_address?: string,
-    phone_number?: string,
-    email?: string,
-    bin?: string,
-    bank?: string,
-    debit?: string,
+    tax_code: string,
+    transport_partner_name: string,
+    province: string,
+    district: string,
+    town: string,
+    detail_address: string,
+    phone_number: string,
+    email: string,
+    bin: string,
+    bank: string,
+    debit: string,
 }
 
 export interface UpdatingTransportPartnerCondition {
@@ -557,7 +540,7 @@ class TransportPartnersOperation {
 
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/transport_partners";
-        this.baseUrl = "http://localhost:4000/api/v1/transport_partners";
+        this.baseUrl = "http://localhost:5000/api/v1/transport_partners";
     }
 
     async createByAdmin(info: CreatingTransportPartnerByAdminInfo) {
@@ -569,9 +552,8 @@ class TransportPartnersOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error creating new transport partner: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error creating new transport partner: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -584,9 +566,8 @@ class TransportPartnersOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error creating new transport partner: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error creating new transport partner: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -599,9 +580,8 @@ class TransportPartnersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding transport partner: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding transport partner: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -614,9 +594,8 @@ class TransportPartnersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding transport partner: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding transport partner: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -629,9 +608,8 @@ class TransportPartnersOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error updating transport partner: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error updating transport partner: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -644,9 +622,8 @@ class TransportPartnersOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error deleting transport partner: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error deleting transport partner: ", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -690,10 +667,10 @@ export interface GettingShipmentsContainedByVehicleCondition {
 }
 
 export interface UpdatingVehicleInfo {
-    transport_partner_id?: string,
-    staff_id?: string,
-    type?: string,
-    max_load?: number,
+    transport_partner_id: string,
+    staff_id: string,
+    type: string,
+    max_load: number,
 }
 
 export interface UpdatingVehicleCondition {
@@ -725,7 +702,7 @@ class VehicleOperation {
 
     constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/vehicles";
-        this.baseUrl = "http://localhost:4000/api/v1/vehicles";
+        this.baseUrl = "http://localhost:5000/api/v1/vehicles";
     }
 
     async checkExist(condition: CheckingExistVehicleCondition) {
@@ -737,9 +714,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, existed: data.existed, message: data.message };
         } catch (error: any) {
-            console.log("Error checking exist vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error checking exist vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -752,9 +728,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error creating new vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error creating new vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -767,9 +742,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error creating new vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error creating new vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -782,9 +756,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -797,9 +770,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error finding vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error finding vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -812,9 +784,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error getting shipments contained by vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error getting shipments contained by vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -828,9 +799,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error updating vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error updating vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -843,9 +813,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, info: data.info, message: data.message };
         } catch (error: any) {
-            console.log("Error adding shipments to vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error adding shipments to vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -858,9 +827,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, info: data.info, message: data.message };
         } catch (error: any) {
-            console.log("Error deleting shipments from vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error deleting shipments from vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -873,9 +841,8 @@ class VehicleOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error deleting vehicle: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error deleting vehicle: ", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -936,18 +903,18 @@ export interface FindingStaffByAdminConditions {
 }
   
 export interface UpdatingStaffInfo {
-    fullname?: string,
-    username?: string,
-    date_of_birth?: string, 
-    email?: string,
-    phone_number?: string,
-    role?: string,
-    salary?: number, 
-    paid_salary?: string, 
-    province?: string,
-    district?: string,
-    town?: string,
-    detail_address?: string,
+    fullname: string,
+    username: string,
+    date_of_birth: string, 
+    email: string,
+    phone_number: string,
+    role: string,
+    salary: number, 
+    paid_salary: string, 
+    province: string,
+    district: string,
+    town: string,
+    detail_address: string,
 }
   
 export interface UpdatingStaffCondition {
@@ -976,7 +943,7 @@ class StaffsOperation {
 
 	constructor() {
 		// this.baseUrl = "https://tdlogistics.govt.hu/api/v1/staffs";
-		this.baseUrl = "http://localhost:4000/api/v1/staffs";
+		this.baseUrl = "http://localhost:5000/api/v1/staffs";
 	}
 
 	// ROLE: any
@@ -989,9 +956,8 @@ class StaffsOperation {
             const data = response.data;
             return { error: data.error, data: data.info, message: data.message };
         } catch (error: any) {
-            console.log("Error get authenticated staff information: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error get authenticated staff information: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -1119,9 +1085,8 @@ class StaffsOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error logging out: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error logging out: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -1267,30 +1232,30 @@ export interface UpdatingBusinessCondition {
 }
   
 export interface UpdatingBusinessInfo {
-	business_name?: string,
-	email?: string,
-	phone_number?: string,
-	debit?: string, 
-	province?: string,
-	district?: string,
-	town?: string,
-	detail_address?: string,
-	bin?: string,
-	bank?: string,
+	business_name: string,
+	email: string,
+	phone_number: string,
+	debit: string, 
+	province: string,
+	district: string,
+	town: string,
+	detail_address: string,
+	bin: string,
+	bank: string,
 }
   
 export interface UpdatingBusinessRepresentorInfo {
-	fullname?: string,
-	phone_number?: string,
-	email?: string,
-	date_of_birth?: string,
-	cccd?: string,
-	province?: string,
-	district?: string,
-	town?: string,
-	detail_address?: string,
-	bin?: string,
-	bank?: string,
+	fullname: string,
+	phone_number: string,
+	email: string,
+	date_of_birth: string,
+	cccd: string,
+	province: string,
+	district: string,
+	town: string,
+	detail_address: string,
+	bin: string,
+	bank: string,
 }
   
 export interface DeletingBusinessCondition {
@@ -1311,7 +1276,7 @@ class BusinessOperation {
 
 	constructor() {
 		// this.baseUrl = "https://tdlogistics.govt.hu/api/v1/business";
-		this.baseUrl = "http://localhost:4000/api/v1/business";
+		this.baseUrl = "http://localhost:5000/api/v1/business";
 
 	}
 
@@ -1410,7 +1375,7 @@ class BusinessOperation {
     // "ADMIN", "MANAGER", "TELLER", "AGENCY_MANAGER", "AGENCY_TELLER"
 	async updateBusiness(info: UpdatingBusinessInfo, condition: UpdatingBusinessCondition) {
 		try {
-			const response = await axios.put(`${this.baseUrl}/update?business_id=${condition.business_id}`, info, {
+			const response = await axios.post(`${this.baseUrl}/update?business_id=${condition.business_id}`, info, {
 				withCredentials: true,
 			});
 
@@ -1569,18 +1534,18 @@ export interface UpdatingPartnerStaffCondition {
 }
 
 export interface UpdatingPartnerStaffInfo {
-	fullname?: string,
-	username?: string,
-	date_of_birth?: string, 
-	email?: string,
-	phone_number?: string,
-	province?: string,
-	district?: string,
-	town?: string,
-	detail_address?: string,
-	position?: string,
-	bin?: string,
-	bank?: string,
+	fullname: string,
+	username: string,
+	date_of_birth: string, 
+	email: string,
+	phone_number: string,
+	province: string,
+	district: string,
+	town: string,
+	detail_address: string,
+	position: string,
+	bin: string,
+	bank: string,
 }
 
 export interface DeletingPartnerStaffCondition {
@@ -1614,7 +1579,7 @@ class PartnerStaffOperation {
 
 	constructor() {
 		// this.baseUrl = "https://tdlogistics.govt.hu/api/v1/partner_staffs";
-		this.baseUrl = "http://localhost:4000/api/v1/partner_staffs";
+		this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
 	}
 
 	// ROLE: PARTNER_DRIVER, PARTNER_SHIPPER
@@ -1861,7 +1826,7 @@ export interface GettingHistoryInfo {
 class ShippersOperation {
 	private baseUrl: string;
 	constructor() {
-		this.baseUrl = "http://localhost:4000/api/v1/shippers";
+		this.baseUrl = "http://localhost:5000/api/v1/shippers";
 	}
 
 	async getTask(condition: GettingTasksCondition) {
@@ -1939,7 +1904,7 @@ class ShipmentsOperation {
     private baseUrl: string;
 	constructor() {
         // this.baseUrl = "https://tdlogistics.govt.hu/api/v1/shipments";
-		this.baseUrl = "http://localhost:4000/api/v1/shipments";
+		this.baseUrl = "http://localhost:5000/api/v1/shipments";
 	}
 
     async check(condition: ShipmentID) {
@@ -2175,12 +2140,12 @@ export interface UpdatingOrderCondition {
 }
 
 export interface UpdatingOrderInfo {
-    mass?: number,
-    height?: number,
-    width?: number,
-    length?: number,
-    COD?: number,
-    status_code?: number,
+    mass: number,
+    height: number,
+    width: number,
+    length: number,
+    COD: number,
+    status_code: number,
 }
 
 export interface CancelingOrderCondition {
@@ -2218,7 +2183,7 @@ export interface UpdatingOrderImageCondition {
 class OrdersOperation {
     private baseUrl: string;
     constructor() {
-        this.baseUrl = "http://localhost:4000/api/v1/orders";
+        this.baseUrl = "http://localhost:5000/api/v1/orders";
     }
 
     async get(conditions: GettingOrdersConditions) {
@@ -2230,9 +2195,8 @@ class OrdersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error getting orders: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error getting orders: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2245,9 +2209,8 @@ class OrdersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error getting orders: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error getting orders: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2260,9 +2223,8 @@ class OrdersOperation {
             const data = response.data;
             return { error: data.error, exist: data.existed, message: data.message };
         } catch (error: any) {
-            console.log("Error checking exist order: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error checking exist order: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2331,9 +2293,8 @@ class OrdersOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error updating order: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error updating order: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2346,9 +2307,8 @@ class OrdersOperation {
             const data = response.data;
             return { error: data.error, message: data.message };
         } catch (error: any) {
-            console.log("Error canceling order: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error canceling order: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2361,9 +2321,8 @@ class OrdersOperation {
             const data = response.data;
             return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
-            console.log("Error calculating fee: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error calculating fee: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2431,9 +2390,9 @@ export interface CreatingNewTaskInfo {
 }
 
 export interface UpdatingTaskInfo {
-    task?: string,
-    priority?: number,
-    completed?: boolean,
+    task: string,
+    priority: number,
+    completed: boolean,
 }
 
 export interface TaskId {
@@ -2443,7 +2402,7 @@ export interface TaskId {
 class ScheduleOperation {
     private baseUrl: string;
     constructor() {
-        this.baseUrl = "http://localhost:4000/api/v1/schedules";
+        this.baseUrl = "http://localhost:5000/api/v1/schedules";
     }
 
     async get(conditions: GettingTasksConditions) {
@@ -2455,9 +2414,8 @@ class ScheduleOperation {
             const data = response.data;
             return { error: data, data: data.data, message: data.message }
         } catch (error: any) {
-            console.log("Error getting tasks: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error getting tasks: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2470,9 +2428,8 @@ class ScheduleOperation {
             const data = response.data;
             return { error: data, message: data.message }
         } catch (error: any) {
-            console.log("Error creating new tasks: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error creating new tasks: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2485,9 +2442,8 @@ class ScheduleOperation {
             const data = response.data;
             return { error: data, message: data.message }
         } catch (error: any) {
-            console.log("Error updating tasks: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error updating tasks: ", error.response.data);
+            return error.response.data;
         }
     }
 
@@ -2500,9 +2456,8 @@ class ScheduleOperation {
             const data = response.data;
             return { error: data, message: data.message }
         } catch (error: any) {
-            console.log("Error deleting tasks: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error deleting tasks: ", error.response.data);
+            return error.response.data;
         }
     }
 }
@@ -2516,7 +2471,7 @@ export interface AdministrativeInfo {
 class AdministrativeOperation {
     private baseUrl: string;
     constructor() {
-        this.baseUrl = "http://localhost:4000/api/v1/administrative";
+        this.baseUrl = "http://localhost:5000/api/v1/administrative";
     }
 
     async get(conditions: AdministrativeInfo) {
@@ -2528,9 +2483,8 @@ class AdministrativeOperation {
             const data = response.data;
             return { error: data, data: data.data, message: data.message }
         } catch (error: any) {
-            console.error("Error getting tasks: ", error?.response?.data);
-            console.error("Request that caused the error: ", error?.request);
-            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+            console.log("Error getting tasks: ", error.response.data);
+            return error.response.data;
         }
     }
 }
