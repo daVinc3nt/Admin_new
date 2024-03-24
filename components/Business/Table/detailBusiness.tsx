@@ -65,11 +65,13 @@ const staff = new StaffsOperation();
 interface DetailBusinessProps {
   onClose: () => void;
   dataInitial: FindingBusinessByAdminCondition;
+  reloadData: () => void;
 }
 
 const DetailBusiness: React.FC<DetailBusinessProps> = ({
   onClose,
   dataInitial,
+  reloadData,
 }) => {
   const [role, setRole] = useState(null);
 
@@ -84,6 +86,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
 
   const intl = useIntl();
   const [fileContract, setFileContract] = useState(null);
+  const [fileContractUpdate, setFileContractUpdate] = useState(null);
   const [RepresentorData, setRepresentorData] = useState({
     bank: "",
     bin: "",
@@ -327,18 +330,19 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     };
     try {
       // Check if the file is a PDF
-      if (fileContract && fileContract.type !== "application/pdf") {
+      if (fileContractUpdate && fileContractUpdate.type !== "application/pdf") {
         alert("Invalid file type. Only PDF files are allowed.");
         return;
       }
       const File: UpdatingContractInfo = {
-        contractFile: fileContract,
+        contractFile: fileContractUpdate,
       };
       const response = await a.updateContract(File, FindByID);
       if (response.error) {
         alert(response.message);
       } else {
         alert("Cập nhật hợp đồng thành công");
+        reloadData();
       }
     } catch (error) {
       console.error("Error updating contract", error);
@@ -449,6 +453,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
           alert(response.message);
         } else {
           alert("Cập nhật thông tin doanh nghiệp thành công");
+          reloadData();
         }
       } catch (error) {
         console.log("error");
@@ -462,6 +467,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
           alert(response2.message);
         } else {
           alert("Cập nhật thông tin người đại diện thành công");
+          reloadData();
         }
       } catch (error) {
         console.log("error");
@@ -965,7 +971,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             </div>
           </div>
           <div className="mt-5 flex flex-col place-content-center">
-            <div className="text-xl text-center">Hợp đồng doanh nghiệp</div>
+            <div className="text-base font-bold text-center">
+              Hợp đồng doanh nghiệp
+            </div>
             {isEditing ? (
               <div className="flex flex-col place-content-center">
                 <div className="flex place-content-center">
@@ -977,15 +985,15 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files[0];
-                        setFileContract(file);
+                        setFileContractUpdate(file);
                       }}
                     />
-                    {fileContract && (
+                    {fileContractUpdate && (
                       <div className=" font-bold text-base ">
-                        {fileContract.name}
+                        {fileContractUpdate.name}
                       </div>
                     )}
-                    {!fileContract && (
+                    {!fileContractUpdate && (
                       <div className=" font-bold text-base ">Tải ảnh lên</div>
                     )}
                   </label>
@@ -1000,9 +1008,11 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="flex place-content-center mt-6">
+              <div className="flex place-content-center py-6">
                 <a href={fileContract} download>
-                  <FormattedMessage id="Download" />
+                  <div className="border-b-blue-500 border-b-2 text-blue-500 text-base font-bold">
+                    Tải hợp đồng
+                  </div>
                 </a>
               </div>
             )}

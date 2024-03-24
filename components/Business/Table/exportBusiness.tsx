@@ -1,4 +1,4 @@
-import { columns } from "./columnBusiness";
+import { createColumns } from "./columnBusiness";
 import { DataTable } from "./datatable";
 import { useState, useEffect } from "react";
 import https from "https";
@@ -54,6 +54,7 @@ export default async function DemoPage(reloadData) {
   const data = await getData();
   console.log("Data Admin", data);
   const role = await getRole();
+  const columns = await createColumns(reloadData);
   return (
     <>
       {data && (
