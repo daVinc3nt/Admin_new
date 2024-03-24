@@ -6,9 +6,10 @@ import CustomDropdown from "./dropdown";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
 import axios from "axios";
-import { CreatingOrderByAdminAndAgencyInformation, OrdersOperation } from "@/TDLib/tdlogistics";
+import { AdministrativeOperation, CreatingOrderByAdminAndAgencyInformation, OrdersOperation } from "@/TDLib/tdlogistics";
 import MapExport from "@/components/Maprender/Mapexport";
-interface City {
+const fetch_city_ward_district = new AdministrativeOperation()
+interface City { 
   Id: string;
   Name: string;
   Districts: District[];

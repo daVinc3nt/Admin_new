@@ -41,7 +41,7 @@ const EditField: React.FC<EditFieldProps> = ({ data, setData, type, inputlen }) 
         <div>
           <input
             ref={inputRef}
-            className={`bg-transparent outline-none border-b-2 border-[#545e7b] text-white ${inputWidth}`}
+            className={`bg-transparent outline-none border-b-2 border-[#545e7b] text-black dark:text-white ${inputWidth}`}
             type={type}
             value={editedData}
             onChange={handleInputChange}

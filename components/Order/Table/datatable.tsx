@@ -190,7 +190,7 @@ export function DataTable<TData, TValue>({
           <div className="text-red-600 text-center">{cancel}</div>
         </div>
       </div>
-      <div className="flex items-center py-4 px-4">
+      <div className="flex items-center py-4 px-4 overflow-x-scroll">
         <div className="w-full flex">
           <div className="relative w-full sm:w-1/2 lg:w-1/3">
             <input

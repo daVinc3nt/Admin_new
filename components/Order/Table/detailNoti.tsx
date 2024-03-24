@@ -88,7 +88,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
         transition={{ duration: 0.5 }}
       >
         <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
-          <div className="font-bold text-lg sm:text-2xl pb-2 text-white w-full text-center">
+          <div className="font-bold text-lg sm:text-2xl pb-2 text-black dark:text-white w-full text-center">
             <FormattedMessage id="Staff Information" />
           </div>
           <Button
@@ -146,7 +146,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
                         type="number"
                         value={data.mass}
                         onChange={(e) =>
@@ -167,7 +167,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
                         type="number"
                         value={data.length}
                         onChange={(e) =>
@@ -188,7 +188,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
                         type="number"
                         value={data.width}
                         onChange={(e) =>
@@ -209,7 +209,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
                         type="number"
                         value={data.height}
                         onChange={(e) =>
@@ -230,7 +230,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
                         type="number"
                         value={data.fee}
                         onChange={(e) =>
@@ -251,7 +251,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
                         type="number"
                         value={data.COD}
                         onChange={(e) =>

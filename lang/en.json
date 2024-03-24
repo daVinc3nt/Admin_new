@@ -48,6 +48,7 @@
     "order.length": "Length (m)",
     "order.width": "Width (m)",
     "order.status": "Status",
+    "order.service_type":"Service type",
     "order.fee": "Fee (vnd)",
     "order.status.cancel": "Cancelled",
     "order.status.pending": "Picking up",

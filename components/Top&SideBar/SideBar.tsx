@@ -74,25 +74,6 @@ const SideItemData = [
       },
     ],
   },
-  {
-    id: 7,
-    title: <FormattedMessage id="Sidebar.option8" />,
-    icon: <BusinessCenter className="scale-75 lg:block" />,
-    submenus: [
-      {
-        id: 8,
-        title: <FormattedMessage id="Sidebar.option9" />,
-        url: "/dashboard/email",
-        icon: <AlternateEmail className="scale-75 lg:block" />,
-      },
-      {
-        id: 9,
-        title: <FormattedMessage id="Sidebar.option10" />,
-        url: "/dashboard/file",
-        icon: <Folder className="scale-75 lg:block" />,
-      },
-    ],
-  },
 ];
 export default function SideBar({ toggleCollapseMobile }) {
   const [dropdown, Setdropdown] = useState(false);
