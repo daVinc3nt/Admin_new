@@ -10,6 +10,7 @@ import {
   UpdatingBusinessInfo,
   BusinessOperation,
   UpdatingContractInfo,
+  UpdatingBusinessRepresentorInfo,
   FindingRepresentorByAdminCondition,
   FindingRepresentorByBusinessCondition,
   StaffsOperation,
@@ -94,6 +95,19 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     province: "",
     town: "",
   });
+  const [checkchangeRepresentor, setCheckChangeRepresentor] = useState({
+    bank: "",
+    bin: "",
+    cccd: "",
+    date_of_birth: "",
+    detail_address: "",
+    district: "",
+    email: "",
+    fullname: "",
+    phone_number: "",
+    province: "",
+    town: "",
+  });
   const [BusinessData, setBusinessData] = useState({
     agency_id: "",
     business_id: "",
@@ -114,6 +128,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
   const a: AdministrativeInfo = {
     province: "",
   };
+  const b: AdministrativeInfo = {
+    province: "",
+  };
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -122,12 +139,23 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
 
+  const [provinceRepresentor, setProvincesRepresentor] = useState([]);
+  const [districtsRepresentor, setDistrictsRepresentor] = useState([]);
+  const [wardsRepresentor, setWardsRepresentor] = useState([]);
+
+  const [selectedProvinceRepresentor, setSelectedProvinceRepresentor] =
+    useState("");
+  const [selectedDistrictRepresentor, setSelectedDistrictRepresentor] =
+    useState("");
+  const [selectedWardRepresentor, setSelectedWardRepresentor] = useState("");
+
   const adminOperation = new AdministrativeOperation();
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
       console.log("Tỉnh", response);
       setProvinces(response.data);
+      setProvincesRepresentor(response.data);
     };
     fetchData();
   }, []);
@@ -155,6 +183,30 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
   const handleWardChange = (e) => {
     setSelectedWard(e.target.value);
     handleInputChange("user_town", e.target.value);
+  };
+
+  const handleProvinceChangeRepresentor = async (e) => {
+    setSelectedProvinceRepresentor(e.target.value);
+    b.province = e.target.value;
+    handleInputChange2("province", e.target.value);
+    console.log(b);
+    const response = await adminOperation.get(b);
+    console.log("Quận", response);
+    setDistrictsRepresentor(response.data);
+  };
+  const handleDistrictChangeRepresentor = async (e) => {
+    setSelectedDistrictRepresentor(e.target.value);
+    b.province = selectedProvinceRepresentor;
+    b.district = e.target.value;
+    handleInputChange2("district", e.target.value);
+    console.log(b);
+    const response = await adminOperation.get(b);
+    console.log("Xã", response);
+    setWardsRepresentor(response.data);
+  };
+  const handleWardChangeRepresentor = (e) => {
+    setSelectedWardRepresentor(e.target.value);
+    handleInputChange2("town", e.target.value);
   };
 
   useEffect(() => {
@@ -223,6 +275,20 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             province: response.data[0].province,
             town: response.data[0].town,
           });
+          setCheckChangeRepresentor({
+            bank: response.data[0].bank,
+            bin: response.data[0].bin,
+            cccd: response.data[0].cccd,
+            date_of_birth: response.data[0].date_of_birth,
+            detail_address: response.data[0].detail_address,
+            district: response.data[0].district,
+            email: response.data[0].email,
+            fullname: response.data[0].fullname,
+            phone_number: response.data[0].phone_number,
+            province: response.data[0].province,
+            town: response.data[0].town,
+          });
+
           console.log("Data", BusinessData);
         } catch (error) {
           console.error("Error fetching representor data", error);
@@ -245,6 +311,13 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
       [key]: value,
     }));
   };
+  const handleInputChange2 = (key: string, value: string) => {
+    setRepresentorData((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const handleUpdateContract = async () => {
     const a = new BusinessOperation();
     const FindByID: FindingRepresentorByBusinessCondition = {
@@ -329,6 +402,31 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     if (BusinessData.bin !== dataInitial.bin) {
       info.bin = BusinessData.bin;
     }
+    const Representor: UpdatingBusinessRepresentorInfo = {
+      bank: RepresentorData.bank,
+      // bin: RepresentorData.bin,
+      // cccd: RepresentorData.cccd,
+      date_of_birth: RepresentorData.date_of_birth,
+      detail_address: RepresentorData.detail_address,
+      district: RepresentorData.district,
+      // email: RepresentorData.email,
+      fullname: RepresentorData.fullname,
+      // phone_number: RepresentorData.phone_number,
+      province: RepresentorData.province,
+      town: RepresentorData.town,
+    };
+    if (RepresentorData.email !== checkchangeRepresentor.email) {
+      Representor.email = RepresentorData.email;
+    }
+    if (RepresentorData.phone_number !== checkchangeRepresentor.phone_number) {
+      Representor.phone_number = RepresentorData.phone_number;
+    }
+    if (RepresentorData.bin !== checkchangeRepresentor.bin) {
+      Representor.bin = RepresentorData.bin;
+    }
+    if (RepresentorData.cccd !== checkchangeRepresentor.cccd) {
+      Representor.cccd = RepresentorData.cccd;
+    }
 
     if (
       role === "ADMIN" ||
@@ -340,12 +438,29 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
       const roleAdmin: UpdatingBusinessCondition = {
         business_id: BusinessData.business_id,
       };
-      const response = await editPartner.updateBusiness(info, roleAdmin);
-      if (response.error) {
+      try {
+        const response = await editPartner.updateBusiness(info, roleAdmin);
+        if (response.error) {
+          alert(response.message);
+        } else {
+          alert("Cập nhật thông tin doanh nghiệp thành công");
+        }
+      } catch (error) {
         console.log("error");
       }
-      alert("Cập nhật thông tin thành công");
-
+      try {
+        const response2 = await editPartner.updateBusinessRepresentor(
+          Representor,
+          roleAdmin
+        );
+        if (response2.error) {
+          alert(response2.message);
+        } else {
+          alert("Cập nhật thông tin người đại diện thành công");
+        }
+      } catch (error) {
+        console.log("error");
+      }
       setIsEditing(false);
     } else {
       alert("Bạn không có quyền chỉnh sửa thông tin");
@@ -551,12 +666,12 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                 )}
               </div>
 
-              <div className="flex gap-3 mt-3">
+              <div className="flex gap-5 mt-3">
+                <div className="font-bold text-base w-48">
+                  <FormattedMessage id="TransportPartner.Adress" />:
+                </div>
                 {!isEditing ? (
-                  <div className="flex gap-3">
-                    <div className="font-bold text-base w-48">
-                      <FormattedMessage id="TransportPartner.Adress" />:
-                    </div>
+                  <div className="flex">
                     <div>{BusinessData?.detail_address}/</div>
                     <div>{BusinessData?.town}/</div>
                     <div>{BusinessData?.district}/</div>
@@ -564,9 +679,6 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                   </div>
                 ) : (
                   <>
-                    <div className="font-bold text-base w-48">
-                      <FormattedMessage id="TransportPartner.Adress" />:{" "}
-                    </div>
                     <select
                       className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
                 `}
@@ -731,78 +843,77 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
               <div className="flex gap-5 w-full">
                 <div className="font-bold text-base w-48">Địa chỉ:</div>
                 {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.detail_address}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        detail_address: e.target.value,
-                      })
-                    }
-                  />
+                  <>
+                    <select
+                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                      id="city"
+                      aria-label=".form-select-sm"
+                      value={selectedProvinceRepresentor}
+                      onChange={handleProvinceChangeRepresentor}
+                    >
+                      <option value="Bình Định">
+                        {intl.formatMessage({ id: "Choose Province" })}
+                      </option>
+                      {provinceRepresentor.map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                }
+                `}
+                      id="district"
+                      aria-label=".form-select-sm"
+                      value={selectedDistrictRepresentor}
+                      onChange={handleDistrictChangeRepresentor}
+                    >
+                      <option value="Bình Định">
+                        {intl.formatMessage({ id: "Choose District" })}
+                      </option>
+                      {districtsRepresentor.map((district) => (
+                        <option key={district} value={district}>
+                          {district}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                      id="ward"
+                      aria-label=".form-select-sm"
+                      value={selectedWardRepresentor}
+                      onChange={handleWardChangeRepresentor}
+                    >
+                      <option value="Bình Định">
+                        {intl.formatMessage({ id: "Choose Ward" })}
+                      </option>
+                      {wardsRepresentor.map((ward) => (
+                        <option key={ward} value={ward}>
+                          {ward}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type=""
+                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                      placeholder="Số nhà- tên đường"
+                      onChange={(e) =>
+                        handleInputChange2("detail_address", e.target.value)
+                      }
+                    />
+                  </>
                 ) : (
-                  <div>{RepresentorData?.detail_address}</div>
+                  <div>
+                    {RepresentorData?.detail_address}/{RepresentorData?.town}/
+                    {RepresentorData?.district}/{RepresentorData?.province}
+                  </div>
                 )}
               </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Tỉnh/Thành phố:</div>
 
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.province}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        province: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.province}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Quận/Huyện:</div>
-
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.district}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        district: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.district}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Phường/Xã:</div>
-
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.town}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        town: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.town}</div>
-                )}
-              </div>
               <div className="flex gap-5 w-full">
                 <div className="font-bold text-base w-48">Ngân hàng:</div>
 
