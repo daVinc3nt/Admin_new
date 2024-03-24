@@ -138,20 +138,20 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
           <div className="grid grid-cols-2 overflow-y-scroll">
             {/* order id và hình ảnh */}
             <div>
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-5 pl-4">
                 <div id="image">
-                  <div className="flex w-full flex-row place-items-center">
+                  <div className="flex w-full flex-row place-items-center justify-start ">
                     <Button className="flex items-center rounded-xl p-2" onClick={() => setOption(0)}>
                       {option === 0 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
                       <span className="pl-1 font-bold text-base">Ảnh lấy hàng</span>
                     </Button>
-                    <div className="text-sm text-cente">|</div>
+                    <div className="text-sm text-center">|</div>
                     <Button className="flex items-center rounded-xl p-2" onClick={() => setOption(1)}>
                       {option === 1 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
                       <span className="pl-1 font-bold text-base">Ảnh giao hàng</span>
                     </Button>
                   </div>
-                  <div className="w-20 h-20  md:w-80 md:h-80 justify-center">
+                  <div className="w-20 h-20  lg:w-96 lg:h-96 md:w-60 md:h-60 justify-center">
                     {imageUrls.length != 0 && option == 0 && <CarouselSlider urls={imageUrls} />}
                     {imageUrls2.length != 0 && option == 1 && <CarouselSlider urls={imageUrls2} />}
                     {imageUrls.length == 0 && imageUrls2.length == 0 && <div className="w-full h-full border rounded-xl justify-center flex place-items-center">Hiện chưa có ảnh</div>}
