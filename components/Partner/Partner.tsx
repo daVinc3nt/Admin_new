@@ -1,11 +1,12 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
 import DemoPage from "./Table/export";
 import LoadingSkeleton from "../LoadingSkeleton/loadingSkeleton";
 import { FormattedMessage } from "react-intl";
 const PartnerMenu = () => {
   const [demoPage, setDemoPage] = useState(<LoadingSkeleton />);
-
+  const router = useRouter();
   const reloadData = useCallback(() => {
     fetchDemoPage();
   }, []);
@@ -16,7 +17,7 @@ const PartnerMenu = () => {
 
   useEffect(() => {
     fetchDemoPage();
-  }, []);
+  }, [router.pathname]);
 
   return (
     <div className="h-[calc(100vh-3rem)] content-center overflow-y-hidden flex flex-col ">

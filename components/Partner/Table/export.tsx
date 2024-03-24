@@ -1,5 +1,6 @@
 import { columns } from "./column";
 import { DataTable } from "./datatable";
+import { useState, useEffect } from "react";
 import https from "https";
 import {
   TransportPartnersOperation,
@@ -7,6 +8,7 @@ import {
   FindingTransportPartnerByTransportPartnerCondition,
   StaffsOperation,
 } from "@/TDLib/tdlogistics";
+import LoadingSkeleton from "@/components/LoadingSkeleton/loadingSkeleton";
 
 const service = new TransportPartnersOperation();
 const conditions: FindingTransportPartnerByAdminConditions[] = [];
@@ -32,5 +34,12 @@ async function getData(): Promise<any> {
 
 export default async function DemoPage(reloadData) {
   const data = await getData();
-  return <DataTable columns={columns} data={data} reloadData={reloadData} />;
+  return (
+    <>
+      {data && (
+        <DataTable columns={columns} data={data} reloadData={reloadData} />
+      )}
+      {!data && <LoadingSkeleton />}
+    </>
+  );
 }

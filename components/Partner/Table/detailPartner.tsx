@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
 import axios from "axios";
+import { Modal } from "@nextui-org/react";
 import {
   UpdatingTransportPartnerInfo,
   UpdatingTransportPartnerCondition,
@@ -85,6 +86,7 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       const res = await staff.getAuthenticatedStaffInfo();
+      console.log("Base", dataInitial);
       if (res.data.role === "ADMIN") {
         setPartnerData({
           transport_partner_id: dataInitial.transport_partner_id,

@@ -167,6 +167,8 @@ export const columns: ColumnDef<Postdetail1>[] = [
 
       const openModal = () => {
         setModalIsOpen(true);
+        console.log(row.original);
+        console.log(row.original.individual_company);
       };
 
       const closeModal = () => {
