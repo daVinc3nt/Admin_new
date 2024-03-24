@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
-import { TbMinusVertical } from "react-icons/tb";
 import { useState } from "react";
-import AddBusiness from "./AddBusiness/addBusiness";
-import ListApprove from "./ListApprove/listapprove";
+import { TbMinusVertical } from "react-icons/tb";
 import {
   ColumnDef,
   SortingState,
@@ -39,6 +37,8 @@ import {
   BusinessOperation,
   StaffsOperation,
   DeletingBusinessCondition,
+  ApprovingBusinessInfo,
+  UpdatingBusinessCondition,
 } from "@/TDLib/tdlogistics";
 
 import BasicPopover from "@/components/Common/Popover";
@@ -84,25 +84,6 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   });
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
-  const [modalIsOpen2, setModalIsOpen2] = useState(false);
-
-  const openModal2 = () => {
-    setModalIsOpen2(true);
-  };
-
-  const closeModal2 = () => {
-    setModalIsOpen2(false);
-  };
 
   const paginationButtons = [];
   for (let i = 0; i < table.getPageCount(); i++) {
@@ -113,41 +94,34 @@ export function DataTable<TData, TValue>({
     );
   }
 
-  const deletepartner = new BusinessOperation();
+  const approveBus = new BusinessOperation();
   const handleDeleteRowsSelected = async () => {
-    if (
-      role === "ADMIN" ||
-      role === "MANAGER" ||
-      role === "TELLER" ||
-      role === "AGENCY_MANAGER" ||
-      role === "AGENCY_TELLER"
-    ) {
-      table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
-        console.log();
-        const condition: DeletingBusinessCondition = {
-          business_id: (row.original as any).business_id,
-          agency_id: (row.original as any).agency_id,
+    table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
+      try {
+        const ApprovingInfo: ApprovingBusinessInfo = {
+          agency_id: (row.original as { agency_id: string }).agency_id,
         };
-        console.log(condition);
-        try {
-          const response = await deletepartner.removeBusiness(condition);
-          if (response.error) {
-            alert("Xóa không thành công");
-          } else {
-            alert("Xóa thành công");
-          }
-        } catch (e) {
-          alert(e);
-          console.log(e);
+        const UpdateCondition: UpdatingBusinessCondition = {
+          business_id: (row.original as { business_id: string }).business_id,
+        };
+
+        const response = await approveBus.approve(
+          ApprovingInfo,
+          UpdateCondition
+        );
+        if (response.error.error) {
+          alert(response.error.message);
+          return;
         }
+        alert("Phê duyệt thành công");
         reloadData();
-      });
-    } else {
-      alert("Bạn không có quyền xóa doanh nghiệp");
-    }
+      } catch (e) {
+        console.log(e);
+      }
+    });
   };
   const confirmDelete = () => {
-    return window.confirm("Are you sure you want to delete?");
+    return window.confirm("Are you sure you want to approve?");
   };
   const deleteRows = () => {
     // Gọi hàm confirmDelete và lưu kết quả vào biến result
@@ -167,7 +141,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <div className="w-full flex flex-col sm:flex-row">
-          <div className="relative w-full sm:w-1/2 lg:w-1/3 flex">
+          <div className="relative w-full sm:w-1/2 lg:w-1/2 flex">
             <input
               id="postSearch"
               type="text"
@@ -239,32 +213,6 @@ export function DataTable<TData, TValue>({
               title="Email"
             />
           </BasicPopover>
-          <div className="flex-grow h-10 flex mt-4 sm:mt-0 justify-center sm:justify-end">
-            {role === "ADMIN" ? (
-              <Button
-                className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 w-full sm:w-44 text-center h-full"
-                onClick={openModal2}
-              >
-                Danh sách chờ phê duyệt
-              </Button>
-            ) : null}
-            {modalIsOpen2 && (
-              <ListApprove
-                onClose={closeModal2}
-                reloadData={reloadData}
-                role={role}
-              />
-            )}
-            <Button
-              className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 w-full sm:w-44 text-center h-full"
-              onClick={openModal}
-            >
-              Thêm doanh nghiệp
-            </Button>
-            {modalIsOpen && (
-              <AddBusiness onClose={closeModal} reloadData={reloadData} />
-            )}
-          </div>
         </div>
       </div>
       <div className="rounded-md border border-gray-700">
@@ -321,25 +269,18 @@ export function DataTable<TData, TValue>({
       </div>
 
       <div className="flex items-center justify-center space-x-2 py-4">
-        {role === "ADMIN" ||
-        role === "MANAGER" ||
-        role === "TELLER" ||
-        role === "AGENCY_MANAGER" ||
-        role === "AGENCY_TELLER" ? (
-          <button
-            className={`text-xs md:text-md justify-self-start text-muted-foreground rounded-lg border border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 hover:text-white hover:shadow-md focus:outline-none font-normal dark:text-white
+        <button
+          className={`text-xs md:text-md justify-self-start text-muted-foreground rounded-lg border border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 hover:text-white hover:shadow-md focus:outline-none font-normal dark:text-white
           ${
             table.getFilteredSelectedRowModel().rows.length > 0
-              ? "border-red-500"
+              ? "border-green-500"
               : "border-gray-600"
           }`}
-            onClick={deleteRows}
-          >
-            <FormattedMessage id="Delete" />{" "}
-            {table.getFilteredSelectedRowModel().rows.length}/
-            {table.getFilteredRowModel().rows.length}
-          </button>
-        ) : null}
+          onClick={deleteRows}
+        >
+          Phê duyệt {table.getFilteredSelectedRowModel().rows.length}/
+          {table.getFilteredRowModel().rows.length}
+        </button>
         <Button
           variant="light"
           size="sm"
