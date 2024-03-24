@@ -81,7 +81,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     user_town: "",
     user_detail_address: "",
 
-    invidual_company: 0,
+    individual_company: 0,
     type: "",
     level: 0,
     postal_code: "",
@@ -261,7 +261,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     user_town: false,
     user_detail_address: false,
 
-    invidual_company: true,
+    individual_company: true,
     type: false,
     level: false,
     postal_code: false,
@@ -342,7 +342,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
           user_town: "",
           user_detail_address: "",
 
-          invidual_company: 0,
+          individual_company: 0,
           type: "",
           level: 0,
           postal_code: "",

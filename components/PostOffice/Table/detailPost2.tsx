@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { set } from "date-fns";
 interface Postdetail2 {
-  invidual_company: number;
+  individual_company: number;
   company_name: string;
   tax_number: string;
   business_number: string;
@@ -89,7 +89,7 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     fetchCities();
   }, []);
   const [Agencydata, setAgencydata] = useState({
-    invidual_company: dataInitial.invidual_company,
+    individual_company: dataInitial.individual_company,
     company_name: dataInitial.company_name,
     tax_number: dataInitial.tax_number,
     business_number: dataInitial.business_number,

@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { set } from "date-fns";
 interface Postdetail2 {
-  invidual_company: number;
+  individual_company: number;
   company_name: string;
   tax_number: string;
   bussiness_number: string;

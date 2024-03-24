@@ -59,7 +59,7 @@ const AddOffice2: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     user_town: "",
     user_detail_address: "",
 
-    invidual_company: 1,
+    individual_company: 1,
     company_name: "",
     tax_number: "",
     business_number: "",
@@ -242,7 +242,7 @@ const AddOffice2: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     user_town: false,
     user_detail_address: false,
 
-    invidual_company: true,
+    individual_company: true,
     company_name: false,
     tax_number: false,
     business_number: false,
@@ -326,7 +326,7 @@ const AddOffice2: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
           user_town: "",
           user_detail_address: "",
 
-          invidual_company: 1,
+          individual_company: 1,
           company_name: "",
           tax_number: "",
           business_number: "",
