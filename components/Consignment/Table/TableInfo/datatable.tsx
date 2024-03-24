@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4 overflow-x-scroll;">
+      <div className="flex items-center py-4 overflow-x-scroll">
         <div className="w-full flex flex-col sm:flex-row">
           <div className="relative w-full lg:w-1/2 flex">
             <input
