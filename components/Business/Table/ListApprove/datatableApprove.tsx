@@ -40,7 +40,7 @@ import {
   ApprovingBusinessInfo,
   UpdatingBusinessCondition,
 } from "@/TDLib/tdlogistics";
-
+import { Modal } from "@nextui-org/react";
 import BasicPopover from "@/components/Common/Popover";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -86,16 +86,18 @@ export function DataTable<TData, TValue>({
   });
 
   const paginationButtons = [];
-  for (let i = 0; i < table.getPageCount(); i++) {
-    paginationButtons.push(
-      <Button key={i} onClick={() => table.setPageIndex(i)}>
-        {i + 1}
-      </Button>
-    );
-  }
+  try {
+    for (let i = 0; i < table.getPageCount(); i++) {
+      paginationButtons.push(
+        <Button key={i} onClick={() => table.setPageIndex(i)}>
+          {i + 1}
+        </Button>
+      );
+    }
+  } catch (e) {}
 
   const approveBus = new BusinessOperation();
-  const handleDeleteRowsSelected = async () => {
+  const handleApprovedselected = async (agency_id: string) => {
     table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
       try {
         const ApprovingInfo: ApprovingBusinessInfo = {
@@ -120,28 +122,34 @@ export function DataTable<TData, TValue>({
       }
     });
   };
-  const confirmDelete = () => {
+  const confirm = () => {
     return window.confirm("Are you sure you want to approve?");
   };
-  const deleteRows = () => {
-    // Gọi hàm confirmDelete và lưu kết quả vào biến result
-    const result = confirmDelete();
-    // Nếu result là true, tức là người dùng nhấn yes
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [agencyId, setAgencyId] = useState("");
+
+  const handleAgencyIdChange = (e) => {
+    setAgencyId(e.target.value);
+  };
+
+  const handleModalSubmit = () => {
+    setIsModalOpen(false);
+    handleApprovedselected(agencyId);
+  };
+
+  const ApproveRows = () => {
+    const result = confirm();
+    console.log(result);
     if (result) {
-      // Gọi hàm handleDeleteRowsSelected để xóa các hàng đã chọn
-      handleDeleteRowsSelected();
-    }
-    // Nếu result là false, tức là người dùng nhấn no
-    else {
-      // Không làm gì cả
+      setIsModalOpen(true);
     }
   };
 
   return (
-    <div>
-      <div className="flex items-center py-4">
+    <div className="flex flex-col place-content-between h-full">
+      <div className="flex items-center py-4 top-0">
         <div className="w-full flex flex-col sm:flex-row">
-          <div className="relative w-full sm:w-1/2 lg:w-1/2 flex">
+          <div className="relative w-full  flex">
             <input
               id="postSearch"
               type="text"
@@ -268,7 +276,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-center space-x-2 py-4">
+      <div className="flex items-center justify-center space-x-2 mt-5">
         <button
           className={`text-xs md:text-md justify-self-start text-muted-foreground rounded-lg border border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 hover:text-white hover:shadow-md focus:outline-none font-normal dark:text-white
           ${
@@ -276,7 +284,7 @@ export function DataTable<TData, TValue>({
               ? "border-green-500"
               : "border-gray-600"
           }`}
-          onClick={deleteRows}
+          onClick={ApproveRows}
         >
           Phê duyệt {table.getFilteredSelectedRowModel().rows.length}/
           {table.getFilteredRowModel().rows.length}
@@ -332,6 +340,27 @@ export function DataTable<TData, TValue>({
           </span>
         </Button>
       </div>
+      {isModalOpen && (
+        <div className="h-20 py-7">
+          <h1 className="text-center text-xl font-bold">Nhập mã đại lý</h1>
+          <div className="flex h-10 mt-3 mb-3">
+            <input
+              type="text"
+              id="agencyId"
+              value={agencyId}
+              placeholder="Vui lòng nhập mã đại lý"
+              onChange={handleAgencyIdChange}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+            <button
+              className="  text-xs bg-blue-500 ml-5 hover:bg-blue-700 text-white font-bold px-5 rounded-full"
+              onClick={handleModalSubmit}
+            >
+              Xác nhận
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

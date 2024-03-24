@@ -10,6 +10,7 @@ import {
   BusinessOperation,
   FindingBusinessByAdminCondition,
 } from "@/TDLib/tdlogistics";
+import { Approval } from "@mui/icons-material";
 
 const ListApprove = ({ onClose, reloadData, role }) => {
   const [data, setData] = useState([]);
@@ -20,7 +21,10 @@ const ListApprove = ({ onClose, reloadData, role }) => {
       const columns2 = await createColumns(reloadData);
       setColumns(columns2);
       try {
-        const res = await func.findByAdmin(false);
+        const input: FindingBusinessByAdminCondition = {
+          approved: false,
+        };
+        const res = await func.findByAdmin(input);
         setData(res.data);
         console.log("Data approve", res);
         console.log("data approve", data);
@@ -68,7 +72,7 @@ const ListApprove = ({ onClose, reloadData, role }) => {
   };
   return (
     <motion.div
-      className={`fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-60 z-50 `}
+      className={`fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-60 z-40 `}
       initial={{ opacity: 0 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
       exit={{ opacity: 0 }}
@@ -88,7 +92,7 @@ const ListApprove = ({ onClose, reloadData, role }) => {
       >
         <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
           <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">
-            <FormattedMessage id="TransportBusiness.AddButton" />
+            Danh sách chờ duyệt
           </div>
           <Button
             className="absolute right-0 w-8 h-8 rounded-full mb-2 hover:bg-gray-300"
@@ -100,9 +104,6 @@ const ListApprove = ({ onClose, reloadData, role }) => {
 
         <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar flex flex-col items-center bg-white dark:bg-[#14141a] p-2 rounded-md dark:text-white">
           <div className="w-[98%] sm:w-10/12">
-            <h1 className="font-semibold pb-2 text-center dark:text-white">
-              Doanh sách chờ duyệt
-            </h1>
             <DataTable data={data} columns={columns} reloadData={reloadData} />
           </div>
         </div>

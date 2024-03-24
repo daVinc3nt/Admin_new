@@ -240,7 +240,7 @@ export function DataTable<TData, TValue>({
             />
           </BasicPopover>
           <div className="flex-grow h-10 flex mt-4 sm:mt-0 justify-center sm:justify-end">
-            {role === "ADMIN" ? (
+            {role === "ADMIN" || role === "MANAGER" || role === "TELLER" ? (
               <Button
                 className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 w-full sm:w-44 text-center h-full"
                 onClick={openModal2}

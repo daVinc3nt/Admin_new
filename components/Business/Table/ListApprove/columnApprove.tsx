@@ -110,64 +110,64 @@ export async function createColumns(
         );
       },
     },
-    {
-      accessorKey: "Thao tác",
-      header: () => {
-        return "Thao tác";
-      },
-      cell: ({ row }) => {
-        const a = new BusinessOperation();
+    // {
+    //   accessorKey: "Thao tác",
+    //   header: () => {
+    //     return "Thao tác";
+    //   },
+    //   cell: ({ row }) => {
+    //     const a = new BusinessOperation();
 
-        const handleApprove = async () => {
-          try {
-            const ApprovingInfo: ApprovingBusinessInfo = {
-              agency_id: row.original.agency_id,
-            };
-            const UpdateCondition: UpdatingBusinessCondition = {
-              business_id: row.original.business_id,
-            };
+    //     const handleApprove = async () => {
+    //       try {
+    //         const ApprovingInfo: ApprovingBusinessInfo = {
+    //           agency_id: row.original.agency_id,
+    //         };
+    //         const UpdateCondition: UpdatingBusinessCondition = {
+    //           business_id: row.original.business_id,
+    //         };
 
-            const response = await a.approve(ApprovingInfo, UpdateCondition);
-            if (response.error.error) {
-              alert(response.error.message);
-              return;
-            }
-            alert("Phê duyệt thành công");
-            reloadData();
-          } catch (e) {
-            console.log(e);
-          }
-        };
+    //         const response = await a.approve(ApprovingInfo, UpdateCondition);
+    //         if (response.error.error) {
+    //           alert(response.error.message);
+    //           return;
+    //         }
+    //         alert("Phê duyệt thành công");
+    //         reloadData();
+    //       } catch (e) {
+    //         console.log(e);
+    //       }
+    //     };
 
-        // const handleReject = async () => {
-        //   const data = row.original;
-        //   const condition: UpdatingBusinessCondition = {
-        //     business_name: data.business_name,
-        //     email: data.email,
-        //     phone_number: data.phone_number,
-        //     status: "REJECTED",
-        //   };
-        //   await a.updateBusiness(condition);
-        //   reloadData();
-        // };
+    //     // const handleReject = async () => {
+    //     //   const data = row.original;
+    //     //   const condition: UpdatingBusinessCondition = {
+    //     //     business_name: data.business_name,
+    //     //     email: data.email,
+    //     //     phone_number: data.phone_number,
+    //     //     status: "REJECTED",
+    //     //   };
+    //     //   await a.updateBusiness(condition);
+    //     //   reloadData();
+    //     // };
 
-        return (
-          <div className="relative flex  mr-2">
-            <Button
-              onClick={handleApprove}
-              className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-green-500 rounded-full"
-            >
-              Chấp nhận
-            </Button>
-            {/* <Button
-              onClick={handleReject}
-              className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full"
-            >
-              Từ chối
-            </Button> */}
-          </div>
-        );
-      },
-    },
+    //     return (
+    //       <div className="relative flex  mr-2">
+    //         <Button
+    //           onClick={handleApprove}
+    //           className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-green-500 rounded-full"
+    //         >
+    //           Chấp nhận
+    //         </Button>
+    //         {/* <Button
+    //           onClick={handleReject}
+    //           className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full"
+    //         >
+    //           Từ chối
+    //         </Button> */}
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 }
