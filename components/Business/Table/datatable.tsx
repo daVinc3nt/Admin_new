@@ -118,8 +118,8 @@ export function DataTable<TData, TValue>({
         };
         console.log(condition);
         try {
-          const error = await deletepartner.removeBusiness(condition);
-          if (error) {
+          const response = await deletepartner.removeBusiness(condition);
+          if (response.error) {
             alert("Xóa không thành công");
           } else {
             alert("Xóa thành công");

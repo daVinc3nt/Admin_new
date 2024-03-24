@@ -5,6 +5,8 @@ import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
 import axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   UpdatingBusinessCondition,
   UpdatingBusinessInfo,
@@ -387,7 +389,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     const info: UpdatingBusinessInfo = {
       business_name: BusinessData.business_name,
       bank: BusinessData.bank,
-      debit: BusinessData.debit.toString(),
+      debit: BusinessData.debit,
       province: BusinessData.province,
       district: BusinessData.district,
       town: BusinessData.town,
@@ -402,11 +404,14 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     if (BusinessData.bin !== dataInitial.bin) {
       info.bin = BusinessData.bin;
     }
+    const date = new Date(RepresentorData.date_of_birth);
+    const formattedDate = date.toISOString().split(".")[0].replace("T", " ");
+
     const Representor: UpdatingBusinessRepresentorInfo = {
       bank: RepresentorData.bank,
       // bin: RepresentorData.bin,
       // cccd: RepresentorData.cccd,
-      date_of_birth: RepresentorData.date_of_birth,
+      date_of_birth: formattedDate,
       detail_address: RepresentorData.detail_address,
       district: RepresentorData.district,
       // email: RepresentorData.email,
@@ -829,15 +834,20 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                     className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
                     type="date"
                     value={RepresentorData?.date_of_birth}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setRepresentorData({
                         ...RepresentorData,
                         date_of_birth: e.target.value,
-                      })
-                    }
+                      });
+                    }}
                   />
                 ) : (
-                  <div>{RepresentorData?.date_of_birth}</div>
+                  <div>
+                    {RepresentorData?.date_of_birth &&
+                      new Date(
+                        RepresentorData.date_of_birth
+                      ).toLocaleDateString("en-GB")}
+                  </div>
                 )}
               </div>
               <div className="flex gap-5 w-full">
