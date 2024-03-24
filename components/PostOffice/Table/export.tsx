@@ -28,13 +28,24 @@ async function getData(): Promise<any> {
     role === "MANAGER" ||
     role === "HUMAN_RESOURCE_MANAGER"
   ) {
-    const response = await service.findByAdmin(conditions[0]);
-    console.log(response);
-    return response.data;
+    try {
+      const response = await service.findByAdmin(conditions[0]);
+      console.log(response);
+      return response.data;
+    } catch (e) {
+      alert("Error: " + e);
+
+      return "Error";
+    }
   } else {
-    const response = await service.findByAgency(conditions2[0]);
-    console.log(response);
-    return response.data;
+    try {
+      const response = await service.findByAgency(conditions2[0]);
+      console.log(response);
+      return response.data;
+    } catch (e) {
+      alert("Error: " + e);
+      return "Error";
+    }
   }
 }
 

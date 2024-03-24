@@ -13,7 +13,7 @@ import { FindingAgencyByAdminInfo } from "@/TDLib/tdlogistics";
 import DetailPost2 from "./detailPost2";
 
 interface Postdetail2 {
-  invidual_company: number;
+  individual_company: number;
   company_name: string;
   tax_number: string;
   business_number: string;
@@ -37,7 +37,7 @@ interface Postdetail2 {
   revenue: string;
 }
 interface Postdetail1 {
-  invidual_company: number;
+  individual_company: number;
   company_name: string;
   tax_number: string;
   business_number: string;
@@ -167,6 +167,8 @@ export const columns: ColumnDef<Postdetail1>[] = [
 
       const openModal = () => {
         setModalIsOpen(true);
+        console.log(row.original);
+        console.log(row.original.individual_company);
       };
 
       const closeModal = () => {
@@ -181,12 +183,12 @@ export const columns: ColumnDef<Postdetail1>[] = [
           >
             +
           </Button>
-          {modalIsOpen && row.original.invidual_company === 1 ? (
+          {modalIsOpen && row.original.individual_company === 1 ? (
             <DetailPost2 onClose={closeModal} dataInitial={row.original} />
           ) : (
             ""
           )}
-          {modalIsOpen && row.original.invidual_company === 0 ? (
+          {modalIsOpen && row.original.individual_company === 0 ? (
             <DetailPost onClose={closeModal} dataInitial={row.original} />
           ) : (
             ""
