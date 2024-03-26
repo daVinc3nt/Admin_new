@@ -172,19 +172,19 @@ export function DataTable<TData, TValue>({
   return (
     <div className="bg-inherit">
       <div className="mt-10 uppercase sticky flex items-center justify-center font-extrabold gap-10 sm:gap-32 text-2xl sm:text-3xl">
-        <div className="items-center flex sm:flex-col flex-row">
+        <div className="items-center flex sm:flex-col flex-row gap-2">
           <div className="text-lg">
             {<FormattedMessage id="order.status.done" />}
           </div>
           <div className="text-green-600 text-center">{done}</div>
         </div>
-        <div className="items-center flex sm:flex-col flex-row">
+        <div className="items-center flex sm:flex-col flex-row gap-2">
           <div className="text-lg">
             {<FormattedMessage id="order.status.ongoing" />}
           </div>
           <div className="text-yellow-600 text-center">{pending}</div>
         </div>
-        <div className="items-center flex sm:flex-col flex-row">
+        <div className="items-center flex sm:flex-col flex-row gap-2">
           <div className="text-lg text-center">
             {<FormattedMessage id="order.status.cancel" />}
           </div>
@@ -309,12 +309,12 @@ export function DataTable<TData, TValue>({
         allTabs={[
           {
             id: "1",
-            name: "Tất cả",
+            name: <FormattedMessage id="order.all" />,
             status: ""
           },
           {
             id: "2",
-            name: "Đang xử lý",
+            name: <FormattedMessage id="order.processing" />,
             status: 2
           },
         ]}

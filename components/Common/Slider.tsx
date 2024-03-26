@@ -19,7 +19,7 @@ export function CarouselSlider(ObjUrls) {
         return (
             <div className="h-full pb-[12px] flex justify-between">
                 <div
-                    className="text-gray-600"
+                    className="dark:text-white text-gray-600"
                     onClick={() => onClick()}
                 >
                     {active ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
@@ -32,10 +32,10 @@ export function CarouselSlider(ObjUrls) {
         return (
             <div className="w-full h-10 mt-2 flex justify-between">
                 <Button className="left" type="button" onClick={() => previous()}>
-                    <FiChevronLeft className="h-full w-8 text-gray-500" />
+                    <FiChevronLeft className="h-full w-8 text-gray-500 dark:text-white" />
                 </Button>
                 <Button className="right" type="button" onClick={() => next()}>
-                    <FiChevronRight className="h-full w-8 text-gray-500" />
+                    <FiChevronRight className="h-full w-8 text-gray-500 dark:text-white" />
                 </Button>
             </div>
         );

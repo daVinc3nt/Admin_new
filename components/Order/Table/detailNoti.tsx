@@ -141,11 +141,11 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
               <div className="flex flex-col gap-5 pl-4">
                 <div className="pr-10">
                   <div className="flex flex-col gap-1 place-items-center w-full justify-center ">
-                    <Button className="flex items-center rounded-xl w-full bg-white p-2 border-2 border-gray-300" onClick={() => setOption(0)}>
+                    <Button className="flex items-center rounded-xl w-full bg-inherit p-2 border-2 border-gray-300" onClick={() => setOption(0)}>
                       {option === 0 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
                       <span className="pl-1 font-bold text-base">Ảnh nhận hàng</span>
                     </Button>
-                    <Button className="flex items-center rounded-xl w-full bg-white p-2 border-2 border-gray-300" onClick={() => setOption(1)}>
+                    <Button className="flex items-center rounded-xl w-full bg-inherit p-2 border-2 border-gray-300" onClick={() => setOption(1)}>
                       {option === 1 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
                       <span className="pl-1 font-bold text-base">Ảnh giao hàng</span>
                     </Button>
@@ -153,7 +153,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                   <div className="relative">
                     {imageUrls.length != 0 && option == 0 && <CarouselSlider urls={imageUrls} />}
                     {imageUrls2.length != 0 && option == 1 && <CarouselSlider urls={imageUrls2} />}
-                    {imageUrls2.length == 0 && imageUrls.length == 0 && <div className="w-full h-40 md:h-52 lg:h-96 rounded-2xl mt-2 outline outline-[1px] text-red-600 text-base flex justify-center place-items-center outline-gray-300 bg-white text-center">Error! Reload the page and try again.</div>}
+                    {imageUrls2.length == 0 && imageUrls.length == 0 && <div className="w-full h-40 bg-inherit md:h-52 lg:h-96 rounded-2xl mt-2 outline outline-[1px] text-red-600 text-base flex justify-center place-items-center outline-inherit bg-white text-center">Error! Reload the page and try again.</div>}
                   </div>
                 </div>
 
@@ -306,7 +306,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
 
                   <div id="agency_id" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                      Bưu cục
+                      <FormattedMessage id="order.service_type" />
                     </div>
                     <div>{data.agency_id}</div>
                   </div>
@@ -320,21 +320,21 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
 
                   <div id="name_receiver" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                      Tên người nhận
+                    <FormattedMessage id="order.receiver" />
                     </div>
                     <div>{data.name_receiver}</div>
                   </div>
 
                   <div id="name_sender" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                      Tên người gửi
+                     <FormattedMessage id="order.sender" />
                     </div>
                     <div>{data.name_sender}</div>
                   </div>
 
                   <div id="source" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                      Địa chỉ gửi hàng
+                      <FormattedMessage id="order.pickuplocation" />
                     </div>
                     <div className="w-8/12">
                       {data.detail_source}, {data.ward_source}, {data.district_source}, {data.province_source}
@@ -343,7 +343,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
 
                   <div id="destination" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                      Địa chỉ giao hàng
+                    <FormattedMessage id="order.receive" />
                     </div>
                     <div className="w-8/12">
                       {data.detail_dest}, {data.ward_dest}, {data.district_dest}, {data.province_dest}
