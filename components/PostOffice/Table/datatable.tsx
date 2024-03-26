@@ -125,13 +125,18 @@ export function DataTable<TData, TValue>({
     }
   };
   const paginationButtons = [];
+  try{
   for (let i = 0; i < table.getPageCount(); i++) {
     paginationButtons.push(
       <Button key={i} onClick={() => table.setPageIndex(i)}>
         {i + 1}
       </Button>
     );
+  }}
+  catch(e){
+    console.log(e);
   }
+  
 
   return (
     <div>

@@ -54,9 +54,10 @@ export default async function DemoPage(reloadData) {
   console.log("Data", data);
   const role = await getRole();
   if (
-    role === "ADMIN" ||
-    role === "MANAGER" ||
-    role === "HUMAN_RESOURCE_MANAGER"
+    (role === "ADMIN" ||
+      role === "MANAGER" ||
+      role === "HUMAN_RESOURCE_MANAGER") &&
+    data.length > 0
   ) {
     return <DataTable columns={columns} data={data} reloadData={reloadData} />;
   } else {
