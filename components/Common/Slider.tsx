@@ -40,6 +40,9 @@ export function CarouselSlider(ObjUrls) {
             </div>
         );
     };
+    useEffect(() => {
+        console.log(ObjUrls)
+    }, [ObjUrls]);
     return <div className="h-full w-full">
         {openModal && <ImageView url={urlState} onClose={() => setIsOpenModal(false)} />}
         <Carousel
@@ -64,23 +67,23 @@ export function CarouselSlider(ObjUrls) {
             dotListClass="flex justify-between gap-1"
         >
 
-            {Array.isArray(ObjUrls.urls)
-                ? ObjUrls.urls.map((url, index) => (
-                    <div key={index} className='rounded-t-xl px-2'>
-                        <Image
-                            onClick={() => handleOpenImgClick(url)}
-                            src={url}
-                            alt={`Order Image ${index}`}
-                            width={100}
-                            height={100}
-                            className='w-full h-40 lg:h-96 rounded-md object-contain'
-                        />
-                    </div>
-                )) : (
-                    <div className="flex justify-center text-center">
-                        <p>No image uploaded</p>
-                    </div>
-                )}
+            {ObjUrls.urls.length != 0 ? ObjUrls.urls.map((url, index) => (
+                <div key={index} className='rounded-t-xl px-2'>
+                    <Image
+                        onClick={() => handleOpenImgClick(url)}
+                        src={url}
+                        alt={`Order Image ${index}`}
+                        width={100}
+                        height={100}
+                        className='w-full h-40 lg:h-96 rounded-md object-contain'
+                    />
+                </div>
+            )) : (
+                <div className="flex justify-center text-center">
+                    <p>No image uploaded</p>
+                </div>
+            )}
         </Carousel>
     </div>
 }
+

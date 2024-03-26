@@ -324,7 +324,7 @@ export function DataTable<TData, TValue>({
 
         />
          {/* bảng ở đây */}
-        <table className="rounded-md border border-gray-700">
+        <Table  className="rounded-md border border-gray-700">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-gray-700">
@@ -376,7 +376,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-        </table>
+        </Table >
 
         {/* dàn nút dưới */}
         <div className="flex bg-inherit items-center sticky bottom-0 justify-center space-x-2 py-4">

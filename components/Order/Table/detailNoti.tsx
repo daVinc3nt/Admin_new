@@ -135,9 +135,9 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
         </div>
         <div className="h-screen_3/5 border border-[#545e7b] mt-4 flex flex-col bg-white
          dark:bg-[#14141a] p-2 rounded-md text-black dark:text-white place-content-center">
-          <div className="grid grid-cols-2 overflow-y-scroll">
+          <div className="flex flex-col sm:grid sm:grid-cols-2 overflow-y-scroll">
             {/* order id và hình ảnh */}
-            <div>
+            <div className="flex flex-col">
               <div className="flex flex-col gap-5 pl-4">
                 <div className="pr-10">
                   <div className="flex flex-col gap-1 place-items-center w-full justify-center ">
