@@ -126,7 +126,7 @@ export function DataTable<TData, TValue>({
       const condition: CancelingOrderCondition = {
         order_id: (row.original as any).order_id,
       };
-      const error = await order.update({status_code: 2},condition);
+      const error = await order.update({ status_code: 2 }, condition);
       if (error) {
         alert(error.message);
       }
@@ -190,7 +190,7 @@ export function DataTable<TData, TValue>({
           <div className="text-red-600 text-center">{cancel}</div>
         </div>
       </div>
-      <div className="flex items-center py-4 px-4 overflow-x-scroll">
+      <div className="flex items-center py-4 px-4">
         <div className="w-full flex">
           <div className="relative w-full sm:w-1/2 lg:w-1/3">
             <input
@@ -299,10 +299,10 @@ export function DataTable<TData, TValue>({
           </DropdownMenu>
         </Dropdown>
       </div>
-      {modalIsOpen && <AddNoti onClose={closeModal}    socket={socket}/>}
+      {modalIsOpen && <AddNoti onClose={closeModal} socket={socket} />}
       {modalIsOpen2 && <AddFile onClose={closeModal2} />}
       <div className="rounded-md border border-gray-700">
-        <table>
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-gray-700">
@@ -330,9 +330,8 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`border-gray-700 ${
-                    row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
-                  }`}
+                  className={`border-gray-700 ${row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
+                    }`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -355,18 +354,17 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-        </table>
+        </Table>
       </div>
       <div className="flex items-center justify-center space-x-2 py-4">
         <Button
           className={`text-xs md:text-sm justify-self-start rounded-lg border
            border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
            hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-          ${
-            table.getFilteredSelectedRowModel().rows.length > 0
+          ${table.getFilteredSelectedRowModel().rows.length > 0
               ? "border-green-500"
               : "border-gray-600"
-          }`}
+            }`}
           onClick={change_status_to_inprogress}
         >
           <FormattedMessage id="processing" />{" "}
@@ -377,11 +375,10 @@ export function DataTable<TData, TValue>({
           className={`text-xs md:text-sm justify-self-start rounded-lg border
            border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
            hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-          ${
-            table.getFilteredSelectedRowModel().rows.length > 0
+          ${table.getFilteredSelectedRowModel().rows.length > 0
               ? "border-red-500"
               : "border-gray-600"
-          }`}
+            }`}
           onClick={deleteRows}
         >
           <FormattedMessage id="Delete" />{" "}

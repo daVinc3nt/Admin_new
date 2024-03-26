@@ -378,8 +378,8 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
             onClick={handleConfirm}
           >
             <>
-              <FaPen className="xs:mr-2" />
-              <span className="hidden xs:block"><FormattedMessage id="Consignment.Info.Submit" /></span>
+              <FaPen className="mr-2" />
+              <span className="truncate"><FormattedMessage id="Consignment.Info.Submit" /></span>
             </>
           </Button>
         </div>

@@ -108,7 +108,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
         <div className="overflow-y-scroll border-[#545e7b] mt-4 no-scrollbar flex flex-col items-center bg-white dark:bg-[#14141a] p-2 rounded-md dark:text-white gap-2">
           <Button className="flex items-center rounded-xl p-2 w-full" onClick={() => setOption(0)}>
             {option === 0 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
-            <span className="pl-1"><FormattedMessage id="Consignment.Add.Option1" /></span>
+            <span className="pl-1 whitespace-pre-line"><FormattedMessage id="Consignment.Add.Option1" /></span>
           </Button>
           {option === 0 &&
             <div className="flex flex-col justify-center w-full">
@@ -127,7 +127,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
           <div className="w-full">
             <Button className="flex items-center rounded-xl w-full p-2" onClick={() => setOption(1)}>
               {option === 1 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
-              <span className="pl-1"><FormattedMessage id="Consignment.Add.Option2" /></span>
+              <span className="pl-1 whitespace-pre-line"><FormattedMessage id="Consignment.Add.Option2" /></span>
             </Button>
             {option === 1 &&
               <div className="flex justify-center w-full">
@@ -152,10 +152,10 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
             }
           </div>
         </div>
-        <Button className="w-full rounded-lg mt-5 mb-1 py-3 border-green-700 hover:bg-green-700 text-green-500
+        <Button className="w-full rounded-lg mt-5 mb-1 py-2 sm:py-3 border-green-700 hover:bg-green-700 text-green-500
         bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md"
           onClick={handleConfirm}>
-          <span className="hidden xs:block"><FormattedMessage id="Consignment.Add.Button" /></span>
+          <span ><FormattedMessage id="Consignment.Add.Button" /></span>
         </Button>
       </motion.div>
     </motion.div>
