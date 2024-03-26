@@ -40,9 +40,6 @@ export function CarouselSlider(ObjUrls) {
             </div>
         );
     };
-    useEffect(() => {
-        console.log(ObjUrls)
-    }, [ObjUrls]);
     return <div className="h-full w-full">
         {openModal && <ImageView url={urlState} onClose={() => setIsOpenModal(false)} />}
         <Carousel
