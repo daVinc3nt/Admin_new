@@ -36,6 +36,7 @@ import AddFile from "../Add/addNoti2";
 import BasicPopover from "@/components/Common/Popover";
 import Filter from "@/components/Common/Filters";
 import { CancelingOrderCondition, OrdersOperation } from "@/TDLib/tdlogistics";
+import { TabSlider } from "@/components/Common/TabSlider";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -126,7 +127,7 @@ export function DataTable<TData, TValue>({
       const condition: CancelingOrderCondition = {
         order_id: (row.original as any).order_id,
       };
-      const error = await order.update({status_code: 2},condition);
+      const error = await order.update({status_code: 16},condition);
       if (error) {
         alert(error.message);
       }
@@ -136,9 +137,9 @@ export function DataTable<TData, TValue>({
     return window.confirm("Are you sure you want to delete?");
   };
   const confirmChange_status = () => {
-    return window.confirm("Are you sure you want to delete?");
+    return window.confirm("Are you sure you want to change the status?");
   };
-
+  
   const change_status_to_inprogress = () => {
     // Gọi hàm confirmChange_status và lưu kết quả vào biến result
     const result = confirmChange_status();
@@ -169,7 +170,7 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div>
+    <div className="bg-inherit">
       <div className="mt-10 uppercase sticky flex items-center justify-center font-extrabold gap-32 text-3xl">
         <div>
           <div className="text-lg">
@@ -190,119 +191,140 @@ export function DataTable<TData, TValue>({
           <div className="text-red-600 text-center">{cancel}</div>
         </div>
       </div>
-      <div className="flex items-center py-4 px-4 overflow-x-scroll">
-        <div className="w-full flex">
-          <div className="relative w-full sm:w-1/2 lg:w-1/3">
-            <input
-              id="consSearch"
-              type="text"
-              value={
-                (table.getColumn("order_id")?.getFilterValue() as string) ?? ""
-              }
-              onChange={(event) =>
-                table.getColumn("order_id")?.setFilterValue(event.target.value)
-              }
-              className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
-                    text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm text-white`}
-              placeholder=""
-            />
-            <label
-              htmlFor="consSearch"
-              className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all 
-                    peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
-                    peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
-            >
-              {<FormattedMessage id="order.searchbyid" />}
-            </label>
+      <div className=" flex flex-col gap-2 bg-inherit">
+        {/* dàn nút trên */}
+        <div className="flex items-center py-4 px-4">
+          <div className="w-full flex">
+            <div className="relative w-full sm:w-1/2 lg:w-1/3">
+              <input
+                id="consSearch"
+                type="text"
+                value={
+                  (table.getColumn("order_id")?.getFilterValue() as string) ?? ""
+                }
+                onChange={(event) =>
+                  table.getColumn("order_id")?.setFilterValue(event.target.value)
+                }
+                className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
+                      text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm text-white`}
+                placeholder=""
+              />
+              <label
+                htmlFor="consSearch"
+                className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all 
+                      peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
+                      peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
+              >
+                {<FormattedMessage id="order.searchbyid" />}
+              </label>
+            </div>
+            <Dropdown className="z-30">
+              <DropdownTrigger>
+                <Button
+                  className="text-xs md:text-base border border-gray-600 rounded ml-2 w-24 text-center"
+                  aria-label="Show items per page"
+                >
+                  Show {table.getState().pagination.pageSize}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                className="bg-[#1a1b23] border border-gray-300 rounded w-24"
+                aria-labelledby="dropdownMenuButton"
+              >
+                {[10, 20, 30, 40, 50].map((pageSize, index) => (
+                  <DropdownItem
+                    key={pageSize}
+                    textValue={`Show ${pageSize} items per page`}
+                  >
+                    <Button
+                      onClick={() => table.setPageSize(pageSize)}
+                      variant="bordered"
+                      aria-label={`Show ${pageSize}`}
+                      className="text-center  text-white w-full"
+                    >
+                      Show {pageSize}
+                    </Button>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <BasicPopover icon={<FilterAltIcon />}>
+              {/* <Filter
+                type="range"
+                column={table.getColumn("service_type")}
+                table={table}
+                title="Mass"
+              />
+              <Filter
+                type="search"
+                column={table.getColumn("pickupLocation")}
+                table={table}
+                title="Origin"
+              /> */}
+              <Filter
+                type="selection"
+                options={{ Done: 3, OnGoing: 1, PickingUp: 2, Cancelled: 4 }}
+                column={table.getColumn("status_code")}
+                table={table}
+                title="Status"
+              />
+            </BasicPopover>
           </div>
+
           <Dropdown className="z-30">
             <DropdownTrigger>
               <Button
-                className="text-xs md:text-base border border-gray-600 rounded ml-2 w-24 text-center"
+                className="text-xs md:text-base border border-gray-600 rounded ml-2 w-36 h-10 text-center"
                 aria-label="Show items per page"
               >
-                Show {table.getState().pagination.pageSize}
+                Thêm đơn hàng
               </Button>
             </DropdownTrigger>
             <DropdownMenu
-              className="bg-[#1a1b23] border border-gray-300 rounded w-24"
+              className="dark:bg-[#1a1b23] bg-white border border-gray-300 rounded w-26"
               aria-labelledby="dropdownMenuButton"
             >
-              {[10, 20, 30, 40, 50].map((pageSize, index) => (
-                <DropdownItem
-                  key={pageSize}
-                  textValue={`Show ${pageSize} items per page`}
+              <DropdownItem>
+                <Button
+                  className="text-center  dark:text-white w-36"
+                  onClick={openModal}
                 >
-                  <Button
-                    onClick={() => table.setPageSize(pageSize)}
-                    variant="bordered"
-                    aria-label={`Show ${pageSize}`}
-                    className="text-center  text-white w-full"
-                  >
-                    Show {pageSize}
-                  </Button>
-                </DropdownItem>
-              ))}
+                  Thêm đơn lẻ
+                </Button>
+              </DropdownItem>
+              <DropdownItem>
+                <Button
+                  className="text-center  dark:text-white w-36"
+                  onClick={openModal2}
+                >
+                  Thêm hàng loạt
+                </Button>
+              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <BasicPopover icon={<FilterAltIcon />}>
-            <Filter
-              type="range"
-              column={table.getColumn("service_type")}
-              table={table}
-              title="Mass"
-            />
-            <Filter
-              type="search"
-              column={table.getColumn("pickupLocation")}
-              table={table}
-              title="Origin"
-            />
-            <Filter
-              type="selection"
-              options={{ Done: 3, OnGoing: 1, PickingUp: 2, Cancelled: 4 }}
-              column={table.getColumn("status_code")}
-              table={table}
-              title="Status"
-            />
-          </BasicPopover>
         </div>
-        <Dropdown className="z-30">
-          <DropdownTrigger>
-            <Button
-              className="text-xs md:text-base border border-gray-600 rounded ml-2 w-36 h-10 text-center"
-              aria-label="Show items per page"
-            >
-              Thêm đơn hàng
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            className="dark:bg-[#1a1b23] bg-white border border-gray-300 rounded w-26"
-            aria-labelledby="dropdownMenuButton"
-          >
-            <DropdownItem>
-              <Button
-                className="text-center  dark:text-white w-36"
-                onClick={openModal}
-              >
-                Thêm đơn lẻ
-              </Button>
-            </DropdownItem>
-            <DropdownItem>
-              <Button
-                className="text-center  dark:text-white w-36"
-                onClick={openModal2}
-              >
-                Thêm hàng loạt
-              </Button>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </div>
-      {modalIsOpen && <AddNoti onClose={closeModal}    socket={socket}/>}
-      {modalIsOpen2 && <AddFile onClose={closeModal2} />}
-      <div className="rounded-md border border-gray-700">
-        <table>
+        {modalIsOpen && <AddNoti onClose={closeModal}    socket={socket}/>}
+        {modalIsOpen2 && <AddFile onClose={closeModal2} />}
+        <TabSlider 
+        allTabs={[
+          {
+            id: "1",
+            name: "Tất cả",
+            status: ""
+          },
+          {
+            id: "2",
+            name: "Đang xử lý",
+            status: 2
+          },
+        ]}
+        onSelectOption={(value) => {
+          table.getColumn("status_code").setFilterValue([value, value]);
+        }}
+
+        />
+         {/* bảng ở đây */}
+        <table className="rounded-md border border-gray-700">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-gray-700">
@@ -356,84 +378,85 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </table>
-      </div>
-      <div className="flex items-center justify-center space-x-2 py-4">
-        <Button
-          className={`text-xs md:text-sm justify-self-start rounded-lg border
-           border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
-           hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-          ${
-            table.getFilteredSelectedRowModel().rows.length > 0
-              ? "border-green-500"
-              : "border-gray-600"
-          }`}
-          onClick={change_status_to_inprogress}
-        >
-          <FormattedMessage id="processing" />{" "}
-          {table.getFilteredSelectedRowModel().rows.length}/
-          {table.getFilteredRowModel().rows.length}
-        </Button>
-        <Button
-          className={`text-xs md:text-sm justify-self-start rounded-lg border
-           border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
-           hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-          ${
-            table.getFilteredSelectedRowModel().rows.length > 0
-              ? "border-red-500"
-              : "border-gray-600"
-          }`}
-          onClick={deleteRows}
-        >
-          <FormattedMessage id="Delete" />{" "}
-          {table.getFilteredSelectedRowModel().rows.length}/
-          {table.getFilteredRowModel().rows.length}
-        </Button>
-        <Button
-          variant="light"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-          drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-          hover:shadow-md md:text-base focus:outline-none font-normal
-          text-black dark:text-white rounded-md text-sm text-center me-2"
-        >
-          <span>{<FormattedMessage id="prev" />}</span>
-        </Button>
-        <span className="flex items-center gap-1">
-          <div className="text-xs md:text-base">
-            {<FormattedMessage id="page" />}
-          </div>
-          <strong className="text-xs md:text-base whitespace-nowrap">
-            {table.getState().pagination.pageIndex + 1}{" "}
-            <FormattedMessage id="of" /> {table.getPageCount()}
-          </strong>
-        </span>
-        <TbMinusVertical className="text-xl text-gray-700" />
-        <span className="flex items-center gap-1 text-xs md:text-base whitespace-nowrap">
-          {<FormattedMessage id="gotopage" />}
-          <input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="border border-gray-500 px-1 py-0.5 rounded w-8 sm:w-16 bg-transparent"
-          />
-        </span>
-        <Button
-          variant="light"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-          drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-          hover:shadow-md md:text-base focus:outline-none font-normal
-          text-black dark:text-white rounded-md text-sm text-center me-2"
-        >
-          <span>{<FormattedMessage id="next" />}</span>
-        </Button>
+
+        {/* dàn nút dưới */}
+        <div className="flex bg-inherit items-center sticky bottom-0 justify-center space-x-2 py-4">
+          <Button
+            className={`text-xs md:text-sm justify-self-start rounded-lg border
+            border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
+            hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
+            ${
+              table.getFilteredSelectedRowModel().rows.length > 0
+                ? "border-green-500"
+                : "border-gray-600"
+            }`}
+            onClick={change_status_to_inprogress}
+          >
+            <FormattedMessage id="processing" />{" "}
+          </Button>
+          <Button
+            className={`text-xs md:text-sm justify-self-start rounded-lg border
+            border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
+            hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
+            ${
+              table.getFilteredSelectedRowModel().rows.length > 0
+                ? "border-red-500"
+                : "border-gray-600"
+            }`}
+            onClick={deleteRows}
+          >
+            <FormattedMessage id="Delete" />{" "}
+            {table.getFilteredSelectedRowModel().rows.length}/
+            {table.getFilteredRowModel().rows.length}
+          </Button>
+          <Button
+            variant="light"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
+            drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
+            hover:shadow-md md:text-base focus:outline-none font-normal
+            text-black dark:text-white rounded-md text-sm text-center me-2"
+          >
+            <span>{<FormattedMessage id="prev" />}</span>
+          </Button>
+          <span className="flex items-center gap-1">
+            <div className="text-xs md:text-base">
+              {<FormattedMessage id="page" />}
+            </div>
+            <strong className="text-xs md:text-base whitespace-nowrap">
+              {table.getState().pagination.pageIndex + 1}{" "}
+              <FormattedMessage id="of" /> {table.getPageCount()}
+            </strong>
+          </span>
+          <TbMinusVertical className="text-xl text-gray-700" />
+          <span className="flex items-center gap-1 text-xs md:text-base whitespace-nowrap">
+            {<FormattedMessage id="gotopage" />}
+            <input
+              type="number"
+              defaultValue={table.getState().pagination.pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                table.setPageIndex(page);
+              }}
+              className="border border-gray-500 px-1 py-0.5 rounded w-8 sm:w-16 bg-transparent"
+            />
+          </span>
+          <Button
+            variant="light"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
+            drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
+            hover:shadow-md md:text-base focus:outline-none font-normal
+            text-black dark:text-white rounded-md text-sm text-center me-2"
+          >
+            <span>{<FormattedMessage id="next" />}</span>
+          </Button>
+        </div>
+        
       </div>
     </div>
   );
