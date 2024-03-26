@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
       const condition: CancelingOrderCondition = {
         order_id: (row.original as any).order_id,
       };
-      const error = await order.update({status_code: 16},condition);
+      const error = await order.update({status_code: 15},condition);
       if (error) {
         alert(error.message);
       }

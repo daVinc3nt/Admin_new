@@ -202,45 +202,63 @@ export const columns: ColumnDef<Order>[] = [
       switch (consState) {
         case 1:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.DeliveredSuccess' });
+          statusColor="text-[#008000]"
           break;
         case 2:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.Processing' });
+          statusColor="text-[#FF8C00]"
           break;
         case 3:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.Taking' });
+          statusColor="text-[#FFFF00]"
           break;
         case 4:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.TakenSuccess' });
+          statusColor="text-[#008000]"
           break;
         case 5:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.TakenFail' });
+          statusColor="text-[#FF0000]"
           break;
         case 6:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.Delivering' });
+          statusColor="text-[#0000FF]"
           break;
         case 7:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.DeliveredCancel' });
+          statusColor="text-[#808080]"
           break;
         case 8:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.DeliveredFail' });
+          statusColor="text-[#FF0000]"
           break;
         case 9:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.Refunding' });
+          statusColor="text-[#800080]"
           break;
         case 10:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.RefundedSuccess' });
+          statusColor="text-[#008000]"
           break;
         case 11:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.RefundedFail' });
+          statusColor="text-[#FF0000]"
           break;
         case 12:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.EnterAgency' });
+          statusColor="text-[#A52A2A]"
           break;
         case 13:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.LeaveAgency' });
+          statusColor="text-[#0000FF]"
           break;
         case 14:
           statusLabel = intl.formatMessage({ id: 'Consignment.Status.ThirdPartyDelivery' });
+          statusColor="text-[#FF4500]"
+          break;
+        case 15:
+          statusLabel = intl.formatMessage({ id: 'Consignment.Status.DoneProcessing' });
+          statusColor="text-[#008000]"
           break;
         default:
           statusLabel = statusLabel = "Unknown"
