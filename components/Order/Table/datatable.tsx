@@ -171,21 +171,21 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="bg-inherit">
-      <div className="mt-10 uppercase sticky flex items-center justify-center font-extrabold gap-32 text-3xl">
-        <div>
+      <div className="mt-10 uppercase sticky flex items-center justify-center font-extrabold gap-10 sm:gap-32 text-2xl sm:text-3xl">
+        <div className="items-center flex sm:flex-col flex-row">
           <div className="text-lg">
             {<FormattedMessage id="order.status.done" />}
           </div>
           <div className="text-green-600 text-center">{done}</div>
         </div>
-        <div>
+        <div className="items-center flex sm:flex-col flex-row">
           <div className="text-lg">
             {<FormattedMessage id="order.status.ongoing" />}
           </div>
           <div className="text-yellow-600 text-center">{pending}</div>
         </div>
-        <div>
-          <div className="text-lg">
+        <div className="items-center flex sm:flex-col flex-row">
+          <div className="text-lg text-center">
             {<FormattedMessage id="order.status.cancel" />}
           </div>
           <div className="text-red-600 text-center">{cancel}</div>
@@ -193,7 +193,7 @@ export function DataTable<TData, TValue>({
       </div>
       <div className=" flex flex-col gap-2 bg-inherit">
         {/* dàn nút trên */}
-        <div className="flex items-center py-4 px-4">
+        <div className="flex items-centerf flex-col sm:flex-row py-4 gap-3 px-4">
           <div className="w-full flex">
             <div className="relative w-full sm:w-1/2 lg:w-1/3">
               <input
@@ -211,7 +211,7 @@ export function DataTable<TData, TValue>({
               />
               <label
                 htmlFor="consSearch"
-                className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all 
+                className={`absolute left-3 -top-0  text-xxs leading-5 text-gray-500 transition-all 
                       peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
                       peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
               >
@@ -271,7 +271,7 @@ export function DataTable<TData, TValue>({
             </BasicPopover>
           </div>
 
-          <Dropdown className="z-30">
+          <Dropdown className="z-30 ">
             <DropdownTrigger>
               <Button
                 className="text-xs md:text-base border border-gray-600 rounded ml-2 w-36 h-10 text-center"
@@ -379,81 +379,85 @@ export function DataTable<TData, TValue>({
         </Table >
 
         {/* dàn nút dưới */}
-        <div className="flex bg-inherit items-center sticky bottom-0 justify-center space-x-2 py-4">
-          <Button
-            className={`text-xs md:text-sm justify-self-start rounded-lg border
-            border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
-            hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-            ${
-              table.getFilteredSelectedRowModel().rows.length > 0
-                ? "border-green-500"
-                : "border-gray-600"
-            }`}
-            onClick={change_status_to_inprogress}
-          >
-            <FormattedMessage id="processing" />{" "}
-          </Button>
-          <Button
-            className={`text-xs md:text-sm justify-self-start rounded-lg border
-            border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
-            hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-            ${
-              table.getFilteredSelectedRowModel().rows.length > 0
-                ? "border-red-500"
-                : "border-gray-600"
-            }`}
-            onClick={deleteRows}
-          >
-            <FormattedMessage id="Delete" />{" "}
-            {table.getFilteredSelectedRowModel().rows.length}/
-            {table.getFilteredRowModel().rows.length}
-          </Button>
-          <Button
-            variant="light"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-            drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-            hover:shadow-md md:text-base focus:outline-none font-normal
-            text-black dark:text-white rounded-md text-sm text-center me-2"
-          >
-            <span>{<FormattedMessage id="prev" />}</span>
-          </Button>
-          <span className="flex items-center gap-1">
-            <div className="text-xs md:text-base">
-              {<FormattedMessage id="page" />}
-            </div>
-            <strong className="text-xs md:text-base whitespace-nowrap">
-              {table.getState().pagination.pageIndex + 1}{" "}
-              <FormattedMessage id="of" /> {table.getPageCount()}
-            </strong>
-          </span>
-          <TbMinusVertical className="text-xl text-gray-700" />
-          <span className="flex items-center gap-1 text-xs md:text-base whitespace-nowrap">
-            {<FormattedMessage id="gotopage" />}
-            <input
-              type="number"
-              defaultValue={table.getState().pagination.pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                table.setPageIndex(page);
-              }}
-              className="border border-gray-500 px-1 py-0.5 rounded w-8 sm:w-16 bg-transparent"
-            />
-          </span>
-          <Button
-            variant="light"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-            drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-            hover:shadow-md md:text-base focus:outline-none font-normal
-            text-black dark:text-white rounded-md text-sm text-center me-2"
-          >
-            <span>{<FormattedMessage id="next" />}</span>
-          </Button>
+        <div className="flex bg-inherit flex-col-reverse sm:flex-row items-center sticky gap-2 bottom-0 justify-center space-x-2 py-4">
+          <div className="flex gap-2">
+            <Button
+              className={`text-xs md:text-sm justify-self-start rounded-lg border
+              border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
+              hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
+              ${
+                table.getFilteredSelectedRowModel().rows.length > 0
+                  ? "border-green-500"
+                  : "border-gray-600"
+              }`}
+              onClick={change_status_to_inprogress}
+            >
+              <FormattedMessage id="processing" />{" "}
+            </Button>
+            <Button
+              className={`text-xs md:text-sm justify-self-start rounded-lg border
+              border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
+              hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
+              ${
+                table.getFilteredSelectedRowModel().rows.length > 0
+                  ? "border-red-500"
+                  : "border-gray-600"
+              }`}
+              onClick={deleteRows}
+            >
+              <FormattedMessage id="Delete" />{" "}
+              {table.getFilteredSelectedRowModel().rows.length}/
+              {table.getFilteredRowModel().rows.length}
+            </Button>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="light"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
+              drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
+              hover:shadow-md md:text-base focus:outline-none font-normal
+              text-black dark:text-white rounded-md text-sm text-center me-2"
+            >
+              <span>{<FormattedMessage id="prev" />}</span>
+            </Button>
+            <span className="flex items-center gap-1">
+              <div className="text-xs md:text-base">
+                {<FormattedMessage id="page" />}
+              </div>
+              <strong className="text-xs md:text-base whitespace-nowrap">
+                {table.getState().pagination.pageIndex + 1}{" "}
+                <FormattedMessage id="of" /> {table.getPageCount()}
+              </strong>
+            </span>
+            <TbMinusVertical className="text-xl text-gray-700" />
+            <span className="flex items-center gap-1 text-xs md:text-base whitespace-nowrap">
+              {<FormattedMessage id="gotopage" />}
+              <input
+                type="number"
+                defaultValue={table.getState().pagination.pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  table.setPageIndex(page);
+                }}
+                className="border border-gray-500 px-1 py-0.5 rounded w-8 sm:w-16 bg-transparent"
+              />
+            </span>
+            <Button
+              variant="light"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
+              drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
+              hover:shadow-md md:text-base focus:outline-none font-normal
+              text-black dark:text-white rounded-md text-sm text-center me-2"
+            >
+              <span>{<FormattedMessage id="next" />}</span>
+            </Button>
+          </div>
         </div>
         
       </div>

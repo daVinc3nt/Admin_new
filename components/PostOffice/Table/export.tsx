@@ -54,14 +54,15 @@ export default async function DemoPage(reloadData) {
   console.log("Data", data);
   const role = await getRole();
   if (
-    role === "ADMIN" ||
+    (role === "ADMIN" ||
     role === "MANAGER" ||
-    role === "HUMAN_RESOURCE_MANAGER"
+    role === "HUMAN_RESOURCE_MANAGER") &&
+    data
   ) {
     return <DataTable columns={columns} data={data} reloadData={reloadData} />;
   } else {
     return (
-      <div className="flex place-content-center">
+      <div className="flex place-content-center h-screen justify-center place-items-center">
         "You are not authorized to access this page. Please contact admin."
       </div>
     );

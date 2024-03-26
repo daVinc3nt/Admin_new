@@ -135,7 +135,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
         </div>
         <div className="h-screen_3/5 border border-[#545e7b] mt-4 flex flex-col bg-white
          dark:bg-[#14141a] p-2 rounded-md text-black dark:text-white place-content-center">
-          <div className="flex flex-col sm:grid sm:grid-cols-2 overflow-y-scroll">
+          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-5 overflow-y-scroll">
             {/* order id và hình ảnh */}
             <div className="flex flex-col">
               <div className="flex flex-col gap-5 pl-4">
@@ -153,6 +153,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                   <div className="relative">
                     {imageUrls.length != 0 && option == 0 && <CarouselSlider urls={imageUrls} />}
                     {imageUrls2.length != 0 && option == 1 && <CarouselSlider urls={imageUrls2} />}
+                    {imageUrls2.length == 0 && imageUrls.length == 0 && <div className="w-full h-40 md:h-52 lg:h-96 rounded-2xl mt-2 outline outline-[1px] text-red-600 text-base flex justify-center place-items-center outline-gray-300 bg-white text-center">Error! Reload the page and try again.</div>}
                   </div>
                 </div>
 
@@ -181,7 +182,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
 
             <div className="flex flex-col">
               {/* thông tin order, được chỉnh */}
-              <div className="">
+              <div className="pl-4">
                 <div className="flex flex-col gap-4">
                   <div id="mass" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
