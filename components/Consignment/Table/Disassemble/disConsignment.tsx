@@ -133,9 +133,9 @@ const DisassembleConsignment: React.FC<DisassembleConsignmentProps> = ({ onClose
         {page === 2 && <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar flex flex-col bg-white dark:bg-[#14141a] p-2 rounded-md dark:text-white">
           <DiffCheck consignment1={consignment1} consignment2={consignment2} />
         </div>}
-        <Button onClick={handleSubmitClick} className="w-full rounded-lg mt-5 mb-1 py-3 border-green-700 hover:bg-green-700 text-green-500
+        <Button onClick={handleSubmitClick} className="w-full rounded-lg mt-5 mb-1 py-2 sm:py-3 border-green-700 hover:bg-green-700 text-green-500
         bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md">
-          <span className="hidden xs:block"><FormattedMessage id="Consignment.Decompose.Submit" /></span>
+          <span ><FormattedMessage id="Consignment.Decompose.Submit" /></span>
         </Button>
       </motion.div>
     </motion.div>

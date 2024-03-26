@@ -24,7 +24,9 @@ const Tasklist = () => {
             <div className="relative text-3xl font-bold border-b-[1px] border-gray-600">
               <div className=" font-bold text-xl sm:text-3xl pt-3 pb-2 text-center">To-do list</div>
             </div>
-            {demoPage}
+            <div className="grid grid-cols-1 gap-5">
+              {demoPage}
+            </div>
           </div>
         </section>
       </div>

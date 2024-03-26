@@ -177,7 +177,7 @@ const DetailNoti: React.FC<DetailNotiProps> = ({ onClose, dataInitial, reloadDat
                     className="w-full rounded-lg mt-5 mb-1 py-3 border-green-700 hover:bg-green-700 text-green-500 bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md"
                     onClick={handleConfirm}
                 >
-                    <span className="hidden xs:block">
+                    <span >
                         <FormattedMessage id="Schedule.Detail.Button" />
                     </span>
                 </Button>

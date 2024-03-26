@@ -29,7 +29,9 @@ const ConsignmentMenu = () => {
                 - <FormattedMessage id="Consignment.Title" /> -
               </div>
             </div>
-            {demoPage}
+            <div className="grid grid-cols-1 gap-5">
+              {demoPage}
+            </div>
           </div>
         </section>
       </div>

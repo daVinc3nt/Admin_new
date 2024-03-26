@@ -167,7 +167,7 @@ const AddNoti: React.FC<AddNotiProps> = ({ onClose, reloadData }) => {
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm:ss"
                             className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-left z-50"
-                            popperPlacement="auto"
+                            popperPlacement="top-0 left-0"
                         />
                     </div>
                     <div className="flex gap-2 flex-col">

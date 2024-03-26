@@ -6,8 +6,10 @@ import { FaTrash, FaPen } from "react-icons/fa";
 import { User, Pencil } from "lucide-react";
 import { FormattedMessage } from "react-intl";
 import { Order } from "./column";
-import { OrdersOperation, UpdatingOrderCondition, UpdatingOrderInfo } from "@/TDLib/tdlogistics";
+import { OrdersOperation, UpdatingOrderCondition, UpdatingOrderImageCondition, UpdatingOrderInfo } from "@/TDLib/tdlogistics";
 import HorizontalLinearAlternativeLabelStepper from "@/components/Common/Timeline";
+import { CarouselSlider } from "@/components/Common/Slider";
+import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 interface Props {
   onClose: () => void;
   dataInitial: Order
@@ -19,8 +21,13 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [data, setData] = useState(dataInitial);
   const [updateData, setupdateData] = useState<any>({});
-  const handleUpdateData =(e, key:string) => {
-      setupdateData({...updateData, [key]: parseInt(e.target.value)});
+  const ordersOperation = new OrdersOperation();
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageUrls2, setImageUrls2] = useState<string[]>([]);
+  const [option, setOption] = useState(0)
+
+  const handleUpdateData = (e, key: string) => {
+    setupdateData({ ...updateData, [key]: parseInt(e.target.value) });
   }
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -56,14 +63,42 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
     setIsEditing(true);
   };
   const handleSaveClick = () => {
-    const x ="staff_id"
-    console.log("click",updateData)
-    console.log(dataInitial)
-    const condition: UpdatingOrderCondition = {order_id: dataInitial.order_id }
-    const order =new OrdersOperation()
-    order.update(updateData, condition)
+    const x = "staff_id"
+    console.log("click", updateData)
+    const condition: UpdatingOrderCondition = { order_id: dataInitial.order_id }
+    ordersOperation.update(updateData, condition)
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const condition: UpdatingOrderImageCondition = {
+          order_id: dataInitial.order_id,
+          type: "send"
+        };
+        const urls = await ordersOperation.getImage(condition);
+        setImageUrls(urls);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+    const fetchImages2 = async () => {
+      try {
+        const condition: UpdatingOrderImageCondition = {
+          order_id: dataInitial.order_id,
+          type: "receive"
+        };
+        const urls2 = await ordersOperation.getImage(condition);
+        setImageUrls2(urls2);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    fetchImages();
+    fetchImages2();
+  }, []);
 
   return (
     <motion.div
@@ -103,13 +138,21 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
           <div className="grid grid-cols-2 overflow-y-scroll">
             {/* order id và hình ảnh */}
             <div>
-              <div className="flex flex-col gap-5">
-                <div id="image">
-                  <div className="font-bold text-base">
-                    <FormattedMessage id="order.image" />
+              <div className="flex flex-col gap-5 pl-4">
+                <div className="pr-10">
+                  <div className="flex flex-col gap-1 place-items-center w-full justify-center ">
+                    <Button className="flex items-center rounded-xl w-full bg-white p-2 border-2 border-gray-300" onClick={() => setOption(0)}>
+                      {option === 0 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
+                      <span className="pl-1 font-bold text-base">Ảnh nhận hàng</span>
+                    </Button>
+                    <Button className="flex items-center rounded-xl w-full bg-white p-2 border-2 border-gray-300" onClick={() => setOption(1)}>
+                      {option === 1 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
+                      <span className="pl-1 font-bold text-base">Ảnh giao hàng</span>
+                    </Button>
                   </div>
-                  <div>
-                    <User className="w-20 h-20  md:w-80 md:h-80" />
+                  <div className="relative">
+                    {imageUrls.length != 0 && option == 0 && <CarouselSlider urls={imageUrls} />}
+                    {imageUrls2.length != 0 && option == 1 && <CarouselSlider urls={imageUrls2} />}
                   </div>
                 </div>
 
@@ -117,25 +160,25 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                   <div className="font-bold text-base">
                     <FormattedMessage id="order.Id" />
                   </div>
-                    <div>{data.order_id}</div>
+                  <div>{data.order_id}</div>
                 </div>
 
                 <div id="service_type" className="flex gap-5">
                   <div className="font-bold text-base">
                     Loại hình gửi
                   </div>
-                    <div>{data.service_type}</div>
+                  <div>{data.service_type}</div>
                 </div>
 
                 <div id="order_time" className="flex gap-5">
                   <div className="font-bold text-base">
                     Thời gian gửi
                   </div>
-                    <div>{data.order_time}</div>
+                  <div>{data.order_time}</div>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex flex-col">
               {/* thông tin order, được chỉnh */}
               <div className="">
@@ -146,14 +189,13 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
                         type="number"
                         value={data.mass}
-                        onChange={(e) =>
-                          {
-                            setData({ ...data, mass: parseFloat(e.target.value)});
-                            handleUpdateData(e, "mass");
-                          }
+                        onChange={(e) => {
+                          setData({ ...data, mass: parseFloat(e.target.value) });
+                          handleUpdateData(e, "mass");
+                        }
                         }
                       />
                     ) : (
@@ -167,14 +209,13 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
                         type="number"
                         value={data.length}
-                        onChange={(e) =>
-                          {
-                            setData({ ...data, height: parseFloat(e.target.value)  });
-                            handleUpdateData(e, "length");
-                          }
+                        onChange={(e) => {
+                          setData({ ...data, height: parseFloat(e.target.value) });
+                          handleUpdateData(e, "length");
+                        }
                         }
                       />
                     ) : (
@@ -188,14 +229,13 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
                         type="number"
                         value={data.width}
-                        onChange={(e) =>
-                          {
-                            setData({ ...data, width: parseFloat(e.target.value)  });
-                            handleUpdateData(e, "width");
-                          }
+                        onChange={(e) => {
+                          setData({ ...data, width: parseFloat(e.target.value) });
+                          handleUpdateData(e, "width");
+                        }
                         }
                       />
                     ) : (
@@ -209,14 +249,13 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
                         type="number"
                         value={data.height}
-                        onChange={(e) =>
-                          {
-                            setData({ ...data, height: parseFloat(e.target.value)  });
-                            handleUpdateData(e, "height");
-                          }
+                        onChange={(e) => {
+                          setData({ ...data, height: parseFloat(e.target.value) });
+                          handleUpdateData(e, "height");
+                        }
                         }
                       />
                     ) : (
@@ -226,18 +265,17 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
 
                   <div id="fee" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                    <FormattedMessage id="order.fee" />
+                      <FormattedMessage id="order.fee" />
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
                         type="number"
                         value={data.fee}
-                        onChange={(e) =>
-                          {
-                            setData({ ...data, fee: parseFloat(e.target.value)  });
-                            handleUpdateData(e, "fee");
-                          }
+                        onChange={(e) => {
+                          setData({ ...data, fee: parseFloat(e.target.value) });
+                          handleUpdateData(e, "fee");
+                        }
                         }
                       />
                     ) : (
@@ -251,14 +289,13 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </div>
                     {isEditing ? (
                       <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
+                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-white"
                         type="number"
                         value={data.COD}
-                        onChange={(e) =>
-                          {
-                            setData({ ...data, COD: parseFloat(e.target.value)  });
-                            handleUpdateData(e, "COD");
-                          }
+                        onChange={(e) => {
+                          setData({ ...data, COD: parseFloat(e.target.value) });
+                          handleUpdateData(e, "COD");
+                        }
                         }
                       />
                     ) : (
@@ -270,28 +307,28 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     <div className=" w-1/3 font-bold text-base">
                       Bưu cục
                     </div>
-                      <div>{data.agency_id}</div>
+                    <div>{data.agency_id}</div>
                   </div>
 
                   <div id="Container" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
                       Container
                     </div>
-                      <div>{data.container}</div>
+                    <div>{data.container}</div>
                   </div>
 
                   <div id="name_receiver" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
                       Tên người nhận
                     </div>
-                      <div>{data.name_receiver}</div>
+                    <div>{data.name_receiver}</div>
                   </div>
 
                   <div id="name_sender" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
                       Tên người gửi
                     </div>
-                      <div>{data.name_sender}</div>
+                    <div>{data.name_sender}</div>
                   </div>
 
                   <div id="source" className="flex ">
@@ -299,8 +336,8 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                       Địa chỉ gửi hàng
                     </div>
                     <div className="w-8/12">
-                        {data.detail_source}, {data.ward_source}, {data.district_source}, {data.province_source}
-                      </div>
+                      {data.detail_source}, {data.ward_source}, {data.district_source}, {data.province_source}
+                    </div>
                   </div>
 
                   <div id="destination" className="flex ">
@@ -308,18 +345,18 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                       Địa chỉ giao hàng
                     </div>
                     <div className="w-8/12">
-                    {data.detail_dest}, {data.ward_dest}, {data.district_dest}, {data.province_dest}
-                      </div>
+                      {data.detail_dest}, {data.ward_dest}, {data.district_dest}, {data.province_dest}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-            { data.journey.length !== 0 ? 
+          {data.journey.length !== 0 ?
             <div className="p-10">
-              <HorizontalLinearAlternativeLabelStepper stage={data.journey}/> 
+              <HorizontalLinearAlternativeLabelStepper stage={data.journey} />
             </div>
-            : <></> }
+            : <></>}
         </div>
 
         <div className="w-full flex">
