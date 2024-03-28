@@ -57,16 +57,26 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose }) => {
       file: selectedFile,
     };
     console.log(condition);
-    const checkfile = await Order.checkFileFormat(condition);
-    console.log(checkfile);
-    if (checkfile.error) {
-      alert(checkfile.message);
-      setSelectedFile(null);
-      return;
+    try {
+      const checkfile = await Order.checkFileFormat(condition);
+      console.log(checkfile);
+      if (checkfile.error.error) {
+        alert(checkfile.error.message);
+        setSelectedFile(null);
+        return;
+      }
+      if (checkfile.valid === false) {
+        alert(checkfile.message);
+        setSelectedFile(null);
+        return;
+      }
+      const response = await Order.createByFile(condition);
+      console.log(response);
+      alert(response.message);
+    } catch (e) {
+      console.log(e);
+      alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
     }
-    const response = await Order.createByFile(condition);
-    console.log(response);
-    alert(response.message);
   };
 
   return (

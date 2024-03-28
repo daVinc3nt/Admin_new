@@ -141,13 +141,22 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
     const checkExist: ShipmentID = {
       shipment_id: shipmentValue,
     };
-    const check = await shipment.check(checkExist);
-    console.log("check", check);
+    try {
+      const check = await shipment.check(checkExist);
+      console.log("check", check);
 
-    if (check.error == true) {
-      setError2(check.message);
-      alert(check.message);
-      return;
+      if (check.error == true) {
+        setError2(check.message);
+        alert(check.message);
+        return;
+      } else if (check.existed == true) {
+        setError2("Lô hàng đã tồn tại trong phương tiện");
+        alert("Lô hàng đã tồn tại trong phương tiện");
+        return;
+      }
+    } catch (e) {
+      console.log(e);
+      alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
     }
     const vehicle = new VehicleOperation();
     const Info: AddingShipmentsToVehicleInfo = {
@@ -157,21 +166,26 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
       vehicle_id: VehicleData.vehicle_id,
     };
     console.log(Info.shipment_ids);
-    const response = await vehicle.addShipments(Info, condition);
-    console.log(response);
-        if (response.info.acceptedNumber == 0) {
-      // setError2("Lô hàng đã tồn tại trong phương tiện");
-      alert("Lô hàng đã tồn tại trong phương tiện");
-      return;
-    }
-    if (response.error == true) {
-      setError2(response.message);
+    try {
+      const response = await vehicle.addShipments(Info, condition);
+      console.log(response);
+      if (response.info.acceptedNumber == 0) {
+        // setError2("Lô hàng đã tồn tại trong phương tiện");
+        alert("Lô hàng đã tồn tại trong phương tiện");
+        return;
+      }
+      if (response.error === true) {
+        setError2(response.message);
+        alert(response.message);
+        return;
+      }
       alert(response.message);
-      return;
+      setshipmentValue("");
+      fetchShipment();
+    } catch (e) {
+      console.log(e);
+      alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
     }
-    alert(response.message);
-    setshipmentValue("");
-    fetchShipment();
   };
   const handleDeleteShipment = async (shipment_id: string) => {
     const vehicle = new VehicleOperation();

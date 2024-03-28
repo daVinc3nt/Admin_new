@@ -10,7 +10,6 @@ import {
 } from "@/TDLib/tdlogistics";
 import { set } from "date-fns";
 
-const Userdata = "ADMIN";
 interface AddVehicleProps {
   onClose: () => void;
   reloadData: () => void;
@@ -89,7 +88,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
     }
   };
 
-  const handleInputChange = (key: string, value: string) => {
+  const handleInputChange = (key: string, value: any) => {
     setVehicledata((prevState) => ({
       ...prevState,
       [key]: value,
@@ -130,6 +129,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
         handleCheckMissing(key, true);
         check = false;
       }
+
       if (Vehicledata[key] === "") {
         handleCheckMissing(key, true);
         check = false;
@@ -148,22 +148,26 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
           staff_id: Vehicledata.staff_id,
           type: Vehicledata.type,
           license_plate: Vehicledata.license_plate,
-          max_load: Vehicledata.max_load,
+          max_load: parseInt(Vehicledata.max_load),
         };
-        const response = await vehicle.createByAdmin(submit);
-        if (response.error == true) {
-          setError(response.message);
-        } else {
-          alert("Thêm phương tiện thành công");
-          setVehicledata({
-            agency_id: "",
-            transport_partner_id: "",
-            staff_id: "",
-            type: "",
-            license_plate: "",
-            max_load: 0,
-          });
-          reloadData();
+        try {
+          const response = await vehicle.createByAdmin(submit);
+          if (response.error === true) {
+            alert(response.message);
+          } else {
+            alert("Thêm phương tiện thành công");
+            setVehicledata({
+              agency_id: "",
+              transport_partner_id: "",
+              staff_id: "",
+              type: "",
+              license_plate: "",
+              max_load: 0,
+            });
+            reloadData();
+          }
+        } catch (e) {
+          alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
         }
       } else {
         const submit: CreatingVehicleByAgencyInfo = {
@@ -171,21 +175,25 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
           staff_id: Vehicledata.staff_id,
           type: Vehicledata.type,
           license_plate: Vehicledata.license_plate,
-          max_load: Vehicledata.max_load,
+          max_load: parseInt(Vehicledata.max_load),
         };
-        const response = await vehicle.createByAgency(submit);
-        if (response.error) {
-          setError(response.message);
-        } else {
-          alert("Thêm phương tiện thành công");
-          setVehicledata({
-            transport_partner_id: "",
-            staff_id: "",
-            type: "",
-            license_plate: "",
-            max_load: 0,
-          });
-          reloadData();
+        try {
+          const response = await vehicle.createByAgency(submit);
+          if (response.error === true) {
+            setError(response.message);
+          } else {
+            alert("Thêm phương tiện thành công");
+            setVehicledata({
+              transport_partner_id: "",
+              staff_id: "",
+              type: "",
+              license_plate: "",
+              max_load: 0,
+            });
+            reloadData();
+          }
+        } catch (e) {
+          alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
         }
       }
     }
@@ -303,7 +311,11 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
                 <input
                   type="number"
                   className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.max_load ? "border-red-500" : ""}`}
+                ${
+                  checkmissing.max_load || Vehicledata.max_load === 0
+                    ? "border-red-500"
+                    : ""
+                }`}
                   placeholder="VD: Kg"
                   onChange={(e) =>
                     handleInputChange("max_load", e.target.value)
