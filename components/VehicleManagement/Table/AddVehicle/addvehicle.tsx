@@ -95,24 +95,14 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
     }));
   };
 
-  const [checkmissing, setCheckmissing] = useState(
-    role === "ADMIN"
-      ? {
-          agency_id: false,
-          transport_partner_id: false,
-          staff_id: false,
-          type: false,
-          license_plate: false,
-          max_load: false,
-        }
-      : {
-          transport_partner_id: false,
-          staff_id: false,
-          type: false,
-          license_plate: false,
-          max_load: false,
-        }
-  );
+  const [checkmissing, setCheckmissing] = useState(() => ({
+    transport_partner_id: false,
+    staff_id: false,
+    type: false,
+    license_plate: false,
+    max_load: false,
+    ...(role === "ADMIN" ? { agency_id: false } : {}),
+  }));
   const handleCheckMissing = (key: string, value: boolean) => {
     setCheckmissing((prevState) => ({
       ...prevState,
@@ -152,8 +142,9 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
         };
         try {
           const response = await vehicle.createByAdmin(submit);
-          if (response.error === true) {
-            alert(response.message);
+          console.log(response);
+          if (response.error.error === true) {
+            alert(response.error.message);
           } else {
             alert("Thêm phương tiện thành công");
             setVehicledata({
@@ -311,11 +302,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
                 <input
                   type="number"
                   className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${
-                  checkmissing.max_load || Vehicledata.max_load === 0
-                    ? "border-red-500"
-                    : ""
-                }`}
+                ${checkmissing.max_load ? "border-red-500" : ""}`}
                   placeholder="VD: Kg"
                   onChange={(e) =>
                     handleInputChange("max_load", e.target.value)

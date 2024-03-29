@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
   cancel,
   pending,
   socket,
-  reloadData
+  reloadData,
 }: DataTableProps<TData, TValue>) {
   const intl = useIntl();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
       const condition: CancelingOrderCondition = {
         order_id: (row.original as any).order_id,
       };
-      const error = await order.update({status_code: 15},condition);
+      const error = await order.update({ status_code: 15 }, condition);
       if (error) {
         alert(error.message);
       }
@@ -139,7 +139,7 @@ export function DataTable<TData, TValue>({
   const confirmChange_status = () => {
     return window.confirm("Are you sure you want to change the status?");
   };
-  
+
   const change_status_to_inprogress = () => {
     // Gọi hàm confirmChange_status và lưu kết quả vào biến result
     const result = confirmChange_status();
@@ -147,7 +147,7 @@ export function DataTable<TData, TValue>({
     if (result) {
       // Gọi hàm handleDeleteRowsSelected để xóa các hàng đã chọn
       handleChange_statusRowsSelected();
-      reloadData()
+      reloadData();
     }
     // Nếu result là false, tức là người dùng nhấn no
     else {
@@ -200,10 +200,13 @@ export function DataTable<TData, TValue>({
                 id="consSearch"
                 type="text"
                 value={
-                  (table.getColumn("order_id")?.getFilterValue() as string) ?? ""
+                  (table.getColumn("order_id")?.getFilterValue() as string) ??
+                  ""
                 }
                 onChange={(event) =>
-                  table.getColumn("order_id")?.setFilterValue(event.target.value)
+                  table
+                    .getColumn("order_id")
+                    ?.setFilterValue(event.target.value)
                 }
                 className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
                       text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm text-white`}
@@ -303,28 +306,29 @@ export function DataTable<TData, TValue>({
             </DropdownMenu>
           </Dropdown>
         </div>
-        {modalIsOpen && <AddNoti onClose={closeModal}    socket={socket}/>}
-        {modalIsOpen2 && <AddFile onClose={closeModal2} />}
-        <TabSlider 
-        allTabs={[
-          {
-            id: "1",
-            name: <FormattedMessage id="order.all" />,
-            status: ""
-          },
-          {
-            id: "2",
-            name: <FormattedMessage id="order.processing" />,
-            status: 2
-          },
-        ]}
-        onSelectOption={(value) => {
-          table.getColumn("status_code").setFilterValue([value, value]);
-        }}
-
+        {modalIsOpen && <AddNoti onClose={closeModal} socket={socket} />}
+        {modalIsOpen2 && (
+          <AddFile onClose={closeModal2} reloadData={reloadData} />
+        )}
+        <TabSlider
+          allTabs={[
+            {
+              id: "1",
+              name: <FormattedMessage id="order.all" />,
+              status: "",
+            },
+            {
+              id: "2",
+              name: <FormattedMessage id="order.processing" />,
+              status: 2,
+            },
+          ]}
+          onSelectOption={(value) => {
+            table.getColumn("status_code").setFilterValue([value, value]);
+          }}
         />
-         {/* bảng ở đây */}
-        <Table  className="rounded-md border border-gray-700">
+        {/* bảng ở đây */}
+        <Table className="rounded-md border border-gray-700">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-gray-700">
@@ -352,8 +356,9 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`border-gray-700 ${row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
-                    }`}
+                  className={`border-gray-700 ${
+                    row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
+                  }`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -376,7 +381,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-        </Table >
+        </Table>
 
         {/* dàn nút dưới */}
         <div className="flex bg-inherit flex-col-reverse sm:flex-row items-center sticky gap-2 bottom-0 justify-center space-x-2 py-4">
@@ -459,7 +464,6 @@ export function DataTable<TData, TValue>({
             </Button>
           </div>
         </div>
-        
       </div>
     </div>
   );

@@ -59,7 +59,29 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
       }, 300);
     }
   };
-  const [Shipment, setShipment] = useState([]);
+  const [ShipmentData, setShipmentData] = useState([]); // [{}
+  const [Shipment, setShipment] = useState([{}]);
+  useEffect(() => {
+    const fetchShipment = async () => {
+      const temp = new ShipmentsOperation();
+      try {
+        const response = await temp.get({});
+        if (response.error == true) {
+        } else {
+          console.log("Data Ma lo hang", response);
+          response.data.map((item: any) => {
+            ShipmentData.push(item.shipment_id);
+          });
+          console.log("Data Ma lo hang", ShipmentData);
+        }
+      } catch (e) {
+        alert(
+          "Đã xảy ra lỗi hệ thống khi lấy mã lô hàng, vui lòng thử lại sau!"
+        );
+      }
+    };
+    fetchShipment();
+  }, []);
   const fetchShipment = async () => {
     const vehicle = new VehicleOperation();
     const condition: GettingShipmentsContainedByVehicleCondition = {
@@ -218,7 +240,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
     >
       <motion.div
         ref={notificationRef}
-        className={`relative w-[98%] sm:w-9/12 dark:bg-[#14141a] bg-white rounded-xl p-4 overflow-y-auto
+        className={`relative w-[98%] sm:w-9/12 dark:bg-[#14141a] bg-white rounded-xl p-4 overflow-y-scroll
           ${isShaking ? "animate-shake" : ""}`}
         initial={{ scale: 0 }}
         animate={{ scale: isVisible ? 1 : 0 }}
@@ -333,77 +355,131 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
           <div className="flex place-content-center text-xl font-bold ">
             Chi tiết phương tiện
           </div>
-          <div className="grid grid-cols  gap-3 my-5 mx-5">
-            <div className=" gap-5 place-content-center mt-2">
-              <div className="font-bold text-base">
-                Danh sách lô hàng đã thêm:
-              </div>
-              <div className="flex-col mt-2">
-                <div className="flex">
-                  <input
-                    type="string"
-                    className="text-xs md:text-sm border border-gray-600 rounded dark:bg-[#14141a] h-10 p-2 w-full"
-                    placeholder="Nhập mã lô hàng"
-                    value={shipmentValue}
-                    onChange={(e) => setshipmentValue(e.target.value)}
-                  />
-                  <button
-                    className="text-xs md:text-sm border border-gray-600 rounded dark:bg-[#14141a] h-10 ml-2 w-1/3 bg-green-500 text-white hover:bg-green-700"
-                    onClick={() => {
-                      if (shipmentValue.trim() !== "") {
-                        handleAddShipment();
-                      }
-                    }}
-                  >
-                    Thêm
-                  </button>
+          <div className="grid grid-cols-2 h-60 overflow-y-scroll">
+            <div className="overflow-y-scroll grid grid-cols gap-3 my-5 mx-5">
+              <div className=" gap-5 place-content-center mt-2">
+                <div className="font-bold text-base">Danh sách lô hàng :</div>
+                <div className="relative flex flex-col w-full   text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
+                  <table className="w-full text-left table-auto min-w-max">
+                    <thead>
+                      <tr>
+                        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Mã lô hàng
+                          </p>
+                        </th>
+                        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Thêm
+                          </p>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ShipmentData ? (
+                        ShipmentData.map((item: any) => {
+                          console.log(item);
+                          return (
+                            <tr className="">
+                              <td className="p-4 border-b border-blue-gray-50">
+                                <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                  {item}
+                                </p>
+                              </td>
+                              <td className="p-4 border-b border-blue-gray-50 text-xl">
+                                <button
+                                  onClick={() => {
+                                    setshipmentValue(item);
+
+                                    handleAddShipment();
+                                  }}
+                                >
+                                  +
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <div>Không có lô hàng nào</div>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="text-red-500">{Error2}</div>
               </div>
-              <div className="relative flex flex-col w-full   text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
-                <table className="w-full text-left table-auto min-w-max">
-                  <thead>
-                    <tr>
-                      <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                          Mã lô hàng
-                        </p>
-                      </th>
-                      <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                          Xóa
-                        </p>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Shipment ? (
-                      Shipment.map((item: any) => {
-                        console.log(item);
-                        return (
-                          <tr className="">
-                            <td className="p-4 border-b border-blue-gray-50">
-                              <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {item.shipment_id}
-                              </p>
-                            </td>
-                            <td className="p-4 border-b border-blue-gray-50 ">
-                              <button
-                                onClick={() => {
-                                  handleDeleteShipment(item.shipment_id);
-                                }}
-                              >
-                                <FaTrash className="w-5 h-5" />
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <div>Không có lô hàng nào</div>
-                    )}
-                  </tbody>
-                </table>
+            </div>
+            <div className="overflow-y-scroll grid grid-cols  gap-3 my-5 mx-5">
+              <div className=" gap-5 place-content-center">
+                <div className="font-bold text-base">
+                  Danh sách lô hàng đã thêm:
+                </div>
+                <div className="flex-col mt-2">
+                  <div className="flex">
+                    <input
+                      type="string"
+                      className="text-xs md:text-sm border border-gray-600 rounded dark:bg-[#14141a] h-10 p-2 w-full"
+                      placeholder="Nhập mã lô hàng"
+                      value={shipmentValue}
+                      onChange={(e) => setshipmentValue(e.target.value)}
+                    />
+                    <button
+                      className="text-xs md:text-sm border border-gray-600 rounded dark:bg-[#14141a] h-10 ml-2 w-1/3 bg-green-500 text-white hover:bg-green-700"
+                      onClick={() => {
+                        if (shipmentValue.trim() !== "") {
+                          handleAddShipment();
+                        }
+                      }}
+                    >
+                      Thêm
+                    </button>
+                  </div>
+                  <div className="text-red-500">{Error2}</div>
+                </div>
+                <div className="relative flex flex-col w-full   text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
+                  <table className="w-full text-left table-auto min-w-max">
+                    <thead>
+                      <tr>
+                        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Mã lô hàng
+                          </p>
+                        </th>
+                        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Xóa
+                          </p>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Shipment ? (
+                        Shipment.map((item: any) => {
+                          console.log(item);
+                          return (
+                            <tr className="">
+                              <td className="p-4 border-b border-blue-gray-50">
+                                <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                  {item.shipment_id}
+                                </p>
+                              </td>
+                              <td className="p-4 border-b border-blue-gray-50 ">
+                                <button
+                                  onClick={() => {
+                                    handleDeleteShipment(item.shipment_id);
+                                  }}
+                                >
+                                  <FaTrash className="w-5 h-5" />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <div>Không có lô hàng nào</div>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

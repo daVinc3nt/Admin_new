@@ -11,9 +11,10 @@ import { Buffer } from "buffer";
 import { set } from "date-fns";
 interface AddNotificationProps {
   onClose: () => void;
+  reloadData: () => void;
 }
 
-const AddFile: React.FC<AddNotificationProps> = ({ onClose }) => {
+const AddFile: React.FC<AddNotificationProps> = ({ onClose, reloadData }) => {
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -48,6 +49,7 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose }) => {
   const [selectedFile, setSelectedFile] = useState<File>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files[0]);
     setSelectedFile(e.target.files[0]);
   };
 
@@ -73,6 +75,8 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose }) => {
       const response = await Order.createByFile(condition);
       console.log(response);
       alert(response.message);
+      setSelectedFile(null);
+      reloadData();
     } catch (e) {
       console.log(e);
       alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
@@ -155,7 +159,7 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose }) => {
               id="dropzone-file"
               type="file"
               className="hidden"
-              onChange={handleFileChange}
+              onChange={setSelectedFile ? (e) => handleFileChange(e) : () => {}}
             />
           </label>
         </div>
