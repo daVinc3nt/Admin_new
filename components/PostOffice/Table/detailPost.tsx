@@ -4,11 +4,15 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
+import BackupIcon from "@mui/icons-material/Backup";
 import {
   StaffsOperation,
   AgencyOperation,
   UpdatingAgencyCondition,
   UpdatingAgencyInfo,
+  AdministrativeOperation,
+  AdministrativeInfo,
+  UpdatingLicenseInfo,
 } from "@/TDLib/tdlogistics";
 import axios from "axios";
 import { set } from "date-fns";
@@ -85,11 +89,19 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [cities, setCities] = useState<City[]>([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [fileContract, setFileContract] = useState(null);
+  const [fileContractUpdate, setFileContractUpdate] = useState(null);
   const [role, setRole] = useState(null);
+  const a: AdministrativeInfo = {
+    province: "",
+  };
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
 
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const res = await staff.getAuthenticatedStaffInfo();
@@ -98,16 +110,64 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
 
     fetchData();
   }, []);
-  useEffect(() => {
-    const fetchCities = async () => {
-      const response = await axios.get(
-        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json"
-      );
-      setCities(response.data);
-    };
 
-    fetchCities();
+  const adminOperation = new AdministrativeOperation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await adminOperation.get({});
+      console.log("Tỉnh", response);
+      setProvinces(response.data);
+    };
+    fetchData();
   }, []);
+  const handleUpdateContract = async () => {
+    const a = new AgencyOperation();
+    const FindByID: UpdatingAgencyCondition = {
+      agency_id: dataInitial.agency_id,
+    };
+    try {
+      // Check if the file is a PDF
+
+      const File: UpdatingLicenseInfo = {
+        licenseFiles: fileContractUpdate,
+      };
+      const response = await a.updateLicense(File, FindByID);
+      if (response.error) {
+        alert(response.message);
+      } else {
+        alert("Cập nhật hợp đồng thành công");
+      }
+    } catch (error) {
+      console.error("Error updating contract", error);
+      alert(error.message || "Có lỗi xảy ra khi cập nhật hợp đồng");
+    }
+  };
+
+  const handleProvinceChange = async (e) => {
+    setSelectedProvince(e.target.value);
+    a.province = e.target.value;
+    handleInputChange("user_province", e.target.value);
+    console.log(a);
+    const response = await adminOperation.get(a);
+    console.log("Quận", response);
+    setDistricts(response.data);
+  };
+
+  const handleDistrictChange = async (e) => {
+    setSelectedDistrict(e.target.value);
+    a.province = selectedProvince;
+    a.district = e.target.value;
+    handleInputChange("user_district", e.target.value);
+    console.log(a);
+    const response = await adminOperation.get(a);
+    console.log("Xã", response);
+    setWards(response.data);
+  };
+  const handleWardChange = (e) => {
+    setSelectedWard(e.target.value);
+    handleInputChange("user_town", e.target.value);
+  };
   const [Agencydata, setAgencydata] = useState({
     agency_id: dataInitial.agency_id,
     agency_name: dataInitial.agency_name,
@@ -135,32 +195,6 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
       [key]: value,
     }));
   };
-  const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCity(event.target.value);
-    setSelectedDistrict("");
-    handleInputChange(
-      "province",
-      cities.find((city) => city.Id === event.target.value).Name
-    );
-  };
-
-  const handleDistrictChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedDistrict(event.target.value);
-    handleInputChange(
-      "district",
-      districts.find((district) => district.Id === event.target.value).Name
-    );
-  };
-
-  const selectedCityObj = cities.find((city) => city.Id === selectedCity);
-  const districts = selectedCityObj ? selectedCityObj.Districts : [];
-
-  const selectedDistrictObj = districts.find(
-    (district) => district.Id === selectedDistrict
-  );
-  const wards = selectedDistrictObj ? selectedDistrictObj.Wards : [];
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -222,12 +256,17 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
       const condition: UpdatingAgencyCondition = {
         agency_id: dataInitial.agency_id,
       };
-      const response = await updateAgency.update(data, condition);
-      console.log(response);
-      if (response.error) {
-        setError(response.message);
-      } else {
-        alert("Cập nhật thành công");
+      try {
+        const response = await updateAgency.update(data, condition);
+        console.log(response);
+        if (response.error) {
+          setError(response.message);
+        } else {
+          alert("Cập nhật thành công");
+        }
+      } catch (e) {
+        console.log(e);
+        alert("Cập nhật thất bại");
       }
     }
 
@@ -266,10 +305,10 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
             <IoMdClose className="w-5/6 h-5/6 " />
           </Button>
         </div>
-        <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white place-content-center">
-          <div className="grid grid-cols">
+        <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white ">
+          <div className="grid md:grid-cols-2 gap-4 w-full">
             {role === "ADMIN" && (
-              <div className="flex gap-5">
+              <div className="flex gap-5 w-full">
                 <div className="font-bold text-base">
                   <FormattedMessage id="Agency.ID" />:
                 </div>
@@ -277,7 +316,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
               </div>
             )}
 
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">
                 <FormattedMessage id="PostOffice.Name" />:
               </div>
@@ -297,11 +336,11 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 <div>{Agencydata.agency_name}</div>
               )}
             </div>
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">Postalcode:</div>
               <div>{Agencydata.postal_code}</div>
             </div>
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">
                 <FormattedMessage id="PostOffice.Phone" />:
               </div>
@@ -321,7 +360,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 <div>{Agencydata.phone_number}</div>
               )}
             </div>
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">Email:</div>
               {isEditing ? (
                 <input
@@ -337,7 +376,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
               )}
             </div>
 
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">
                 <FormattedMessage id="PostOffice.BankName" />:
               </div>
@@ -354,7 +393,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 <div>{Agencydata.bank}</div>
               )}
             </div>
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">
                 <FormattedMessage id="PostOffice.BankNumber" />:
               </div>
@@ -371,7 +410,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 <div>{Agencydata.bin}</div>
               )}
             </div>
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">Commission_rate</div>
               {isEditing ? (
                 <input
@@ -389,7 +428,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 <div>{Agencydata.commission_rate}</div>
               )}
             </div>
-            <div className="flex gap-5">
+            <div className="flex gap-5 w-full">
               <div className="font-bold text-base">Doanh thu :</div>
               {isEditing ? (
                 <input
@@ -425,15 +464,15 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 `}
                     id="city"
                     aria-label=".form-select-sm"
-                    value={selectedCity}
-                    onChange={handleCityChange}
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
                   >
-                    <option value="">
+                    <option value="Bình Định">
                       {intl.formatMessage({ id: "Choose Province" })}
                     </option>
-                    {cities.map((city) => (
-                      <option key={city.Id} value={city.Id}>
-                        {city.Name}
+                    {provinces.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
                       </option>
                     ))}
                   </select>
@@ -450,8 +489,8 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                       {intl.formatMessage({ id: "Choose District" })}
                     </option>
                     {districts.map((district) => (
-                      <option key={district.Id} value={district.Id}>
-                        {district.Name}
+                      <option key={district} value={district}>
+                        {district}
                       </option>
                     ))}
                   </select>
@@ -460,19 +499,15 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 `}
                     id="ward"
                     aria-label=".form-select-sm"
-                    onChange={(e) =>
-                      handleInputChange(
-                        "town",
-                        wards.find((ward) => ward.Id === e.target.value).Name
-                      )
-                    }
+                    value={selectedWard}
+                    onChange={(e) => handleWardChange(e)}
                   >
-                    <option value="">
+                    <option value="Tăng Bạt Hổ">
                       {intl.formatMessage({ id: "Choose Ward" })}
                     </option>
                     {wards.map((ward) => (
-                      <option key={ward.Id} value={ward.Id}>
-                        {ward.Name}
+                      <option key={ward} value={ward}>
+                        {ward}
                       </option>
                     ))}
                   </select>
@@ -487,6 +522,53 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                     }
                   />
                 </>
+              )}
+            </div>
+            <div className="mt-5 flex flex-col place-content-center">
+              <div className="text-base font-bold text-center">
+                Hợp đồng doanh nghiệp
+              </div>
+              {isEditing ? (
+                <div className="flex flex-col place-content-center">
+                  <div className="flex place-content-center">
+                    <label className="flex py-6">
+                      <BackupIcon className="h-6 w-6" />
+
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          setFileContractUpdate(file);
+                        }}
+                      />
+                      {fileContractUpdate && (
+                        <div className=" font-bold text-base ">
+                          {fileContractUpdate.name}
+                        </div>
+                      )}
+                      {!fileContractUpdate && (
+                        <div className=" font-bold text-base ">Tải ảnh lên</div>
+                      )}
+                    </label>
+                  </div>
+                  <div className="flex place-content-center">
+                    <button
+                      onClick={handleUpdateContract}
+                      className=" text-white place-items-center h-full w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
+                    >
+                      Xác nhận
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex place-content-center py-6">
+                  <a href={fileContract} download>
+                    <div className="border-b-blue-500 border-b-2 text-blue-500 text-base font-bold">
+                      Tải hợp đồng
+                    </div>
+                  </a>
+                </div>
               )}
             </div>
           </div>

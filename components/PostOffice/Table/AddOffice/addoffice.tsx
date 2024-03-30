@@ -38,16 +38,6 @@ interface Ward {
 const staff = new StaffsOperation();
 
 const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
-  const [MapIsOpen, setMapIsOpen] = useState(false);
-
-  const openMap = () => {
-    setMapIsOpen(true);
-  };
-
-  const closeMap = () => {
-    setMapIsOpen(false);
-  };
-
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -66,8 +56,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
 
   const [OfficeData, setOfficeData] = useState({
     user_fullname: "",
-    username: "",
-    user_password: "",
     user_date_of_birth: "",
     user_cccd: "",
     user_phone_number: "",
@@ -81,7 +69,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     user_town: "",
     user_detail_address: "",
 
-    individual_company: 0,
+    individual_company: false,
     type: "",
     level: 0,
     postal_code: "",
@@ -232,22 +220,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
   // A function to handle the user_password input change
 
   // A function to handle the confirm user_password input change
-  const handleConfirmPasswordChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setConfirmPassword(e.target.value);
-    // Check if the confirm user_password matches the user_password
-    if (e.target.value !== "" && e.target.value !== OfficeData.user_password) {
-      setValidation("Mật khẩu không khớp!");
-    } else {
-      setValidation("");
-    }
-  };
 
   const [checkmissing, setCheckmissing] = useState({
     user_fullname: false,
-    username: false,
-    user_password: false,
     user_date_of_birth: false,
     user_cccd: false,
     user_phone_number: false,
@@ -320,15 +295,14 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
     } else {
       setError("");
       const response = await agency.create(OfficeData);
-      if (response.error) {
-        setError(response.message);
+      console.log(response);
+      if (response.error.error) {
+        alert(response.error.message);
       } else {
         reloadData();
         alert("Tạo thành công");
         setOfficeData({
           user_fullname: "",
-          username: "",
-          user_password: "",
           user_date_of_birth: "",
           user_cccd: "",
           user_phone_number: "",
@@ -342,7 +316,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
           user_town: "",
           user_detail_address: "",
 
-          individual_company: 0,
+          individual_company: false,
           type: "",
           level: 0,
           postal_code: "",
@@ -474,6 +448,15 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
                 placeholder={intl.formatMessage({ id: "BankNumber" })}
                 onChange={(e) => handleInputChange("user_bin", e.target.value)}
               />
+              <input
+                type="text"
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.user_position ? "border-red-500" : ""}`}
+                placeholder={intl.formatMessage({ id: "Position" })}
+                onChange={(e) =>
+                  handleInputChange("user_position", e.target.value)
+                }
+              />
             </div>
             <div className="flex gap-3 mt-3">
               <select
@@ -543,86 +526,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
 
           <div className="w-[98%] sm:w-10/12 mt-5">
             <h1 className="font-semibold pb-2 text-center">
-              <FormattedMessage id="Create Account" />
-            </h1>
-            <div className="flex-row gap-">
-              <div>
-                <input
-                  type=""
-                  className={`ext-xs md:text-sm border w-full border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2
-                  ${checkmissing.username ? "border-red-500" : ""}`}
-                  placeholder={intl.formatMessage({ id: "Username" })}
-                  onChange={(e) =>
-                    handleInputChange("username", e.target.value)
-                  }
-                />
-                <p className="flex items-center gap-1 mt-2 font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-                  <FormattedMessage id="RegexUsername" />
-                </p>
-              </div>
-
-              <div className="">
-                <div className="relative">
-                  <input
-                    type="password"
-                    placeholder={intl.formatMessage({ id: "Password" })}
-                    id="user_password"
-                    value={OfficeData.user_password}
-                    onChange={(e) =>
-                      handleInputChange("user_password", e.target.value)
-                    }
-                    className={`text-xs mt-3 md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 w-full p-2 focus:ring-blue-500 focus:border-blue-500 focus:ring-
-                    ${checkmissing.user_password ? "border-red-500" : ""} `}
-                  />
-                </div>
-                <p className="flex items-center gap-1 mt-2 font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-                  <FormattedMessage id="RegexPassword" />
-                </p>
-              </div>
-
-              <div>
-                <div className="relative">
-                  <input
-                    type="password"
-                    placeholder={intl.formatMessage({ id: "ConfirmPassword" })}
-                    id="confirmPassword"
-                    value={confirmPassword}
-                    onChange={handleConfirmPasswordChange}
-                    className=" text-xs mt-3 w-full md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 focus:ring-blue-500 focus:border-blue-500 focus:ring-1"
-                  />
-
-                  <p
-                    id="validation"
-                    className="text-center text-orange-500 italic text-sm"
-                  >
-                    {validation}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-3 mt-3">
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.user_position ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "Role" })}
-                onChange={(e) =>
-                  handleInputChange("user_position", e.target.value)
-                }
-              />
-              <input
-                type="number"
-                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.user_salary ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "Salary" })}
-                onChange={(e) =>
-                  handleInputChange("user_salary", parseInt(e.target.value))
-                }
-              />
-            </div>
-          </div>
-          <div className="w-[98%] sm:w-10/12 mt-5">
-            <h1 className="font-semibold pb-2 text-center">
               <FormattedMessage id="PostOffice.Infomation" />
             </h1>
             <div className="flex gap-3 mt-3">
@@ -635,54 +538,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
                   handleInputChange("agency_name", e.target.value)
                 }
               />
-              <input
-                type="string"
-                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-  ${checkmissing.managed_wards ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "PostOffice.Wards" })}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-
-              <button
-                className="text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-1/4 bg-green-500 text-white"
-                onClick={() => {
-                  if (inputValue.trim() !== "") {
-                    setOfficeData((prevState) => ({
-                      ...prevState,
-                      managed_wards: [...prevState.managed_wards, inputValue],
-                    }));
-                    setInputValue("");
-                    console.log(OfficeData.managed_wards);
-                  }
-                }}
-              >
-                Thêm
-              </button>
-            </div>
-            <div className="mt-4">
-              Danh sách đã thêm:
-              {OfficeData.managed_wards.map((ward, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between mt-2"
-                >
-                  <p className="mr-2">{ward}</p>
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                    onClick={() => {
-                      setOfficeData((prevState) => ({
-                        ...prevState,
-                        managed_wards: prevState.managed_wards.filter(
-                          (_, i) => i !== index
-                        ),
-                      }));
-                    }}
-                  >
-                    Xóa
-                  </button>
-                </div>
-              ))}
             </div>
 
             <div className="flex gap-3 mt-3">
@@ -693,6 +548,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
                 placeholder={intl.formatMessage({ id: "PostOffice.Info.Type" })}
                 onChange={(e) => handleInputChange("type", e.target.value)}
               />
+
               <input
                 type="number"
                 className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
@@ -732,7 +588,10 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
                 ${checkmissing.commission_rate ? "border-red-500" : ""}`}
                 placeholder={intl.formatMessage({ id: "PostOffice.Rate" })}
                 onChange={(e) =>
-                  handleInputChange("commission_rate", parseInt(e.target.value))
+                  handleInputChange(
+                    "commission_rate",
+                    parseFloat(e.target.value)
+                  )
                 }
               />
               <input
@@ -832,6 +691,65 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
                 placeholder={intl.formatMessage({ id: "BankNumber" })}
                 onChange={(e) => handleInputChange("bin", e.target.value)}
               />
+            </div>
+            <div className="flex gap-3 mt-3">
+              <select
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+  ${checkmissing.managed_wards ? "border-red-500" : ""}`}
+                id="ward"
+                aria-label=".form-select-sm"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              >
+                <option value="">
+                  {intl.formatMessage({ id: "Choose Ward" })}
+                </option>
+                {wardsPartner.map((ward) => (
+                  <option key={ward} value={ward}>
+                    {ward}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                className="text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full bg-green-500 text-white"
+                onClick={() => {
+                  if (inputValue.trim() !== "") {
+                    setOfficeData((prevState) => ({
+                      ...prevState,
+                      managed_wards: [...prevState.managed_wards, inputValue],
+                    }));
+                    setInputValue("");
+                    console.log(OfficeData.managed_wards);
+                  }
+                }}
+              >
+                Thêm
+              </button>
+            </div>
+            <div className="mt-4">
+              Danh sách đã thêm:
+              {OfficeData.managed_wards.map((ward, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between mt-2"
+                >
+                  <p className="mr-2">{ward}</p>
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                    onClick={() => {
+                      setOfficeData((prevState) => ({
+                        ...prevState,
+                        managed_wards: prevState.managed_wards.filter(
+                          (_, i) => i !== index
+                        ),
+                      }));
+                    }}
+                  >
+                    Xóa
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>

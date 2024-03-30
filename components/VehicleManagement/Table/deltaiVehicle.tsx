@@ -389,6 +389,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
                               <td className="p-4 border-b border-blue-gray-50 text-xl">
                                 <button
                                   onClick={() => {
+                                    
                                     setshipmentValue(item);
 
                                     handleAddShipment();

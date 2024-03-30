@@ -4,11 +4,15 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
+import BackupIcon from "@mui/icons-material/Backup";
 import {
   StaffsOperation,
   AgencyOperation,
   UpdatingAgencyCondition,
   UpdatingAgencyInfo,
+  AdministrativeOperation,
+  AdministrativeInfo,
+  UpdatingLicenseInfo,
 } from "@/TDLib/tdlogistics";
 import axios from "axios";
 import { set } from "date-fns";
@@ -16,7 +20,6 @@ interface Postdetail2 {
   individual_company: number;
   company_name: string;
   tax_number: string;
-  business_number: string;
   agency_id: string;
   agency_name: string;
   bank: string;
@@ -65,9 +68,70 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [cities, setCities] = useState<City[]>([]);
-  const [selectedCity, setSelectedCity] = useState("");
+  const [fileLicense, setFileLicense] = useState(null);
+  const [fileLicenseUpdate, setFileLicenseUpdate] = useState(null);
+
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
+  const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
+
+  const adminOperation = new AdministrativeOperation();
+  const a: AdministrativeInfo = {
+    province: "",
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await adminOperation.get({});
+      console.log("Tỉnh", response);
+      setProvinces(response.data);
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const a = new AgencyOperation();
+      const findID: UpdatingAgencyCondition = {
+        agency_id: dataInitial.agency_id,
+      };
+      try {
+        const response = await a.findLicense(findID);
+        console.log("Agency", response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [dataInitial]);
+
+  const handleProvinceChange = async (e) => {
+    setSelectedProvince(e.target.value);
+    a.province = e.target.value;
+    handleInputChange("user_province", e.target.value);
+    console.log(a);
+    const response = await adminOperation.get(a);
+    console.log("Quận", response);
+    setDistricts(response.data);
+  };
+
+  const handleDistrictChange = async (e) => {
+    setSelectedDistrict(e.target.value);
+    a.province = selectedProvince;
+    a.district = e.target.value;
+    handleInputChange("user_district", e.target.value);
+    console.log(a);
+    const response = await adminOperation.get(a);
+    console.log("Xã", response);
+    setWards(response.data);
+  };
+  const handleWardChange = (e) => {
+    setSelectedWard(e.target.value);
+    handleInputChange("user_town", e.target.value);
+  };
+
   const [role, setRole] = useState(null);
 
   useEffect(() => {
@@ -78,21 +142,11 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
 
     fetchData();
   }, []);
-  useEffect(() => {
-    const fetchCities = async () => {
-      const response = await axios.get(
-        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json"
-      );
-      setCities(response.data);
-    };
 
-    fetchCities();
-  }, []);
   const [Agencydata, setAgencydata] = useState({
     individual_company: dataInitial.individual_company,
     company_name: dataInitial.company_name,
     tax_number: dataInitial.tax_number,
-    business_number: dataInitial.business_number,
     agency_id: dataInitial.agency_id,
     agency_name: dataInitial.agency_name,
     bank: dataInitial.bank,
@@ -118,32 +172,6 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
       [key]: value,
     }));
   };
-  const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCity(event.target.value);
-    setSelectedDistrict("");
-    handleInputChange(
-      "province",
-      cities.find((city) => city.Id === event.target.value).Name
-    );
-  };
-
-  const handleDistrictChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedDistrict(event.target.value);
-    handleInputChange(
-      "district",
-      districts.find((district) => district.Id === event.target.value).Name
-    );
-  };
-
-  const selectedCityObj = cities.find((city) => city.Id === selectedCity);
-  const districts = selectedCityObj ? selectedCityObj.Districts : [];
-
-  const selectedDistrictObj = districts.find(
-    (district) => district.Id === selectedDistrict
-  );
-  const wards = selectedDistrictObj ? selectedDistrictObj.Wards : [];
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -205,16 +233,43 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
       const condition: UpdatingAgencyCondition = {
         agency_id: dataInitial.agency_id,
       };
-      const response = await updateAgency.update(data, condition);
-      console.log(response);
-      if (response.error) {
-        setError(response.message);
-      } else {
-        alert("Cập nhật thành công");
+      try {
+        const response = await updateAgency.update(data, condition);
+        console.log(response);
+        if (response.error) {
+          setError(response.message);
+        } else {
+          alert("Cập nhật thành công");
+        }
+      } catch (error) {
+        console.log(error);
+        alert("Cập nhật thất bại");
       }
     }
 
     setIsEditing(false);
+  };
+  const handleUpdateLicense = async () => {
+    const a = new AgencyOperation();
+    const FindByID: UpdatingAgencyCondition = {
+      agency_id: dataInitial.agency_id,
+    };
+    try {
+      // Check if the file is a PDF
+
+      const File: UpdatingLicenseInfo = {
+        licenseFiles: fileLicenseUpdate,
+      };
+      const response = await a.updateLicense(File, FindByID);
+      if (response.error) {
+        alert(response.message);
+      } else {
+        alert("Cập nhật hợp đồng thành công");
+      }
+    } catch (error) {
+      console.error("Error updating contract", error);
+      alert(error.message || "Có lỗi xảy ra khi cập nhật hợp đồng");
+    }
   };
 
   return (
@@ -395,10 +450,6 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
               <div className="font-bold text-base">Mã số thuế:</div>
               <div>{Agencydata.tax_number}</div>
             </div>
-            <div className="flex gap-5">
-              <div className="font-bold text-base">Mã số doanh nghiệp:</div>
-              <div>{Agencydata.business_number}</div>
-            </div>
             <div className="flex gap-3 mt-3">
               {!isEditing ? (
                 <div className="flex gap-3">
@@ -420,15 +471,15 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 `}
                     id="city"
                     aria-label=".form-select-sm"
-                    value={selectedCity}
-                    onChange={handleCityChange}
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
                   >
-                    <option value="">
+                    <option value="Bình Định">
                       {intl.formatMessage({ id: "Choose Province" })}
                     </option>
-                    {cities.map((city) => (
-                      <option key={city.Id} value={city.Id}>
-                        {city.Name}
+                    {provinces.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
                       </option>
                     ))}
                   </select>
@@ -441,12 +492,12 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                     value={selectedDistrict}
                     onChange={handleDistrictChange}
                   >
-                    <option value="">
+                    <option value="Hoài Ân">
                       {intl.formatMessage({ id: "Choose District" })}
                     </option>
                     {districts.map((district) => (
-                      <option key={district.Id} value={district.Id}>
-                        {district.Name}
+                      <option key={district} value={district}>
+                        {district}
                       </option>
                     ))}
                   </select>
@@ -455,19 +506,15 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 `}
                     id="ward"
                     aria-label=".form-select-sm"
-                    onChange={(e) =>
-                      handleInputChange(
-                        "town",
-                        wards.find((ward) => ward.Id === e.target.value).Name
-                      )
-                    }
+                    value={selectedWard}
+                    onChange={(e) => handleWardChange(e)}
                   >
-                    <option value="">
+                    <option value="Tăng Bạt Hổ">
                       {intl.formatMessage({ id: "Choose Ward" })}
                     </option>
                     {wards.map((ward) => (
-                      <option key={ward.Id} value={ward.Id}>
-                        {ward.Name}
+                      <option key={ward} value={ward}>
+                        {ward}
                       </option>
                     ))}
                   </select>
@@ -482,6 +529,53 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                     }
                   />
                 </>
+              )}
+            </div>
+            <div className="mt-5 flex flex-col place-content-center">
+              <div className="text-base font-bold text-center">
+                Hợp đồng doanh nghiệp
+              </div>
+              {isEditing ? (
+                <div className="flex flex-col place-content-center">
+                  <div className="flex place-content-center">
+                    <label className="flex py-6">
+                      <BackupIcon className="h-6 w-6" />
+
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          setFileLicenseUpdate(file);
+                        }}
+                      />
+                      {setFileLicenseUpdate && (
+                        <div className=" font-bold text-base ">
+                          {setFileLicenseUpdate.name}
+                        </div>
+                      )}
+                      {!setFileLicenseUpdate && (
+                        <div className=" font-bold text-base ">Tải ảnh lên</div>
+                      )}
+                    </label>
+                  </div>
+                  <div className="flex place-content-center">
+                    <button
+                      onClick={handleUpdateLicense}
+                      className=" text-white place-items-center h-full w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
+                    >
+                      Xác nhận
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex place-content-center py-6">
+                  <a href={fileLicense} download>
+                    <div className="border-b-blue-500 border-b-2 text-blue-500 text-base font-bold">
+                      Tải hợp đồng
+                    </div>
+                  </a>
+                </div>
               )}
             </div>
           </div>

@@ -264,8 +264,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({ onClose, reloadData }) => {
       ) {
         const response = await Business.createByAdmin(BusinessData);
         if (response.error) {
-          alert("Thêm đối tác thất bại" + response.message);
-          setError(response.message);
+          alert("Thêm đối tác thất bại" + response.error.message);
         } else {
           alert("Thêm đối tác thành công");
           reloadData();
@@ -448,7 +447,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({ onClose, reloadData }) => {
       >
         <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
           <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">
-            <FormattedMessage id="TransportBusiness.AddButton" />
+            Thêm doanh nghiệp
           </div>
           <Button
             className="absolute right-0 w-8 h-8 rounded-full mb-2 hover:bg-gray-300"
@@ -461,71 +460,95 @@ const AddBusiness: React.FC<AddBusinessProps> = ({ onClose, reloadData }) => {
         <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar flex flex-col items-center bg-white dark:bg-[#14141a] p-2 rounded-md dark:text-white">
           <div className="w-[98%] sm:w-10/12">
             <h1 className="font-semibold pb-2 text-center dark:text-white">
-              <FormattedMessage id="TransportBusiness.Add.HeadInfo" />
+              Thông tin người quản lý
             </h1>
             <div className="flex gap-3">
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+              <div className="w-full">
+                <div className="text-center dark:text-white">Họ và tên</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_fullname ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "Fullname" })}
-                onChange={(e) =>
-                  handleInputChange("user_fullname", e.target.value)
-                }
-              />
-
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  placeholder="VD: Nguyen Van A"
+                  onChange={(e) =>
+                    handleInputChange("user_fullname", e.target.value)
+                  }
+                />
+              </div>
+              <div className="w-full">
+                <div className="text-center dark:text-white">Số điện thoại</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_phone_number ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "Phone" })}
-                onChange={(e) =>
-                  handleInputChange("user_phone_number", e.target.value)
-                }
-              />
+                  placeholder="VD: 0988888888"
+                  onChange={(e) =>
+                    handleInputChange("user_phone_number", e.target.value)
+                  }
+                />
+              </div>
             </div>
             <div className="flex gap-3 mt-3">
-              <input
-                type="date"
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+              <div className="w-full">
+                <div className="text-center dark:text-white">Ngày sinh</div>
+                <input
+                  type="date"
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_date_of_birth ? "border-red-500" : ""}`}
-                placeholder="Ngày sinh"
-                onChange={(e) =>
-                  handleInputChange("user_date_of_birth", e.target.value)
-                }
-              />
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  placeholder="Ngày sinh"
+                  onChange={(e) =>
+                    handleInputChange("user_date_of_birth", e.target.value)
+                  }
+                />
+              </div>
+              <div className="w-full">
+                <div className="text-center dark:text-white">Số CCCD</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_cccd ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "CCCD" })}
-                onChange={(e) => handleInputChange("user_cccd", e.target.value)}
-              />
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  placeholder="VD: 052204009999"
+                  onChange={(e) =>
+                    handleInputChange("user_cccd", e.target.value)
+                  }
+                />
+              </div>
+              <div className="w-full">
+                <div className="text-center dark:text-white">Email</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_email ? "border-red-500" : ""}`}
-                placeholder="Email"
-                onChange={(e) =>
-                  handleInputChange("user_email", e.target.value)
-                }
-              />
+                  placeholder="VD: tdlogistics@gmail.com"
+                  onChange={(e) =>
+                    handleInputChange("user_email", e.target.value)
+                  }
+                />
+              </div>
             </div>
             <div className="flex gap-3 mt-3">
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+              <div className="w-full">
+                <div className="text-center dark:text-white">Ngân hàng</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_bank ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankName" })}
-                onChange={(e) => handleInputChange("user_bank", e.target.value)}
-              />
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  onChange={(e) =>
+                    handleInputChange("user_bank", e.target.value)
+                  }
+                />
+              </div>
+              <div className="w-full">
+                <div className="text-center dark:text-white">Số tài khoản</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_bin ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankNumber" })}
-                onChange={(e) => handleInputChange("user_bin", e.target.value)}
-              />
+                  onChange={(e) =>
+                    handleInputChange("user_bin", e.target.value)
+                  }
+                />
+              </div>
             </div>
             <div className="flex gap-3 mt-3">
               <select
@@ -597,7 +620,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({ onClose, reloadData }) => {
             <h1 className="font-semibold pb-2 text-center">
               <FormattedMessage id="Create Account" />
             </h1>
-            <div className="flex-row gap-">
+            <div className="flex-row gap-3">
               <div>
                 <input
                   type=""
@@ -662,79 +685,97 @@ const AddBusiness: React.FC<AddBusinessProps> = ({ onClose, reloadData }) => {
           </div>
           <div className="w-[98%] sm:w-10/12 mt-5">
             <h1 className="font-semibold pb-2 text-center">
-              <FormattedMessage id="TransportBusiness.Add.BusinessInfo" />
+              Thông tin doanh nghiệp
             </h1>
             <div className="flex gap-3">
               {role === "ADMIN" ||
               role === "MANAGER" ||
               role === "HUMAN_RESOURCE_MANAGER" ? (
+                <div className="w-full">
+                  <div className="text-center dark:text-white">Agency ID</div>
+                  <input
+                    type=""
+                    className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  ${checkmissing.agency_id ? "border-red-500" : ""}`}
+                    placeholder="VD: BC_71000_077204005692"
+                    onChange={(e) =>
+                      handleInputChange("agency_id", e.target.value)
+                    }
+                  />
+                </div>
+              ) : null}
+              <div className="w-full">
+                <div className="text-center dark:text-white">Mã số thuế</div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
-                  ${checkmissing.agency_id ? "border-red-500" : ""}`}
-                  placeholder={intl.formatMessage({
-                    id: "TransportBusiness.BusinessCode",
-                  })}
+                ${checkmissing.tax_number ? "border-red-500" : ""}`}
+                  placeholder="VD: 1234567890"
                   onChange={(e) =>
-                    handleInputChange("agency_id", e.target.value)
+                    handleInputChange("tax_number", e.target.value)
                   }
                 />
-              ) : null}
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.tax_number ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({
-                  id: "TransportBusiness.TaxCode",
-                })}
-                onChange={(e) =>
-                  handleInputChange("tax_number", e.target.value)
-                }
-              />
+              </div>
             </div>
             <div className="flex gap-3 mt-3">
-              <input
-                type="number"
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+              <div className="w-full">
+                <div className="text-center dark:text-white">Số điện thoại</div>
+                <input
+                  type="number"
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.phone_number ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "Phone" })}
-                onChange={(e) =>
-                  handleInputChange("phone_number", e.target.value)
-                }
-              />
-
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  placeholder="VD: 0988888888"
+                  onChange={(e) =>
+                    handleInputChange("phone_number", e.target.value)
+                  }
+                />
+              </div>
+              <div className="w-full">
+                <div className="text-center dark:text-white">Email</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.email ? "border-red-500" : ""}`}
-                placeholder="Email"
-                onChange={(e) => handleInputChange("email", e.target.value)}
-              />
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  placeholder="VD: tdlogistics@gmail.com"
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                />
+              </div>
+              <div className="w-full">
+                <div className="text-center dark:text-white">
+                  Tên doanh nghiệp
+                </div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.business_name ? "border-red-500" : ""}`}
-                placeholder="Tên doanh nghiệp"
-                onChange={(e) =>
-                  handleInputChange("business_name", e.target.value)
-                }
-              />
+                  placeholder="VD: Công ty TNHH ABC"
+                  onChange={(e) =>
+                    handleInputChange("business_name", e.target.value)
+                  }
+                />
+              </div>
             </div>
             <div className="flex gap-3 mt-3">
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+              <div className="w-full">
+                <div className="text-center dark:text-white">Ngân hàng</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.bank ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankName" })}
-                onChange={(e) => handleInputChange("bank", e.target.value)}
-              />
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
+                  placeholder={intl.formatMessage({ id: "BankName" })}
+                  onChange={(e) => handleInputChange("bank", e.target.value)}
+                />
+              </div>
+              <div className="w-full">
+                <div className="text-center dark:text-white">Số tài khoản</div>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.bin ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankNumber" })}
-                onChange={(e) => handleInputChange("bin", e.target.value)}
-              />
+                  placeholder={intl.formatMessage({ id: "BankNumber" })}
+                  onChange={(e) => handleInputChange("bin", e.target.value)}
+                />
+              </div>
             </div>
             <div className="flex gap-3 mt-3">
               <select
@@ -808,9 +849,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({ onClose, reloadData }) => {
         bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md"
           onClick={handleSubmit}
         >
-          <span className="hidden xs:block">
-            <FormattedMessage id="TransportBusiness.AddButton" />
-          </span>
+          <span className="hidden xs:block">Thêm doanh nghiệp</span>
         </Button>
         <div className=" flex place-content-center text-red-500 font-bold ">
           {error && <p>{error}</p>}
