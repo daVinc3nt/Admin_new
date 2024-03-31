@@ -59,7 +59,7 @@ const Dropzone = ({ className, files, setFiles, submit }) => {
 
   return (
     //@ts-ignore
-    <form className="w-full">
+    <form className="w-full overflow-y-scroll">
       <div
         {...getRootProps({
           className: className,

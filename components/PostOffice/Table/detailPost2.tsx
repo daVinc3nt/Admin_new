@@ -6,6 +6,7 @@ import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
 import BackupIcon from "@mui/icons-material/Backup";
 import Dropzone from "./Dropzone";
+import Image from "next/image";
 import {
   StaffsOperation,
   AgencyOperation,
@@ -69,7 +70,7 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [fileLicense, setFileLicense] = useState(null);
+  const [fileLicense, setFileLicense] = useState([]);
   const [fileLicenseUpdate, setFileLicenseUpdate] = useState([]);
 
   const [provinces, setProvinces] = useState([]);
@@ -100,7 +101,7 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
       if (result.error) {
         alert(result.message);
       }
-      reloadData();
+      reloadIMG();
       alert("Cập nhật thành công");
       setFileLicenseUpdate([]);
     } catch (error) {
@@ -111,26 +112,22 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const a: AdministrativeInfo = {
     province: "",
   };
-  const fetchIMG = async (callback?: () => void) => {
+  const fetchIMG = async () => {
     const a = new AgencyOperation();
     const findID: UpdatingAgencyCondition = {
       agency_id: dataInitial.agency_id,
     };
     try {
       const response = await a.findLicense(findID);
+      setFileLicense(response);
       console.log("Agency", response);
-      if (callback) {
-        callback();
-      }
     } catch (error) {
       console.log(error);
     }
   };
-
-  const reloadData = () => {
-    fetchIMG(reloadData);
+  const reloadIMG = async () => {
+    fetchIMG();
   };
-
   useEffect(() => {
     fetchIMG();
   }, [dataInitial]);
@@ -323,14 +320,14 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     >
       <motion.div
         ref={notificationRef}
-        className={`relative w-[98%] sm:w-9/12 dark:bg-[#14141a] bg-white rounded-xl p-4 overflow-y-auto
+        className={`relative w-[98%] sm:w-9/12 dark:bg-[#14141a] bg-white rounded-xl p-4 overflow-y-scroll
           ${isShaking ? "animate-shake" : ""}`}
         initial={{ scale: 0 }}
         animate={{ scale: isVisible ? 1 : 0 }}
         exit={{ scale: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
+        <div className=" items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
           <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">
             <FormattedMessage id="PostOffice.Infomation" />
           </div>
@@ -341,8 +338,8 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
             <IoMdClose className="w-5/6 h-5/6 " />
           </Button>
         </div>
-        <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white place-content-center">
-          <div className="grid grid-cols">
+        <div className="h-screen_3/5   border border-[#545e7b] mt-4 overflow-y-scroll  dark:bg-[#14141a] bg-white p-2 rounded-md text-black dark:text-white ">
+          <div className="flex flex-col ">
             {role === "ADMIN" && (
               <div className="flex gap-5">
                 <div className="font-bold text-base">
@@ -568,27 +565,42 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 </>
               )}
             </div>
-            <div className="mt-5 flex flex-col place-content-center">
-              <div className="text-base font-bold text-center">
-                Hợp đồng doanh nghiệp
-              </div>
-              {isEditing ? (
-                <Dropzone
-                  className="h-32 w-full bg-white rounded-xl flex justify-center outline-gray-400 outline-dashed"
-                  files={fileLicenseUpdate}
-                  setFiles={setFileLicenseUpdate}
-                  submit={handleSubmit}
-                />
-              ) : (
-                <div className="flex place-content-center py-6">
-                  <a href={fileLicense} download>
-                    <div className="border-b-blue-500 border-b-2 text-blue-500 text-base font-bold">
-                      Tải hợp đồng
-                    </div>
-                  </a>
-                </div>
-              )}
+          </div>
+          <div className="mt-5 flex flex-col place-content-center">
+            <div className="text-base font-bold text-center">
+              Hợp đồng doanh nghiệp
             </div>
+            {isEditing ? (
+              <Dropzone
+                className="h-32 w-full bg-white rounded-xl flex justify-center outline-gray-400 outline-dashed"
+                files={fileLicenseUpdate}
+                setFiles={setFileLicenseUpdate}
+                submit={handleSubmit}
+              />
+            ) : (
+              <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 min-h-[130px]">
+                {fileLicense?.map((file) => (
+                  <li
+                    key={file}
+                    className="relative h-32 rounded-md px-2 border border-gray-300"
+                  >
+                    <Image
+                      src={file}
+                      alt={file.name}
+                      width={100}
+                      height={100}
+                      onLoad={() => {
+                        URL.revokeObjectURL(file);
+                      }}
+                      className="h-full w-full rounded-md object-contain"
+                    />
+                    <div className="mt-1 text-[12px] font-medium text-stone-500 text-center whitespace-nowrap truncate">
+                      {file}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div className="text-red-700 font-bold flex place-content-center text-base">
             {error}
