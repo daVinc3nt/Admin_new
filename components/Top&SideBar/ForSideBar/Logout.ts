@@ -13,6 +13,7 @@ export function Logout(){
     if (result) {
 
         Cookies.remove("connect.sid");
+        
         action.logout()
     }
     // Nếu result là false, tức là người dùng nhấn no
