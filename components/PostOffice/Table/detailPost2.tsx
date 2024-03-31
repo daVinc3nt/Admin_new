@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
 import BackupIcon from "@mui/icons-material/Backup";
+import Dropzone from "./Dropzone";
 import {
   StaffsOperation,
   AgencyOperation,
@@ -69,7 +70,7 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [fileLicense, setFileLicense] = useState(null);
-  const [fileLicenseUpdate, setFileLicenseUpdate] = useState(null);
+  const [fileLicenseUpdate, setFileLicenseUpdate] = useState([]);
 
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -78,7 +79,28 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
+  const handleSubmit = async () => {
+    console.log("File", fileLicenseUpdate);
+    const orders = new AgencyOperation();
+    if (!fileLicenseUpdate) {
+      alert("Please select at least one file.");
+      return;
+    }
+    let condition: UpdatingAgencyCondition = {
+      agency_id: dataInitial.agency_id,
+    };
 
+    let updatingOrderInfo: UpdatingLicenseInfo = {
+      licenseFiles: fileLicenseUpdate as unknown as FileList,
+    };
+
+    try {
+      const result = await orders.updateLicense(updatingOrderInfo, condition);
+      console.log(result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const adminOperation = new AdministrativeOperation();
   const a: AdministrativeInfo = {
     province: "",
@@ -249,28 +271,28 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
 
     setIsEditing(false);
   };
-  const handleUpdateLicense = async () => {
-    const a = new AgencyOperation();
-    const FindByID: UpdatingAgencyCondition = {
-      agency_id: dataInitial.agency_id,
-    };
-    try {
-      // Check if the file is a PDF
-
-      const File: UpdatingLicenseInfo = {
-        licenseFiles: fileLicenseUpdate,
-      };
-      const response = await a.updateLicense(File, FindByID);
-      if (response.error) {
-        alert(response.message);
-      } else {
-        alert("Cập nhật hợp đồng thành công");
-      }
-    } catch (error) {
-      console.error("Error updating contract", error);
-      alert(error.message || "Có lỗi xảy ra khi cập nhật hợp đồng");
-    }
-  };
+  // const handleUpdateLicense = async () => {
+  //   const a = new AgencyOperation();
+  //   try {
+  //     const FindByID: UpdatingAgencyCondition = {
+  //       agency_id: dataInitial.agency_id,
+  //     };
+  //     const File: UpdatingLicenseInfo = {
+  //       licenseFiles:  fileLicenseUpdate,
+  //     };
+  //     console.log("File", File);
+  //     const response = await a.updateLicense(File, FindByID);
+  //     console.log("response", response);
+  //     if (response.error) {
+  //       setError(response.message);
+  //     }
+  //     setFileLicense(response.data.licenseFiles);
+  //     alert("Cập nhật thành công");
+  //   } catch (error) {
+  //     console.error("Error updating contract", error);
+  //     alert(error.message || "Có lỗi xảy ra khi cập nhật hợp đồng");
+  //   }
+  // };
 
   return (
     <motion.div
@@ -536,38 +558,12 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 Hợp đồng doanh nghiệp
               </div>
               {isEditing ? (
-                <div className="flex flex-col place-content-center">
-                  <div className="flex place-content-center">
-                    <label className="flex py-6">
-                      <BackupIcon className="h-6 w-6" />
-
-                      <input
-                        type="file"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          setFileLicenseUpdate(file);
-                        }}
-                      />
-                      {setFileLicenseUpdate && (
-                        <div className=" font-bold text-base ">
-                          {setFileLicenseUpdate.name}
-                        </div>
-                      )}
-                      {!setFileLicenseUpdate && (
-                        <div className=" font-bold text-base ">Tải ảnh lên</div>
-                      )}
-                    </label>
-                  </div>
-                  <div className="flex place-content-center">
-                    <button
-                      onClick={handleUpdateLicense}
-                      className=" text-white place-items-center h-full w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
-                    >
-                      Xác nhận
-                    </button>
-                  </div>
-                </div>
+                <Dropzone
+                  className="h-32 w-full bg-white rounded-xl flex justify-center outline-gray-400 outline-dashed"
+                  files={fileLicenseUpdate}
+                  setFiles={setFileLicenseUpdate}
+                  submit={handleSubmit}
+                />
               ) : (
                 <div className="flex place-content-center py-6">
                   <a href={fileLicense} download>
