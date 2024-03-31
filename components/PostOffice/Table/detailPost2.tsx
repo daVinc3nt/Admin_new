@@ -97,6 +97,12 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     try {
       const result = await orders.updateLicense(updatingOrderInfo, condition);
       console.log(result);
+      if (result.error) {
+        alert(result.message);
+      }
+      reloadData();
+      alert("Cập nhật thành công");
+      setFileLicenseUpdate([]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -105,6 +111,30 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const a: AdministrativeInfo = {
     province: "",
   };
+  const fetchIMG = async (callback?: () => void) => {
+    const a = new AgencyOperation();
+    const findID: UpdatingAgencyCondition = {
+      agency_id: dataInitial.agency_id,
+    };
+    try {
+      const response = await a.findLicense(findID);
+      console.log("Agency", response);
+      if (callback) {
+        callback();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const reloadData = () => {
+    fetchIMG(reloadData);
+  };
+
+  useEffect(() => {
+    fetchIMG();
+  }, [dataInitial]);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
@@ -113,21 +143,6 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     };
     fetchData();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      const a = new AgencyOperation();
-      const findID: UpdatingAgencyCondition = {
-        agency_id: dataInitial.agency_id,
-      };
-      try {
-        const response = await a.findLicense(findID);
-        console.log("Agency", response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [dataInitial]);
 
   const handleProvinceChange = async (e) => {
     setSelectedProvince(e.target.value);
