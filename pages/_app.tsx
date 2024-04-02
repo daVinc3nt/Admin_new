@@ -32,6 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const fetchData = async () => {
       const res = await staff.getAuthenticatedStaffInfo();
+      console.log("nè",res)
       setInfo(res.data);
     };
     fetchData();
