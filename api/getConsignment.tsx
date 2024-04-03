@@ -9,5 +9,6 @@ async function getData() {
 
 export default async function DemoPage(reloadData) {
     const data = await getData();
+    if (data) console.log(data.data[0].journey)
     return <DataTable columns={columns} data={data.data} reloadData={reloadData} />;
 }

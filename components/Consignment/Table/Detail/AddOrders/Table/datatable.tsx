@@ -30,7 +30,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  selectedOrders: TData[]; // Thêm props selectedOrders để truyền danh sách các đơn hàng đã được chọn
+  selectedOrders: TData[];
   setSelectedOrders
 }
 
@@ -190,51 +190,55 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-center space-x-2 py-4">
-        <Button
-          variant="light"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-          drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-          hover:shadow-md md:text-base focus:outline-none font-normal
-          text-black dark:text-white rounded-md text-sm text-center me-2"
-        >
-          <span>{<FormattedMessage id="prev" />}</span>
-        </Button>
-        <span className="flex items-center gap-1">
-          <div className="text-xs md:text-base">{<FormattedMessage id="page" />}</div>
-          <strong className="text-xs md:text-base whitespace-nowrap">
-            {table.getState().pagination.pageIndex + 1} <FormattedMessage id="of" /> {" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <TbMinusVertical className="text-xl text-gray-700" />
-        <span className="flex items-center gap-1 text-xs md:text-base whitespace-nowrap">
-          {<FormattedMessage id="gotopage" />}
-          <input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="border border-gray-500 px-1 py-0.5 rounded w-8 sm:w-16 bg-transparent"
-          />
-        </span>
-        <Button
-          variant="light"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-          drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-          hover:shadow-md md:text-base focus:outline-none font-normal text-black
-          dark:text-white rounded-md text-sm text-center me-2"
-        >
-          <span>{<FormattedMessage id="next" />}</span>
-        </Button>
+      <div className="flex bg-inherit flex-col-reverse sm:flex-row items-center sticky gap-2 bottom-0 justify-center space-x-2 py-4">
+        <div className="flex gap-2">
+          <Button
+            variant="light"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
+              drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
+              hover:shadow-md md:text-base focus:outline-none font-normal
+              text-black dark:text-white rounded-md text-sm text-center me-2"
+          >
+            <span>{<FormattedMessage id="prev" />}</span>
+          </Button>
+          <span className="flex items-center gap-1">
+            <div className="text-xs md:text-base">
+              {<FormattedMessage id="page" />}
+            </div>
+            <strong className="text-xs md:text-base whitespace-nowrap">
+              {table.getState().pagination.pageIndex + 1}{" "}
+              <FormattedMessage id="of" /> {table.getPageCount()}
+            </strong>
+          </span>
+          <TbMinusVertical className="text-xl text-gray-700" />
+          <span className="flex items-center gap-1 text-xs md:text-base whitespace-nowrap">
+            {<FormattedMessage id="gotopage" />}
+            <input
+              type="number"
+              defaultValue={table.getState().pagination.pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                table.setPageIndex(page);
+              }}
+              className="border border-gray-500 px-1 py-0.5 rounded w-8 sm:w-16 bg-transparent"
+            />
+          </span>
+          <Button
+            variant="light"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
+              drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
+              hover:shadow-md md:text-base focus:outline-none font-normal
+              text-black dark:text-white rounded-md text-sm text-center me-2"
+          >
+            <span>{<FormattedMessage id="next" />}</span>
+          </Button>
+        </div>
       </div>
     </div>
   );

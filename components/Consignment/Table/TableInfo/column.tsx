@@ -9,6 +9,11 @@ import { Checkbox } from "@/components/TableUI/checkbox";
 import { FormattedMessage, useIntl } from "react-intl";
 import Consignment from "@/pages/dashboard/consignment";
 import { MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+const createTime = (time: string) => {
+  const moment = require('moment-timezone');
+  const standardDatetime = moment(time).tz(moment.tz.guess()).format('DD/MM/YYYY HH:mm:ss');
+  return standardDatetime;
+}
 export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "number",
@@ -74,6 +79,25 @@ export const columns: ColumnDef<any>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+  },
+  {
+    accessorKey: "created_at",
+
+    header: ({ column }) => {
+      return (
+        <Button
+          className="rounded flex justify-center w-full"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <FormattedMessage id="Schedule.Info6" />
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="flex justify-center">{createTime(row.original.created_at)}</div>;
     },
   },
   {
