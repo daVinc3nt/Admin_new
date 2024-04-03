@@ -8,31 +8,25 @@ const getinfo = new StaffsOperation();
 const protectedRoutes = "/dashboard";
 const authRoutes = "/log";
 export async function middleware(request: NextRequest) {
-  const currentUser =await getinfo.getAuthenticatedStaffInfo();
-// when the user wanna get in dashboard but dont have the cookie
-// or the one is expired, the page would redirect to login page
-const response: AxiosResponse = await axios.get(`http://localhost:4000/get_info`, {
-    withCredentials: true,
-});
-
-const data = response.data;
-console.log(data.error, data.info, data.message );
-  if (
-    request.nextUrl.pathname.startsWith(protectedRoutes) &&
-    (!currentUser)
-  ) {
-    request.cookies.delete("currentUser");
-    const response = NextResponse.redirect(new URL(`${request.nextUrl.locale === "en" ? "en":""}/log`, request.url));
-    response.cookies.delete("currentUser");
-    return response;
-  }
-//when the user wanna go back to the login page but the cookie has
-//been caught, the page will automatically get into the dashboard
-  else if ((request.nextUrl.pathname.startsWith(authRoutes)) 
-     && (currentUser)) {
-    return NextResponse.redirect(new URL(`${request.nextUrl.locale === "en" ? "en":""}/dashboard`, request.url));
-  }
-   else 
+//   const currentUser =await getinfo.getAuthenticatedStaffInfo();
+// // when the user wanna get in dashboard but dont have the cookie
+// // or the one is expired, the page would redirect to login page
+//   if (
+//     request.nextUrl.pathname.startsWith(protectedRoutes) &&
+//     (!currentUser)
+//   ) {
+//     request.cookies.delete("currentUser");
+//     const response = NextResponse.redirect(new URL(`${request.nextUrl.locale === "en" ? "en":""}/log`, request.url));
+//     response.cookies.delete("currentUser");
+//     return response;
+//   }
+// //when the user wanna go back to the login page but the cookie has
+// //been caught, the page will automatically get into the dashboard
+//   else if ((request.nextUrl.pathname.startsWith(authRoutes)) 
+//      && (currentUser)) {
+//     return NextResponse.redirect(new URL(`${request.nextUrl.locale === "en" ? "en":""}/dashboard`, request.url));
+//   }
+//    else 
    return NextResponse.next();
 }
 export const config = {

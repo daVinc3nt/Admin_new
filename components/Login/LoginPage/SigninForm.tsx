@@ -88,8 +88,10 @@ const SigninForm = () => {
     .then(result => console.log(result))
     .catch(error => console.log(error))
     const res = await staffsOperation.getAuthenticatedStaffInfo();
-    setInfo(res.data);
-    router.push("/dashboard")
+    if (res.data) {
+      setInfo(res.data);
+      router.push("/dashboard")
+    }
   }
   const staffAuth =() => {
     const {email, phoneNumber} = formValues;
