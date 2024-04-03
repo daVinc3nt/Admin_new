@@ -22,7 +22,7 @@ import MenuHambuger from "./MenuHambuger";
 const SideItemData = [
   {
     id: 0,
-    title: "Tài khoản",
+    title:  <FormattedMessage id="Sidebar.option13" />,
     url: "/dashboard/account",
     icon: <AccountBox className="scale-75 lg:block" />,
   },

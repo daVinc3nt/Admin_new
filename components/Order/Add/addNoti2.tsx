@@ -4,11 +4,10 @@ import { FormattedMessage } from "react-intl";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { OrdersOperation } from "@/TDLib/tdlogistics";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 export interface UploadingOrderFileCondition {
   file: File;
 }
-import { Buffer } from "buffer";
-import { set } from "date-fns";
 interface AddNotificationProps {
   onClose: () => void;
   reloadData: () => void;
@@ -96,7 +95,7 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose, reloadData }) => {
       <motion.div
         ref={notificationRef}
         className={`relative  lg:w-1/4 bg-white
-        dark:bg-[#14141a] rounded-xl p-4 overflow-y-auto ${
+        dark:bg-[#14141a] rounded-xl p-5 overflow-y-auto ${
           isShaking ? "animate-shake" : ""
         }`}
         initial={{ scale: 0 }}
@@ -115,7 +114,7 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose, reloadData }) => {
             <IoMdClose className="w-5/6 h-5/6" />
           </Button>
         </div>
-        <div className="text-center">
+        <div className="text-center py-5">
           Vui lòng chọn file excel chứa thông tin đơn hàng
         </div>
         <div className="flex items-center justify-center w-full">
@@ -163,6 +162,15 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose, reloadData }) => {
             />
           </label>
         </div>
+        <div className="text-center py-5">
+          *Lưu ý: Bạn cần tải file dưới đây về trước khi tạo đơn hàng loạt. Bạn không được thay đổi tên cột, có thể đổi tên file và thêm đơn mới vào như mẫu.
+        </div>
+        <a 
+          className='ring ring-gray-300 rounded-xl p-2'
+          href="/SampleFile/Ex.xlsx" 
+          download='Sample.xlsx'> 
+          <FileDownloadIcon/> Download
+        </a>
 
         <Button
           onClick={handleConfirm}

@@ -7,6 +7,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { IoAddCircleOutline } from "react-icons/io5";
 import AddOrders from "./AddOrders/addOrdersNoti";
 import { ShipmentsOperation } from "@/TDLib/tdlogistics";
+import CustomTimeline from "@/components/Common/Timeline2";
+import TimelineNoti from "./timelineNoti";
 
 interface DetailNotificationProps {
   onClose: () => void;
@@ -25,6 +27,7 @@ interface DetailNotificationProps {
     status: number;
     transport_partner_id: string | null;
     vehicle_id: string | null;
+    journey: any;
   };
 }
 
@@ -35,6 +38,7 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
   const [data, setData] = useState(dataInitial);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen2, setModalIsOpen2] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
   const intl = useIntl();
   const openModal = () => {
@@ -43,6 +47,14 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
 
   const closeModal = () => {
     setModalIsOpen(false);
+  };
+
+  const openModal2 = () => {
+    setModalIsOpen2(true);
+  };
+
+  const closeModal2 = () => {
+    setModalIsOpen2(false);
   };
 
   useEffect(() => {
@@ -58,6 +70,10 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
       handleGetOrdersFromShipment();
     }
   }, [isVisible]);
+
+  useEffect(() => {
+    console.log(dataInitial.journey)
+  }, []);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
@@ -158,6 +174,7 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
       }}
     >
       {modalIsOpen && <AddOrders onClose={closeModal} addOrders={addOrders} />}
+      {modalIsOpen2 && <TimelineNoti onClose={closeModal2} dataInitial={dataInitial} />}
       <motion.div
         ref={notificationRef}
         className={`relative w-[98%] sm:w-9/12 bg-white dark:bg-[#14141a] rounded-xl p-4 overflow-y-auto
@@ -190,6 +207,7 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
               </div>
             </div>
 
+
             <div className="text-center text-lg mt-2">
               <FormattedMessage id="Consignment.Info.Info8" />:{" "}
               {(() => {
@@ -209,6 +227,15 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
 
                 return <span className={`${statusColor} font-semibold text-xl`}>{statusLabel}</span>;
               })()}
+            </div>
+            <div className="flex justify-center">
+              <Button
+                className={`px-2 rounded-lg mt-2 mb-1 py-2 border-green-700 hover:bg-green-600 text-green-500
+              bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md`}
+                onClick={openModal2}
+              >
+                Xem hành trình
+              </Button>
             </div>
             <div className="w-full flex">
               {selectedOrders.length > 0 && <Button
@@ -290,6 +317,7 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
                       <span className="font-bold mr-2 whitespace-nowrap">+ <FormattedMessage id="Consignment.Info.Info16" />:</span>
                       <span>{order.COD.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                     </div>
+
                   </div>
 
 

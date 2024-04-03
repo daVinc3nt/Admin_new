@@ -30,6 +30,7 @@
     "Sidebar.option10": "Quản lý file",
     "Sidebar.option11": "Thoát",
     "Sidebar.option12": "Bưu cục-đại lý",
+    "Sidebar.option13": "Tài khoản",
     "processing":"Đánh dấu đã xử lý",
     "page": "Trang",
     "prev": "Trước",
@@ -89,8 +90,8 @@
     "order.send":"Phía gửi",
     "order.to":"Phía nhận",
     "order.service_type":"Loại hình vận chuyển",
-
-
+    "order.type": "Loại hình gửi",
+    "order.sendtime":"Thời gian gửi",
     "Consignment.Title": "Lô hàng",
     "Consignment.SearchBox": "Tìm kiếm theo mã lô hàng",
     "Consignment.AddButton": "Thêm lô hàng",

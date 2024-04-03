@@ -83,6 +83,7 @@ const MobileLog = () => {
     .then(result => console.log(result))
     .catch(error => console.log(error))
     const res = await staffsOperation.getAuthenticatedStaffInfo();
+    console.log(res.data)
     if (res.data) {
       setInfo(res.data);
       router.push("/dashboard")
