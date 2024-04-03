@@ -12,7 +12,7 @@ import {
 } from "@/TDLib/tdlogistics";
 import { Approval } from "@mui/icons-material";
 
-const ListApprove = ({ onClose, reloadData, role }) => {
+const ListApprove = ({ onClose, reloadData, info }) => {
   const [data, setData] = useState([]);
   const func = new BusinessOperation();
   const [columns, setColumns] = useState([]);
@@ -33,7 +33,7 @@ const ListApprove = ({ onClose, reloadData, role }) => {
       }
     };
     fetchData();
-  }, [role]);
+  }, [info]);
   useEffect(() => {
     console.log("data approve", data);
   }, [data]);

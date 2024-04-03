@@ -42,12 +42,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   reloadData?: () => void;
+  info?: any;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   reloadData,
+  info,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -192,7 +194,11 @@ export function DataTable<TData, TValue>({
               <FormattedMessage id="Vehicle.AddButton" />
             </Button>
             {modalIsOpen && (
-              <AddVehicle onClose={closeModal} reloadData={reloadData} />
+              <AddVehicle
+                onClose={closeModal}
+                reloadData={reloadData}
+                info={info}
+              />
             )}
           </div>
         </div>

@@ -16,8 +16,6 @@ import {
   AdministrativeInfo,
   UpdatingLicenseInfo,
 } from "@/TDLib/tdlogistics";
-import axios from "axios";
-import { set } from "date-fns";
 interface Postdetail2 {
   individual_company: number;
   company_name: string;
@@ -42,30 +40,19 @@ interface Postdetail2 {
   revenue: string;
 }
 
-interface City {
-  Id: string;
-  Name: string;
-  Districts: District[];
-}
-
-interface District {
-  Id: string;
-  Name: string;
-  Wards: Ward[];
-}
-
-interface Ward {
-  Id: string;
-  Name: string;
-}
-const staff = new StaffsOperation();
-
 interface DetailAgencyProps {
   onClose: () => void;
   dataInitial: Postdetail2;
+  reloadData: () => void;
+  info: any;
 }
 
-const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
+const DetailPost2: React.FC<DetailAgencyProps> = ({
+  onClose,
+  dataInitial,
+  reloadData,
+  info,
+}) => {
   const intl = useIntl();
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -166,17 +153,6 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     handleInputChange("user_town", e.target.value);
   };
 
-  const [role, setRole] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      setRole(res.data.role);
-    };
-
-    fetchData();
-  }, []);
-
   const [Agencydata, setAgencydata] = useState({
     individual_company: dataInitial.individual_company,
     company_name: dataInitial.company_name,
@@ -260,9 +236,9 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
       bank: Agencydata.bank,
     };
     if (
-      role === "ADMIN" ||
-      role === "MANAGER" ||
-      role === "HUMAN_RESOURCE_MANAGER"
+      info.role === "ADMIN" ||
+      info.role === "MANAGER" ||
+      info.role === "HUMAN_RESOURCE_MANAGER"
     ) {
       const condition: UpdatingAgencyCondition = {
         agency_id: dataInitial.agency_id,
@@ -274,6 +250,7 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
           setError(response.message);
         } else {
           alert("Cập nhật thành công");
+          reloadData();
         }
       } catch (error) {
         console.log(error);
@@ -340,7 +317,7 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
         </div>
         <div className="h-screen_3/5   border border-[#545e7b] mt-4 overflow-y-scroll  dark:bg-[#14141a] bg-white p-2 rounded-md text-black dark:text-white ">
           <div className="flex flex-col ">
-            {role === "ADMIN" && (
+            {info.role === "ADMIN" && (
               <div className="flex gap-5">
                 <div className="font-bold text-base">
                   <FormattedMessage id="Agency.ID" />:

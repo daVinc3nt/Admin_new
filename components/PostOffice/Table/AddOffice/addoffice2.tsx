@@ -3,7 +3,6 @@ import { m, motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FormattedMessage, useIntl } from "react-intl";
-import PasswordToggle from "./PasswordToggle";
 import axios from "axios";
 import MapExport from "@/components/Maprender/Mapexport";
 import {
@@ -14,10 +13,12 @@ import {
   AdministrativeInfo,
 } from "@/TDLib/tdlogistics";
 import { Input } from "postcss";
+import { info } from "console";
 
 interface AddOfficeProps {
   onClose: () => void;
   reloadData?: () => void;
+  info?: any;
 }
 interface City {
   Id: string;
@@ -35,7 +36,11 @@ interface Ward {
   Id: string;
   Name: string;
 }
-const AddOffice2: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
+const AddOffice2: React.FC<AddOfficeProps> = ({
+  onClose,
+  reloadData,
+  info,
+}) => {
   // const [PaperUpload, setPaperUpload] = useState(null);
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);

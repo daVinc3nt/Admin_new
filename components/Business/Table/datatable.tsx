@@ -37,7 +37,6 @@ import Filter from "@/components/Common/Filters";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
   BusinessOperation,
-  StaffsOperation,
   DeletingBusinessCondition,
 } from "@/TDLib/tdlogistics";
 
@@ -46,17 +45,13 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   reloadData?: () => void;
-  role?: string;
+  info?: any;
 }
-interface DeletingTransportPartnerCondition {
-  transport_partner_id: string;
-}
-
 export function DataTable<TData, TValue>({
   columns,
   data,
   reloadData,
-  role,
+  info,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -116,11 +111,11 @@ export function DataTable<TData, TValue>({
   const deletepartner = new BusinessOperation();
   const handleDeleteRowsSelected = async () => {
     if (
-      role === "ADMIN" ||
-      role === "MANAGER" ||
-      role === "TELLER" ||
-      role === "AGENCY_MANAGER" ||
-      role === "AGENCY_TELLER"
+      info?.role === "ADMIN" ||
+      info?.role === "MANAGER" ||
+      info?.role === "TELLER" ||
+      info?.role === "AGENCY_MANAGER" ||
+      info?.role === "AGENCY_TELLER"
     ) {
       table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
         console.log();
@@ -240,7 +235,9 @@ export function DataTable<TData, TValue>({
             />
           </BasicPopover>
           <div className="flex-grow h-10 flex mt-4 sm:mt-0 justify-center sm:justify-end">
-            {role === "ADMIN" || role === "MANAGER" || role === "TELLER" ? (
+            {info?.role === "ADMIN" ||
+            info?.role === "MANAGER" ||
+            info?.role === "TELLER" ? (
               <Button
                 className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 w-full sm:w-44 text-center h-full"
                 onClick={openModal2}
@@ -252,7 +249,7 @@ export function DataTable<TData, TValue>({
               <ListApprove
                 onClose={closeModal2}
                 reloadData={reloadData}
-                role={role}
+                info={info}
               />
             )}
             <Button
@@ -262,7 +259,11 @@ export function DataTable<TData, TValue>({
               Thêm doanh nghiệp
             </Button>
             {modalIsOpen && (
-              <AddBusiness onClose={closeModal} reloadData={reloadData} />
+              <AddBusiness
+                onClose={closeModal}
+                reloadData={reloadData}
+                info={info}
+              />
             )}
           </div>
         </div>
@@ -321,11 +322,11 @@ export function DataTable<TData, TValue>({
       </div>
 
       <div className="flex items-center justify-center space-x-2 py-4">
-        {role === "ADMIN" ||
-        role === "MANAGER" ||
-        role === "TELLER" ||
-        role === "AGENCY_MANAGER" ||
-        role === "AGENCY_TELLER" ? (
+        {info?.role === "ADMIN" ||
+        info?.role === "MANAGER" ||
+        info?.role === "TELLER" ||
+        info?.role === "AGENCY_MANAGER" ||
+        info?.role === "AGENCY_TELLER" ? (
           <button
             className={`text-xs md:text-md justify-self-start text-muted-foreground rounded-lg border border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 hover:text-white hover:shadow-md focus:outline-none font-normal dark:text-white
           ${

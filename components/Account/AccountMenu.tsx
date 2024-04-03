@@ -6,7 +6,6 @@ import { UserContext } from "@/Context/InfoContext/UserContext";
 import LoadingSkeleton from "../LoadingSkeleton/loadingSkeleton";
 const AccountMenu = () => {
   const info = useContext(UserContext).info;
-  console.log("info", info);
   return (
     <div className="h-[calc(100vh-3rem)] content-center overflow-y-hidden flex flex-col w-full">
       <div className="h-full items-center w-full left-0 right-0 overflow-y-scroll no-scrollbar">

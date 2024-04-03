@@ -3,13 +3,11 @@ import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FormattedMessage, useIntl } from "react-intl";
-import PasswordToggle from "./PasswordToggle";
 import axios from "axios";
 import {
   TransportPartnersOperation,
   CreatingTransportPartnerByAdminInfo,
   CreatingTransportPartnerByAgencyInfo,
-  StaffsOperation,
   AdministrativeOperation,
   AdministrativeInfo,
 } from "@/TDLib/tdlogistics";
@@ -17,42 +15,21 @@ import { set } from "date-fns";
 interface AddPartnerProps {
   onClose: () => void;
   reloadData: () => void;
+  info: any;
 }
 
-interface City {
-  Id: string;
-  Name: string;
-  Districts: District[];
-}
-
-interface District {
-  Id: string;
-  Name: string;
-  Wards: Ward[];
-}
-
-interface Ward {
-  Id: string;
-  Name: string;
-}
-const staff = new StaffsOperation();
-
-const AddPartner: React.FC<AddPartnerProps> = ({ onClose, reloadData }) => {
+const AddPartner: React.FC<AddPartnerProps> = ({
+  onClose,
+  reloadData,
+  info,
+}) => {
   const [role, setRole] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      setRole(res.data.role);
-    };
-
-    fetchData();
-  }, []);
   const [PartnerData, setPartnerData] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      if (res.data.role === "ADMIN") {
+      setRole(info.role);
+      if (info?.role === "ADMIN") {
         setPartnerData({
           username: "",
           user_password: "",
@@ -116,7 +93,7 @@ const AddPartner: React.FC<AddPartnerProps> = ({ onClose, reloadData }) => {
     };
 
     fetchData();
-  }, []);
+  }, [info]);
 
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -170,16 +147,6 @@ const AddPartner: React.FC<AddPartnerProps> = ({ onClose, reloadData }) => {
       [key]: value,
     }));
   };
-
-  const [Showpassword, setShowpassword] = useState(false);
-  const togglePasswordVisibility = () => {
-    setShowpassword((prevState) => !prevState);
-  };
-  const [Showpassword2, setShowpassword2] = useState(false);
-  const togglePasswordVisibility2 = () => {
-    setShowpassword2((prevState) => !prevState);
-  };
-
   // A state variable to store the confirm user_password value
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -609,7 +576,7 @@ const AddPartner: React.FC<AddPartnerProps> = ({ onClose, reloadData }) => {
               <div className="">
                 <div className="relative">
                   <input
-                    type={Showpassword ? "text" : "user_password"}
+                    type="password"
                     placeholder={intl.formatMessage({ id: "Password" })}
                     id="user_password"
                     value={PartnerData?.user_password || ""}
@@ -619,10 +586,6 @@ const AddPartner: React.FC<AddPartnerProps> = ({ onClose, reloadData }) => {
                     className={`text-xs mt-3 md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 w-full p-2 focus:ring-blue-500 focus:border-blue-500 focus:ring-
                     ${checkmissing.user_password ? "border-red-500" : ""} `}
                   />
-
-                  <button onClick={togglePasswordVisibility}>
-                    <PasswordToggle />
-                  </button>
                 </div>
                 <p className="flex items-center gap-1 mt-2 font-sans text-sm antialiased font-normal leading-normal text-gray-700">
                   <FormattedMessage id="RegexPassword" />
@@ -632,7 +595,7 @@ const AddPartner: React.FC<AddPartnerProps> = ({ onClose, reloadData }) => {
               <div>
                 <div className="relative">
                   <input
-                    type={Showpassword2 ? "text" : "user_password"}
+                    type="password"
                     placeholder={intl.formatMessage({ id: "ConfirmPassword" })}
                     id="confirmPassword"
                     value={confirmPassword}
@@ -640,9 +603,6 @@ const AddPartner: React.FC<AddPartnerProps> = ({ onClose, reloadData }) => {
                     className=" text-xs mt-3 w-full md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 focus:ring-blue-500 focus:border-blue-500 focus:ring-1"
                   />
 
-                  <button onClick={togglePasswordVisibility2}>
-                    <PasswordToggle />
-                  </button>
                   <p
                     id="validation"
                     className="text-center text-orange-500 italic text-sm"

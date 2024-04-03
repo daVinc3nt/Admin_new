@@ -21,10 +21,12 @@ interface ApproveBusinessCondition {
 
 type MyColumnDef<T> = ColumnDef<T> & {
   reloadData?: () => void;
+  info?: any;
 };
 
 export async function createColumns(
-  reloadData: () => void
+  reloadData: () => void,
+  info: any
 ): Promise<MyColumnDef<ApproveBusinessCondition>[]> {
   return [
     {

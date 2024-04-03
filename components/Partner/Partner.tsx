@@ -1,23 +1,25 @@
 import React from "react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useRouter } from "next/router";
 import DemoPage from "./Table/export";
 import LoadingSkeleton from "../LoadingSkeleton/loadingSkeleton";
 import { FormattedMessage } from "react-intl";
+import { UserContext } from "@/Context/InfoContext/UserContext";
 const PartnerMenu = () => {
   const [demoPage, setDemoPage] = useState(<LoadingSkeleton />);
-  const router = useRouter();
+  const { info } = useContext(UserContext);
   const reloadData = useCallback(() => {
     fetchDemoPage();
-  }, []);
+  }, [info]);
+
   const fetchDemoPage = async () => {
-    const result = await DemoPage(reloadData);
+    const result = await DemoPage(reloadData, info);
     setDemoPage(result);
   };
 
   useEffect(() => {
     fetchDemoPage();
-  }, [router.pathname]);
+  }, [info]);
 
   return (
     <div className="h-[calc(100vh-3rem)] content-center overflow-y-hidden flex flex-col ">

@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   reloadData?: () => void;
+  info?: any;
 }
 interface DeletingTransportPartnerCondition {
   transport_partner_id: string;
@@ -50,6 +51,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   reloadData,
+  info,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -210,7 +212,11 @@ export function DataTable<TData, TValue>({
               <FormattedMessage id="TransportPartner.AddButton" />
             </Button>
             {modalIsOpen && (
-              <AddPartner onClose={closeModal} reloadData={reloadData} />
+              <AddPartner
+                onClose={closeModal}
+                reloadData={reloadData}
+                info={info}
+              />
             )}
           </div>
         </div>

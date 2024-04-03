@@ -13,21 +13,14 @@ import { set } from "date-fns";
 interface AddVehicleProps {
   onClose: () => void;
   reloadData: () => void;
+  info: any;
 }
 
-const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
-  const staff = new StaffsOperation();
-  const [role, setRole] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      setRole(res.data.role);
-    };
-
-    fetchData();
-  }, []);
-
+const AddVehicle: React.FC<AddVehicleProps> = ({
+  onClose,
+  reloadData,
+  info,
+}) => {
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -36,7 +29,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (role === "ADMIN") {
+      if (info?.role === "ADMIN") {
         setVehicledata({
           agency_id: "",
           transport_partner_id: "",
@@ -56,7 +49,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
       }
     };
     fetchData();
-  }, [role]);
+  }, [info]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -101,7 +94,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
     type: false,
     license_plate: false,
     max_load: false,
-    ...(role === "ADMIN" ? { agency_id: false } : {}),
+    ...(info?.role === "ADMIN" ? { agency_id: false } : {}),
   }));
   const handleCheckMissing = (key: string, value: boolean) => {
     setCheckmissing((prevState) => ({
@@ -131,7 +124,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
       setError("Vui lòng nhập đầy đủ thông tin");
     } else {
       setError("");
-      if (role === "ADMIN") {
+      if (info?.role === "ADMIN") {
         const submit: CreatingVehicleByAdminInfo = {
           agency_id: Vehicledata.agency_id,
           transport_partner_id: Vehicledata.transport_partner_id,
@@ -227,7 +220,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({ onClose, reloadData }) => {
           </h1>
           <div className="w-[98%] sm:w-10/12 grid grid-rows-2 ">
             <div className="flex gap-3">
-              {role === "ADMIN" && (
+              {info?.role === "ADMIN" && (
                 <div className="w-full">
                   <div className="text-center dark:text-white">
                     Mã đại lý/bưu cục
