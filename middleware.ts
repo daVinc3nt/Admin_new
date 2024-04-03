@@ -3,13 +3,20 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 import { StaffsOperation } from "./TDLib/tdlogistics";
+import axios, { AxiosResponse } from "axios";
 const getinfo = new StaffsOperation();
 const protectedRoutes = "/dashboard";
 const authRoutes = "/log";
 export async function middleware(request: NextRequest) {
-  const currentUser = await getinfo.getAuthenticatedStaffInfo();
+  const currentUser =await getinfo.getAuthenticatedStaffInfo();
 // when the user wanna get in dashboard but dont have the cookie
 // or the one is expired, the page would redirect to login page
+const response: AxiosResponse = await axios.get(`http://localhost:4000/get_info`, {
+    withCredentials: true,
+});
+
+const data = response.data;
+console.log(data.error, data.info, data.message );
   if (
     request.nextUrl.pathname.startsWith(protectedRoutes) &&
     (!currentUser)

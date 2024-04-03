@@ -29,14 +29,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [info, setInfo] = useState(null);
   const router = useRouter();
   const [value, setValue] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      console.log("nè",res)
-      setInfo(res.data);
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await staff.getAuthenticatedStaffInfo();
+  //     console.log("nè",res)
+  //     setInfo(res.data);
+  //   };
+  //   fetchData();
+  // }, []);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
