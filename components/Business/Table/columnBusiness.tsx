@@ -1,15 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Info, MoreHorizontal } from "lucide-react";
 import { Button } from "@nextui-org/react";
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
-import { LogoIcon, UsersIcon } from "@/components/Icons";
 import DetailBusiness from "./detailBusiness";
 import { Checkbox } from "@/components/TableUI/checkbox";
 import { FormattedMessage, useIntl } from "react-intl";
-import { TransportPartnersOperation } from "@/TDLib/tdlogistics";
 interface FindingBusinessByAdminCondition {
   agency_id: string;
   bank: string;
@@ -31,10 +28,12 @@ interface FindingBusinessByAdminCondition {
 
 type MyColumnDef<T> = ColumnDef<T> & {
   reloadData?: () => void;
+  info?: any;
 };
 
 export async function createColumns(
-  reloadData: () => void
+  reloadData: () => void,
+  info: any
 ): Promise<MyColumnDef<FindingBusinessByAdminCondition>[]> {
   return [
     {
@@ -149,6 +148,7 @@ export async function createColumns(
                 onClose={closeModal}
                 dataInitial={row.original}
                 reloadData={reloadData}
+                info={info}
               />
             )}
           </div>

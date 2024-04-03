@@ -1,15 +1,11 @@
 import { createColumns } from "./columnBusiness";
 import { DataTable } from "./datatable";
-import { useState, useEffect } from "react";
 import https from "https";
 import {
   BusinessOperation,
   FindingBusinessByAdminCondition,
   FindingBusinessByBusinessCondition,
-  FindingRepresentorByAdminCondition,
-  FindingRepresentorByBusinessCondition,
   StaffsOperation,
-  BusinessAuthenticate,
 } from "@/TDLib/tdlogistics";
 import LoadingSkeleton from "@/components/LoadingSkeleton/loadingSkeleton";
 
@@ -17,27 +13,19 @@ const service = new BusinessOperation();
 const conditions: FindingBusinessByAdminCondition[] = [];
 const conditions2: FindingBusinessByBusinessCondition[] = [];
 
-async function getRole(): Promise<any> {
+async function getData(info: any): Promise<any> {
   const staff = new StaffsOperation();
-  const res = await staff.getAuthenticatedStaffInfo();
-  return res.data.role;
-}
-async function getData(): Promise<any> {
-  const staff = new StaffsOperation();
-  const res = await staff.getAuthenticatedStaffInfo();
-  const isadmin = res.data.role;
-  console.log(isadmin);
 
   if (
-    isadmin === "ADMIN" ||
-    isadmin === "MANAGER" ||
-    isadmin === "HUMAN_RESOURCE_MANAGER" ||
-    isadmin === "TELLER" ||
-    isadmin === "COMPLAINTS_SOLVER" ||
-    isadmin === "AGENCY_MANAGER" ||
-    isadmin === "AGENCY_HUMAN_RESOURCE_MANAGER" ||
-    isadmin === "AGENCY_TELLER" ||
-    isadmin === "AGENCY_COMPLAINTS_SOLVER"
+    info?.role === "ADMIN" ||
+    info?.role === "MANAGER" ||
+    info?.role === "HUMAN_RESOURCE_MANAGER" ||
+    info?.role === "TELLER" ||
+    info?.role === "COMPLAINTS_SOLVER" ||
+    info?.role === "AGENCY_MANAGER" ||
+    info?.role === "AGENCY_HUMAN_RESOURCE_MANAGER" ||
+    info?.role === "AGENCY_TELLER" ||
+    info?.role === "AGENCY_COMPLAINTS_SOLVER"
   ) {
     const response = await service.findByAdmin(conditions[0]);
     console.log("RoleAdmin");
@@ -50,11 +38,10 @@ async function getData(): Promise<any> {
   }
 }
 
-export default async function DemoPage(reloadData) {
-  const data = await getData();
+export default async function DemoPage(reloadData, info) {
+  const data = await getData(info);
   console.log("Data Admin", data);
-  const role = await getRole();
-  const columns = await createColumns(reloadData);
+  const columns = await createColumns(reloadData, info);
   return (
     <>
       {data && (
@@ -62,7 +49,7 @@ export default async function DemoPage(reloadData) {
           columns={columns}
           data={data}
           reloadData={reloadData}
-          role={role}
+          info={info}
         />
       )}
       {!data && <LoadingSkeleton />}

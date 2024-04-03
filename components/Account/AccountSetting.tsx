@@ -2,18 +2,18 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import {
-  UsersOperation,
   StaffsOperation,
-  UpdatingPasswordsInfo,
   AdministrativeInfo,
   UpdatingStaffCondition,
   AdministrativeOperation,
   FindingAvatarCondition,
   UpdatingAvatarStaffInfo,
 } from "@/TDLib/tdlogistics";
+import NotiPopup from "../Common/NotiPopup";
 import { Person } from "@mui/icons-material";
 import BackupIcon from "@mui/icons-material/Backup";
 import { useIntl, FormattedMessage } from "react-intl";
+import { set } from "date-fns";
 interface UserData {
   agency_id: string;
   avatar: string;
@@ -46,6 +46,17 @@ const AccountSetting = (info) => {
   function closeModal() {
     setModalIsOpen(false);
   }
+
+  const [NotiIsOpen, setNotiIsOpen] = useState(false);
+
+  function openNoti() {
+    setNotiIsOpen(true);
+  }
+
+  function closeNoti() {
+    setNotiIsOpen(false);
+  }
+  const [message, setMessage] = useState("");
   const intl = useIntl();
   const [staff_id, setStaff_id] = useState("");
   const userOp2 = new StaffsOperation();
@@ -87,55 +98,59 @@ const AccountSetting = (info) => {
     town: "",
     detail_address: "",
   });
-  useEffect(() => {
-    const fetchData = async () => {
-      const res2 = await userOp2.getAuthenticatedStaffInfo();
-      console.log("res2", res2);
-      setStaff_id(res2.data.staff_id);
-      setStaffInfo({
-        agency_id: res2.data.agency_id,
-        avatar: res2.data.avatar,
-        bank: res2.data.bank,
-        bin: res2.data.bin,
-        cccd: res2.data.cccd,
-        date_of_birth: res2.data.date_of_birth,
-        detail_address: res2.data.detail_address,
-        district: res2.data.district,
-        email: res2.data.email,
-        fullname: res2.data.fullname,
-        paid_salary: res2.data.paid_salary,
-        password: res2.data.password,
-        phone_number: res2.data.phone_number,
-        position: res2.data.position,
-        privileges: res2.data.privileges,
-        province: res2.data.province,
-        salary: res2.data.salary,
-        staff_id: res2.data.staff_id,
-        town: res2.data.town,
-        username: res2.data.username,
-      });
-      setUpdate({
-        fullname: res2.data.fullname,
-        username: res2.data.username,
-        date_of_birth: res2.data.date_of_birth,
-        email: res2.data.email,
-        phone_number: res2.data.phone_number,
-        role: res2.data.role,
-        salary: res2.data.salary,
-        paid_salary: res2.data.paid_salary,
-        province: res2.data.province,
-        district: res2.data.district,
-        town: res2.data.town,
-        detail_address: res2.data.detail_address,
-      });
-      const get: FindingAvatarCondition = {
-        staff_id: res2.data.staff_id,
-      };
-      console.log("get", get);
-      const url = await userOp2.getAvatar(get);
-      console.log("AVT", url);
-      setAvatar(url);
+  const reloadData = async () => {
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const res2 = await userOp2.getAuthenticatedStaffInfo();
+    console.log("res2", res2);
+    setStaff_id(res2.data.staff_id);
+    setStaffInfo({
+      agency_id: res2.data.agency_id,
+      avatar: res2.data.avatar,
+      bank: res2.data.bank,
+      bin: res2.data.bin,
+      cccd: res2.data.cccd,
+      date_of_birth: res2.data.date_of_birth,
+      detail_address: res2.data.detail_address,
+      district: res2.data.district,
+      email: res2.data.email,
+      fullname: res2.data.fullname,
+      paid_salary: res2.data.paid_salary,
+      password: res2.data.password,
+      phone_number: res2.data.phone_number,
+      position: res2.data.position,
+      privileges: res2.data.privileges,
+      province: res2.data.province,
+      salary: res2.data.salary,
+      staff_id: res2.data.staff_id,
+      town: res2.data.town,
+      username: res2.data.username,
+    });
+    setUpdate({
+      fullname: res2.data.fullname,
+      username: res2.data.username,
+      date_of_birth: res2.data.date_of_birth,
+      email: res2.data.email,
+      phone_number: res2.data.phone_number,
+      role: res2.data.role,
+      salary: res2.data.salary,
+      paid_salary: res2.data.paid_salary,
+      province: res2.data.province,
+      district: res2.data.district,
+      town: res2.data.town,
+      detail_address: res2.data.detail_address,
+    });
+    const get: FindingAvatarCondition = {
+      staff_id: res2.data.staff_id,
     };
+    console.log("get", get);
+    const url = await userOp2.getAvatar(get);
+    console.log("AVT", url);
+    setAvatar(url);
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -203,26 +218,43 @@ const AccountSetting = (info) => {
     const Staffcondition: UpdatingStaffCondition = {
       staff_id: staff_id,
     };
-    const response = await userOp2.update(Update, Staffcondition);
-    console.log("response", response);
-    if (response.error === false) {
-      alert("Cập nhật thông tin thành công");
-    } else {
-      alert(response.message);
+    try {
+      const response = await userOp2.update(Update, Staffcondition);
+      console.log("response", response);
+
+      if (response.error.error === false) {
+        setMessage("Cập nhật thông tin thành công");
+        openNoti();
+        reloadData();
+      } else {
+        setMessage("Cập nhật thông tin thất bại  \n" + response.error.message);
+        openNoti();
+      }
+    } catch (e) {
+      setMessage("e");
+      openNoti();
     }
+
     setIsEditInfo(!isEditInfo);
   };
   const handleChangePassword = async () => {
     const up: UpdatingStaffCondition = {
       staff_id: staff_id,
     };
-
-    const reponse = await userOp2.updatePassword(passwordInfo, up);
-    console.log("reponse", reponse);
-    if (reponse.error === false) {
-      alert("Đổi mật khẩu thành công");
-    } else {
-      alert("Đổi mật khẩu thất bại");
+    try {
+      const reponse = await userOp2.updatePassword(passwordInfo, up);
+      console.log("reponse", reponse);
+      if (reponse.error.error === false) {
+        setMessage("Đổi mật khẩu thành công");
+        openNoti();
+        reloadData();
+      } else {
+        setMessage("Đổi mật khẩu thất bại \n" + reponse.error.message);
+        openNoti();
+      }
+    } catch (e) {
+      setMessage(e);
+      openNoti();
     }
   };
   const [avaterUpload, setAvaterUpload] = useState(null);
@@ -236,9 +268,13 @@ const AccountSetting = (info) => {
     const response = await userOp2.updateAvatar(staffInfo, id);
     console.log("response", response);
     if (response.error === false) {
-      alert("Cập nhật ảnh đại diện thành công");
+      setMessage("Cập nhật ảnh đại diện thành công");
+      openNoti();
+      reloadData();
+      setAvaterUpload(null);
     } else {
-      alert("Cập nhật ảnh đại diện thất bại");
+      setMessage("Cập nhật ảnh đại diện thất bại");
+      openNoti();
     }
   };
   return (
@@ -250,13 +286,13 @@ const AccountSetting = (info) => {
         <div className="flex flex-col text-xs font-base gap-3 mt-3 ">
           <div>
             <div className="text-base font-light">Ảnh đại diện :</div>
-            <div className=" flex flex-row place place-content-center  border-2 h-20 border-blue-200  rounded-lg mt-3">
+            <div className=" flex flex-row place place-content-center justify-center items-center  border-2 h-20 border-blue-200  rounded-lg mt-3">
               {avatar && (
                 <div className="pl-5 py-2 w-20 h-20 ">
                   <img
                     src={avatar}
                     alt="Avatar"
-                    className="h-14 bg-white border rounded"
+                    className="h-full bg-white border rounded"
                     onClick={openModal}
                   />
                 </div>
@@ -267,9 +303,9 @@ const AccountSetting = (info) => {
                 </div>
               )}
 
-              <div className="flex-grow place-content-center ">
-                <label className="flex py-6">
-                  <BackupIcon className="h-6 w-6" />
+              <div className="flex-grow items-center justify-center ">
+                <label className="flex place-content-center  py-6">
+                  <BackupIcon className="ml-3 h-6 w-6" />
 
                   <input
                     type="file"
@@ -314,7 +350,7 @@ const AccountSetting = (info) => {
             <img src={avatar} alt="Avatar" className="h-full rounded-sm" />
           </div>
         </Modal>
-
+        {NotiIsOpen && <NotiPopup onClose={closeNoti} message={message} />}
         <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mt-3">
           <div className="flex flex-col text-xs font-base gap-3 ">
             <div>
@@ -326,6 +362,7 @@ const AccountSetting = (info) => {
                 className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md   border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 "
                 placeholder="Nhập họ và tên mới"
                 value={Update.fullname}
+                onChange={(e) => handleInputChange("fullname", e.target.value)}
               />
             ) : (
               <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md  border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
@@ -343,6 +380,9 @@ const AccountSetting = (info) => {
                 className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
                 placeholder="Nhập số điện thoại mới"
                 value={Update.phone_number}
+                onChange={(e) =>
+                  handleInputChange("phone_number", e.target.value)
+                }
               />
             ) : (
               <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
@@ -361,6 +401,7 @@ const AccountSetting = (info) => {
                   className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
                   placeholder="Nhập số CCCD mới"
                   value={staffInfo.cccd}
+                  onChange={(e) => handleInputChange("cccd", e.target.value)}
                 />
               </div>
             ) : (
@@ -388,6 +429,7 @@ const AccountSetting = (info) => {
                 className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
                 placeholder="Nhập email mới"
                 value={Update.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
               />
             ) : (
               <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
@@ -401,7 +443,7 @@ const AccountSetting = (info) => {
             </div>
 
             <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
-              {Update.date_of_birth}
+              {new Date(Update.date_of_birth).toLocaleDateString("vi-VN")}
             </div>
           </div>
 

@@ -3,7 +3,6 @@ import { m, motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FormattedMessage, useIntl } from "react-intl";
-import PasswordToggle from "./PasswordToggle";
 import axios from "axios";
 import MapExport from "@/components/Maprender/Mapexport";
 import {
@@ -18,6 +17,7 @@ import { Input } from "postcss";
 interface AddOfficeProps {
   onClose: () => void;
   reloadData?: () => void;
+  info: any;
 }
 interface City {
   Id: string;
@@ -37,7 +37,7 @@ interface Ward {
 }
 const staff = new StaffsOperation();
 
-const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData }) => {
+const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);

@@ -1,46 +1,53 @@
-import { VehicleData, columns } from "./column";
+import { VehicleData, createColumns } from "./column";
 import { DataTable } from "./datatable";
 import https from "https";
 import {
   FindingVehicleByAdminConditions,
   FindingVehicleByStaffCondition,
   VehicleOperation,
-  StaffsOperation,
 } from "@/TDLib/tdlogistics";
-import { useContext } from "react";
-import { UserContext } from "@/Context/InfoContext/UserContext";
 
 const vehicle = new VehicleOperation();
 const condition: FindingVehicleByAdminConditions[] = [];
 const condition2: FindingVehicleByStaffCondition[] = [];
 
-async function getRole(): Promise<any> {
-  const staff = new StaffsOperation();
-  const res = await staff.getAuthenticatedStaffInfo();
-  const role = res.data.role;
-  return role;
-}
-async function getData(): Promise<any> {
+async function getData(info: any): Promise<any> {
   // Fetch data from your API here.
-  const role = await getRole();
-  if (role === "ADMIN") {
-    const response = await vehicle.findByAdmin(condition[0]);
-    console.log(response);
-    return response.data;
+  if (info?.role === "ADMIN") {
+    try {
+      const response = await vehicle.findByAdmin(condition[0]);
+      console.log(response);
+      return response.data;
+    } catch (e) {
+      alert("Error: " + e);
+      return "Error";
+    }
   } else {
-    const response = await vehicle.findByStaff(condition2[0]);
+    try {
+      const response = await vehicle.findByStaff(condition2[0]);
 
-    console.log(response);
-    return response.data;
+      console.log(response);
+      return response.data;
+    } catch (e) {
+      alert("Error: " + e);
+      return "Error";
+    }
   }
 }
 
-export default async function DemoPage(reloadData) {
-  const data = await getData();
-  const role = await getRole();
+export default async function DemoPage(reloadData, info) {
+  const data = await getData(info);
   console.log(data);
-  if (role === "ADMIN") {
-    return <DataTable columns={columns} data={data} reloadData={reloadData} />;
+  const columns = await createColumns(reloadData, info);
+  if (info?.role === "ADMIN") {
+    return (
+      <DataTable
+        columns={columns}
+        data={data}
+        reloadData={reloadData}
+        info={info}
+      />
+    );
   } else {
     return (
       <div className="flex place-content-center">

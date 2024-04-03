@@ -4,8 +4,6 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
-import axios from "axios";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   UpdatingBusinessCondition,
@@ -15,14 +13,10 @@ import {
   UpdatingBusinessRepresentorInfo,
   FindingRepresentorByAdminCondition,
   FindingRepresentorByBusinessCondition,
-  StaffsOperation,
   AdministrativeOperation,
   AdministrativeInfo,
   FindingContractCondition,
 } from "@/TDLib/tdlogistics";
-import { Data } from "@react-google-maps/api";
-import email from "@/pages/dashboard";
-import { set } from "date-fns";
 import BackupIcon from "@mui/icons-material/Backup";
 
 interface FindingBusinessByAdminCondition {
@@ -44,46 +38,19 @@ interface FindingBusinessByAdminCondition {
   username: string;
 }
 
-interface City {
-  Id: string;
-  Name: string;
-  Districts: District[];
-}
-
-interface District {
-  Id: string;
-  Name: string;
-  Wards: Ward[];
-}
-
-interface Ward {
-  Id: string;
-  Name: string;
-}
-const staff = new StaffsOperation();
-
 interface DetailBusinessProps {
   onClose: () => void;
   dataInitial: FindingBusinessByAdminCondition;
   reloadData: () => void;
+  info?: any;
 }
 
 const DetailBusiness: React.FC<DetailBusinessProps> = ({
   onClose,
   dataInitial,
   reloadData,
+  info,
 }) => {
-  const [role, setRole] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      setRole(res.data.role);
-    };
-
-    fetchData();
-  }, []);
-
   const intl = useIntl();
   const [fileContract, setFileContract] = useState(null);
   const [fileContractUpdate, setFileContractUpdate] = useState(null);
@@ -218,11 +185,11 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     const fetchData = async () => {
       console.log("Base", dataInitial);
       if (
-        role === "ADMIN" ||
-        role === "MANAGER" ||
-        role === "TELLER" ||
-        role === "AGENCY_MANAGER" ||
-        role === "AGENCY_TELLER"
+        info?.role === "ADMIN" ||
+        info?.role === "MANAGER" ||
+        info?.role === "TELLER" ||
+        info?.role === "AGENCY_MANAGER" ||
+        info?.role === "AGENCY_TELLER"
       ) {
         setBusinessData({
           agency_id: dataInitial.agency_id,
@@ -240,23 +207,20 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
           tax_number: dataInitial.tax_number,
           debit: dataInitial.debit,
         });
-
-        console.log("Data", BusinessData);
-        console.log("Data2", RepresentorData);
       }
     };
     fetchData();
-  }, [dataInitial, role]);
+  }, [dataInitial, info]);
 
   useEffect(() => {
     const fetchData = async () => {
       console.log("Base", dataInitial);
       if (
-        role === "ADMIN" ||
-        role === "MANAGER" ||
-        role === "TELLER" ||
-        role === "AGENCY_MANAGER" ||
-        role === "AGENCY_TELLER"
+        info?.role === "ADMIN" ||
+        info?.role === "MANAGER" ||
+        info?.role === "TELLER" ||
+        info?.role === "AGENCY_MANAGER" ||
+        info?.role === "AGENCY_TELLER"
       ) {
         const a = new BusinessOperation();
         const FindByID: FindingRepresentorByBusinessCondition = {
@@ -308,7 +272,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
       }
     };
     fetchData();
-  }, [dataInitial, role]);
+  }, [dataInitial, info]);
 
   const handleInputChange = (key: string, value: string) => {
     setBusinessData((prevState) => ({
@@ -390,7 +354,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
   const handleSaveClick = async () => {
     const editPartner = new BusinessOperation();
 
-    const info: UpdatingBusinessInfo = {
+    const info2: UpdatingBusinessInfo = {
       business_name: BusinessData.business_name,
       bank: BusinessData.bank,
       debit: BusinessData.debit,
@@ -400,13 +364,13 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
       detail_address: BusinessData.detail_address,
     };
     if (BusinessData.email !== dataInitial.email) {
-      info.email = BusinessData.email;
+      info2.email = BusinessData.email;
     }
     if (BusinessData.phone_number !== dataInitial.phone_number) {
-      info.phone_number = BusinessData.phone_number;
+      info2.phone_number = BusinessData.phone_number;
     }
     if (BusinessData.bin !== dataInitial.bin) {
-      info.bin = BusinessData.bin;
+      info2.bin = BusinessData.bin;
     }
     const date = new Date(RepresentorData.date_of_birth);
     const formattedDate = date.toISOString().split(".")[0].replace("T", " ");
@@ -438,17 +402,17 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     }
 
     if (
-      role === "ADMIN" ||
-      role === "MANAGER" ||
-      role === "TELLER" ||
-      role === "AGENCY_MANAGER" ||
-      role === "AGENCY_TELLER"
+      info?.role === "ADMIN" ||
+      info?.role === "MANAGER" ||
+      info?.role === "TELLER" ||
+      info?.role === "AGENCY_MANAGER" ||
+      info?.role === "AGENCY_TELLER"
     ) {
       const roleAdmin: UpdatingBusinessCondition = {
         business_id: BusinessData.business_id,
       };
       try {
-        const response = await editPartner.updateBusiness(info, roleAdmin);
+        const response = await editPartner.updateBusiness(info2, roleAdmin);
         if (response.error) {
           alert(response.message);
         } else {
@@ -510,467 +474,462 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             <IoMdClose className="w-5/6 h-5/6 " />
           </Button>
         </div>
-        <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white place-content-center">
-          <div className="grid grid-cols w-full gap-5 ">
-            <div className="flex flex-col w-full gap-5">
-              <div className="font-bold text-base text-center">
-                Thông tin Doanh nghiệp
-              </div>
-              {role === "ADMIN" ||
-                role === "MANAGER" ||
-                role === "TELLER" ||
-                role === "AGENCY_MANAGER" ||
-                (role === "AGENCY_TELLER" && (
-                  <div className="flex gap-5 w-full">
-                    <div className="font-bold text-base w-48">
-                      <FormattedMessage id="TransportPartner.PartnerCode" />:
-                    </div>
-                    {isEditing ? (
-                      <input
-                        className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                        type="text"
-                        value={BusinessData?.business_id}
-                        onChange={(e) =>
-                          setBusinessData({
-                            ...BusinessData,
-                            business_id: e.target.value,
-                          })
-                        }
-                      />
-                    ) : (
-                      <div>BusinessData?.business_id</div>
-                    )}
-                  </div>
-                ))}
-
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Tên doanh nghiệp</div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={BusinessData.business_name}
-                    onChange={(e) =>
-                      setBusinessData({
-                        ...BusinessData,
-                        business_name: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{BusinessData?.business_name}</div>
-                )}
-              </div>
-
+        <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white place-content-start">
+          <div className="font-bold text-base text-center">
+            Thông tin Doanh nghiệp
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5 mt-3">
+            {(info?.role === "ADMIN" ||
+              info?.role === "MANAGER" ||
+              info?.role === "TELLER" ||
+              info?.role === "AGENCY_MANAGER" ||
+              info?.role === "AGENCY_TELLER") && (
               <div className="flex gap-5 w-full">
                 <div className="font-bold text-base w-48">
-                  <FormattedMessage id="PostOffice.Phone" />:
+                  <FormattedMessage id="TransportPartner.PartnerCode" />:
                 </div>
                 {isEditing ? (
                   <input
                     className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
                     type="text"
-                    value={BusinessData.phone_number}
+                    value={BusinessData?.business_id}
                     onChange={(e) =>
                       setBusinessData({
                         ...BusinessData,
-                        phone_number: e.target.value,
+                        business_id: e.target.value,
                       })
                     }
                   />
                 ) : (
-                  <div>{BusinessData?.phone_number}</div>
+                  <div>BusinessData?.business_id</div>
                 )}
               </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Email:</div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={BusinessData?.email}
-                    onChange={(e) =>
-                      setBusinessData({
-                        ...BusinessData,
-                        email: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{BusinessData?.email}</div>
-                )}
-              </div>
+            )}
 
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">
-                  <FormattedMessage id="PostOffice.BankName" />:
-                </div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={BusinessData?.bank}
-                    onChange={(e) =>
-                      setBusinessData({ ...BusinessData, bank: e.target.value })
-                    }
-                  />
-                ) : (
-                  <div>{BusinessData?.bank}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">
-                  <FormattedMessage id="PostOffice.BankNumber" />:
-                </div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={BusinessData?.bin}
-                    onChange={(e) =>
-                      setBusinessData({ ...BusinessData, bin: e.target.value })
-                    }
-                  />
-                ) : (
-                  <div>{BusinessData?.bin}</div>
-                )}
-              </div>
-
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">
-                  <FormattedMessage id="TransportPartner.TaxCode" />:
-                </div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type=""
-                    value={BusinessData?.tax_number}
-                    onChange={(e) =>
-                      setBusinessData({
-                        ...BusinessData,
-                        tax_number: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{BusinessData?.tax_number}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">
-                  <FormattedMessage id="TransportPartner.Debit" />:
-                </div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="number"
-                    value={BusinessData?.debit}
-                    onChange={(e) =>
-                      setBusinessData({
-                        ...BusinessData,
-                        debit: parseInt(e.target.value),
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{BusinessData?.debit || 0} vnđ</div>
-                )}
-              </div>
-
-              <div className="flex gap-5 mt-3">
-                <div className="font-bold text-base w-48">
-                  <FormattedMessage id="TransportPartner.Adress" />:
-                </div>
-                {!isEditing ? (
-                  <div className="flex">
-                    <div>{BusinessData?.detail_address}/</div>
-                    <div>{BusinessData?.town}/</div>
-                    <div>{BusinessData?.district}/</div>
-                    <div>{BusinessData?.province}</div>
-                  </div>
-                ) : (
-                  <>
-                    <select
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                `}
-                      id="city"
-                      aria-label=".form-select-sm"
-                      value={selectedProvince}
-                      onChange={handleProvinceChange}
-                    >
-                      <option value="Bình Định">
-                        {intl.formatMessage({ id: "Choose Province" })}
-                      </option>
-                      {provinces.map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                }
-                `}
-                      id="district"
-                      aria-label=".form-select-sm"
-                      value={selectedDistrict}
-                      onChange={handleDistrictChange}
-                    >
-                      <option value="Bình Định">
-                        {intl.formatMessage({ id: "Choose District" })}
-                      </option>
-                      {districts.map((district) => (
-                        <option key={district} value={district}>
-                          {district}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                `}
-                      id="ward"
-                      aria-label=".form-select-sm"
-                      onChange={(e) =>
-                        handleInputChange("town", e.target.value)
-                      }
-                    >
-                      <option value="Bình Định">
-                        {intl.formatMessage({ id: "Choose Ward" })}
-                      </option>
-                      {wards.map((ward) => (
-                        <option key={ward} value={ward}>
-                          {ward}
-                        </option>
-                      ))}
-                    </select>
-
-                    <input
-                      type=""
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                `}
-                      placeholder="Số nhà- tên đường"
-                      onChange={(e) =>
-                        handleInputChange("detail_address", e.target.value)
-                      }
-                    />
-                  </>
-                )}
-              </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Tên doanh nghiệp</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={BusinessData.business_name}
+                  onChange={(e) =>
+                    setBusinessData({
+                      ...BusinessData,
+                      business_name: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{BusinessData?.business_name}</div>
+              )}
             </div>
-            <div className="flex flex-col w-full gap-5">
-              <div className="font-bold text-base  text-center">
-                Thông tin người đại diện
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Họ và tên:</div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.fullname}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        fullname: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.fullname}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Số điện thoại:</div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.phone_number}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        phone_number: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.phone_number}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Email:</div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.email}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        email: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.email}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Số CMND/CCCD:</div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.cccd}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        cccd: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.cccd}</div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Ngày sinh:</div>
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="date"
-                    value={RepresentorData?.date_of_birth}
-                    onChange={(e) => {
-                      setRepresentorData({
-                        ...RepresentorData,
-                        date_of_birth: e.target.value,
-                      });
-                    }}
-                  />
-                ) : (
-                  <div>
-                    {RepresentorData?.date_of_birth &&
-                      new Date(
-                        RepresentorData.date_of_birth
-                      ).toLocaleDateString("en-GB")}
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Địa chỉ:</div>
-                {isEditing ? (
-                  <>
-                    <select
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                `}
-                      id="city"
-                      aria-label=".form-select-sm"
-                      value={selectedProvinceRepresentor}
-                      onChange={handleProvinceChangeRepresentor}
-                    >
-                      <option value="Bình Định">
-                        {intl.formatMessage({ id: "Choose Province" })}
-                      </option>
-                      {provinceRepresentor.map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                }
-                `}
-                      id="district"
-                      aria-label=".form-select-sm"
-                      value={selectedDistrictRepresentor}
-                      onChange={handleDistrictChangeRepresentor}
-                    >
-                      <option value="Bình Định">
-                        {intl.formatMessage({ id: "Choose District" })}
-                      </option>
-                      {districtsRepresentor.map((district) => (
-                        <option key={district} value={district}>
-                          {district}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                `}
-                      id="ward"
-                      aria-label=".form-select-sm"
-                      value={selectedWardRepresentor}
-                      onChange={handleWardChangeRepresentor}
-                    >
-                      <option value="Bình Định">
-                        {intl.formatMessage({ id: "Choose Ward" })}
-                      </option>
-                      {wardsRepresentor.map((ward) => (
-                        <option key={ward} value={ward}>
-                          {ward}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type=""
-                      className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                `}
-                      placeholder="Số nhà- tên đường"
-                      onChange={(e) =>
-                        handleInputChange2("detail_address", e.target.value)
-                      }
-                    />
-                  </>
-                ) : (
-                  <div>
-                    {RepresentorData?.detail_address}/{RepresentorData?.town}/
-                    {RepresentorData?.district}/{RepresentorData?.province}
-                  </div>
-                )}
-              </div>
 
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Ngân hàng:</div>
-
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.bank}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        bank: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.bank}</div>
-                )}
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="PostOffice.Phone" />:
               </div>
-              <div className="flex gap-5 w-full">
-                <div className="font-bold text-base w-48">Số tài khoản:</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={BusinessData.phone_number}
+                  onChange={(e) =>
+                    setBusinessData({
+                      ...BusinessData,
+                      phone_number: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{BusinessData?.phone_number}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Email:</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={BusinessData?.email}
+                  onChange={(e) =>
+                    setBusinessData({
+                      ...BusinessData,
+                      email: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{BusinessData?.email}</div>
+              )}
+            </div>
 
-                {isEditing ? (
-                  <input
-                    className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                    type="text"
-                    value={RepresentorData?.bin}
-                    onChange={(e) =>
-                      setRepresentorData({
-                        ...RepresentorData,
-                        bin: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div>{RepresentorData?.bin}</div>
-                )}
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="PostOffice.BankName" />:
               </div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={BusinessData?.bank}
+                  onChange={(e) =>
+                    setBusinessData({ ...BusinessData, bank: e.target.value })
+                  }
+                />
+              ) : (
+                <div>{BusinessData?.bank}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="PostOffice.BankNumber" />:
+              </div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={BusinessData?.bin}
+                  onChange={(e) =>
+                    setBusinessData({ ...BusinessData, bin: e.target.value })
+                  }
+                />
+              ) : (
+                <div>{BusinessData?.bin}</div>
+              )}
+            </div>
+
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="TransportPartner.TaxCode" />:
+              </div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type=""
+                  value={BusinessData?.tax_number}
+                  onChange={(e) =>
+                    setBusinessData({
+                      ...BusinessData,
+                      tax_number: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{BusinessData?.tax_number}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="TransportPartner.Debit" />:
+              </div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="number"
+                  value={BusinessData?.debit}
+                  onChange={(e) =>
+                    setBusinessData({
+                      ...BusinessData,
+                      debit: parseInt(e.target.value),
+                    })
+                  }
+                />
+              ) : (
+                <div>{BusinessData?.debit || 0} vnđ</div>
+              )}
             </div>
           </div>
-          <div className="mt-5 flex flex-col place-content-center">
+          <div className="flex gap-5 mt-3">
+            <div className="font-bold text-base w-48">
+              <FormattedMessage id="TransportPartner.Adress" />:
+            </div>
+            {!isEditing ? (
+              <div className="flex">
+                <div>{BusinessData?.detail_address}/</div>
+                <div>{BusinessData?.town}/</div>
+                <div>{BusinessData?.district}/</div>
+                <div>{BusinessData?.province}</div>
+              </div>
+            ) : (
+              <>
+                <select
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                  id="city"
+                  aria-label=".form-select-sm"
+                  value={selectedProvince}
+                  onChange={handleProvinceChange}
+                >
+                  <option value="Bình Định">
+                    {intl.formatMessage({ id: "Choose Province" })}
+                  </option>
+                  {provinces.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                }
+                `}
+                  id="district"
+                  aria-label=".form-select-sm"
+                  value={selectedDistrict}
+                  onChange={handleDistrictChange}
+                >
+                  <option value="Bình Định">
+                    {intl.formatMessage({ id: "Choose District" })}
+                  </option>
+                  {districts.map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                  id="ward"
+                  aria-label=".form-select-sm"
+                  onChange={(e) => handleInputChange("town", e.target.value)}
+                >
+                  <option value="Bình Định">
+                    {intl.formatMessage({ id: "Choose Ward" })}
+                  </option>
+                  {wards.map((ward) => (
+                    <option key={ward} value={ward}>
+                      {ward}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                  placeholder="Số nhà- tên đường"
+                  onChange={(e) =>
+                    handleInputChange("detail_address", e.target.value)
+                  }
+                />
+              </>
+            )}
+          </div>
+          <div className="font-bold text-base  text-center mt-3">
+            Thông tin người đại diện
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5 mt-3">
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Họ và tên:</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={RepresentorData?.fullname}
+                  onChange={(e) =>
+                    setRepresentorData({
+                      ...RepresentorData,
+                      fullname: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{RepresentorData?.fullname}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Số điện thoại:</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={RepresentorData?.phone_number}
+                  onChange={(e) =>
+                    setRepresentorData({
+                      ...RepresentorData,
+                      phone_number: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{RepresentorData?.phone_number}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Email:</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={RepresentorData?.email}
+                  onChange={(e) =>
+                    setRepresentorData({
+                      ...RepresentorData,
+                      email: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{RepresentorData?.email}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Số CMND/CCCD:</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={RepresentorData?.cccd}
+                  onChange={(e) =>
+                    setRepresentorData({
+                      ...RepresentorData,
+                      cccd: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{RepresentorData?.cccd}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Ngày sinh:</div>
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="date"
+                  value={RepresentorData?.date_of_birth}
+                  onChange={(e) => {
+                    setRepresentorData({
+                      ...RepresentorData,
+                      date_of_birth: e.target.value,
+                    });
+                  }}
+                />
+              ) : (
+                <div>
+                  {RepresentorData?.date_of_birth &&
+                    new Date(RepresentorData.date_of_birth).toLocaleDateString(
+                      "en-GB"
+                    )}
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Ngân hàng:</div>
+
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={RepresentorData?.bank}
+                  onChange={(e) =>
+                    setRepresentorData({
+                      ...RepresentorData,
+                      bank: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{RepresentorData?.bank}</div>
+              )}
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="font-bold text-base w-48">Số tài khoản:</div>
+
+              {isEditing ? (
+                <input
+                  className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
+                  type="text"
+                  value={RepresentorData?.bin}
+                  onChange={(e) =>
+                    setRepresentorData({
+                      ...RepresentorData,
+                      bin: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <div>{RepresentorData?.bin}</div>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-5 w-full mt-3">
+            <div className="font-bold text-base w-48">Địa chỉ:</div>
+            {isEditing ? (
+              <>
+                <select
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                  id="city"
+                  aria-label=".form-select-sm"
+                  value={selectedProvinceRepresentor}
+                  onChange={handleProvinceChangeRepresentor}
+                >
+                  <option value="Bình Định">
+                    {intl.formatMessage({ id: "Choose Province" })}
+                  </option>
+                  {provinceRepresentor.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                }
+                `}
+                  id="district"
+                  aria-label=".form-select-sm"
+                  value={selectedDistrictRepresentor}
+                  onChange={handleDistrictChangeRepresentor}
+                >
+                  <option value="Bình Định">
+                    {intl.formatMessage({ id: "Choose District" })}
+                  </option>
+                  {districtsRepresentor.map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                  id="ward"
+                  aria-label=".form-select-sm"
+                  value={selectedWardRepresentor}
+                  onChange={handleWardChangeRepresentor}
+                >
+                  <option value="Bình Định">
+                    {intl.formatMessage({ id: "Choose Ward" })}
+                  </option>
+                  {wardsRepresentor.map((ward) => (
+                    <option key={ward} value={ward}>
+                      {ward}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type=""
+                  className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                `}
+                  placeholder="Số nhà- tên đường"
+                  onChange={(e) =>
+                    handleInputChange2("detail_address", e.target.value)
+                  }
+                />
+              </>
+            ) : (
+              <div>
+                {RepresentorData?.detail_address}/{RepresentorData?.town}/
+                {RepresentorData?.district}/{RepresentorData?.province}
+              </div>
+            )}
+          </div>
+          <div className="mt-5 flex flex-col place-content-center ">
             <div className="text-base font-bold text-center">
               Hợp đồng doanh nghiệp
             </div>

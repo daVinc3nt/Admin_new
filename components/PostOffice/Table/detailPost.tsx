@@ -4,6 +4,8 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
+import Dropzone from "./Dropzone";
+import Image from "next/image";
 import BackupIcon from "@mui/icons-material/Backup";
 import {
   StaffsOperation,
@@ -14,32 +16,7 @@ import {
   AdministrativeInfo,
   UpdatingLicenseInfo,
 } from "@/TDLib/tdlogistics";
-import axios from "axios";
-import { set } from "date-fns";
-interface Postdetail2 {
-  individual_company: number;
-  company_name: string;
-  tax_number: string;
-  bussiness_number: string;
-  agency_id: string;
-  agency_name: string;
-  bank: string;
-  bin: string;
-  commission_rate: string;
-  contract: string;
-  detail_address: string;
-  district: string;
-  email: string;
-  latitude: string;
-  level: string;
-  longitude: string;
-  managed_wards: string[];
-  phone_number: string;
-  postal_code: string;
-  province: string;
-  town: string;
-  revenue: string;
-}
+
 interface Postdetail {
   agency_id: string;
   agency_name: string;
@@ -61,37 +38,25 @@ interface Postdetail {
   revenue: string;
 }
 
-interface City {
-  Id: string;
-  Name: string;
-  Districts: District[];
-}
-
-interface District {
-  Id: string;
-  Name: string;
-  Wards: Ward[];
-}
-
-interface Ward {
-  Id: string;
-  Name: string;
-}
-const staff = new StaffsOperation();
-
 interface DetailAgencyProps {
   onClose: () => void;
   dataInitial: Postdetail;
+  reloadData: () => void;
+  info: any;
 }
 
-const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
+const DetailPost: React.FC<DetailAgencyProps> = ({
+  onClose,
+  dataInitial,
+  reloadData,
+  info,
+}) => {
   const intl = useIntl();
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [fileContract, setFileContract] = useState(null);
-  const [fileContractUpdate, setFileContractUpdate] = useState(null);
-  const [role, setRole] = useState(null);
+  // const [fileLicense, setFileLicense] = useState([]);
+  // const [fileLicenseUpdate, setFileLicenseUpdate] = useState([]);
   const a: AdministrativeInfo = {
     province: "",
   };
@@ -102,14 +67,6 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      setRole(res.data.role);
-    };
-
-    fetchData();
-  }, []);
 
   const adminOperation = new AdministrativeOperation();
 
@@ -121,28 +78,54 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
     };
     fetchData();
   }, []);
-  const handleUpdateContract = async () => {
-    const a = new AgencyOperation();
-    const FindByID: UpdatingAgencyCondition = {
-      agency_id: dataInitial.agency_id,
-    };
-    try {
-      // Check if the file is a PDF
+  // const handleSubmit = async () => {
+  //   console.log("File", fileLicenseUpdate);
+  //   const orders = new AgencyOperation();
+  //   if (!fileLicenseUpdate) {
+  //     alert("Please select at least one file.");
+  //     return;
+  //   }
+  //   let condition: UpdatingAgencyCondition = {
+  //     agency_id: dataInitial.agency_id,
+  //   };
 
-      const File: UpdatingLicenseInfo = {
-        licenseFiles: fileContractUpdate,
-      };
-      const response = await a.updateLicense(File, FindByID);
-      if (response.error) {
-        alert(response.message);
-      } else {
-        alert("Cập nhật hợp đồng thành công");
-      }
-    } catch (error) {
-      console.error("Error updating contract", error);
-      alert(error.message || "Có lỗi xảy ra khi cập nhật hợp đồng");
-    }
-  };
+  //   let updatingOrderInfo: UpdatingLicenseInfo = {
+  //     licenseFiles: fileLicenseUpdate as unknown as FileList,
+  //   };
+
+  //   try {
+  //     const result = await orders.updateLicense(updatingOrderInfo, condition);
+  //     console.log("Result", result);
+  //     if (result.error) {
+  //       alert(result.message);
+  //     }
+  //     reloadIMG();
+  //     alert("Cập nhật thành công");
+  //     setFileLicenseUpdate([]);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+  // const fetchIMG = async () => {
+  //   const a = new AgencyOperation();
+  //   const findID: UpdatingAgencyCondition = {
+  //     agency_id: dataInitial.agency_id,
+  //   };
+  //   console.log("ID", findID);
+  //   try {
+  //     const response = await a.findLicense(findID);
+  //     setFileLicense(response);
+  //     console.log("Agency", response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // const reloadIMG = async () => {
+  //   fetchIMG();
+  // };
+  // useEffect(() => {
+  //   fetchIMG();
+  // }, [dataInitial]);
 
   const handleProvinceChange = async (e) => {
     setSelectedProvince(e.target.value);
@@ -249,9 +232,9 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
       bank: Agencydata.bank,
     };
     if (
-      role === "ADMIN" ||
-      role === "MANAGER" ||
-      role === "HUMAN_RESOURCE_MANAGER"
+      info.role === "ADMIN" ||
+      info.role === "MANAGER" ||
+      info.role === "HUMAN_RESOURCE_MANAGER"
     ) {
       const condition: UpdatingAgencyCondition = {
         agency_id: dataInitial.agency_id,
@@ -263,6 +246,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
           setError(response.message);
         } else {
           alert("Cập nhật thành công");
+          reloadData();
         }
       } catch (e) {
         console.log(e);
@@ -306,8 +290,8 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
           </Button>
         </div>
         <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white ">
-          <div className="grid md:grid-cols-2 gap-4 w-full">
-            {role === "ADMIN" && (
+          <div className="grid md:grid-cols-2 gap-2 w-full">
+            {info.role === "ADMIN" && (
               <div className="flex gap-5 w-full">
                 <div className="font-bold text-base">
                   <FormattedMessage id="Agency.ID" />:
@@ -443,15 +427,15 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 <div>{Agencydata.revenue}</div>
               )}
             </div>
-            <div className="flex gap-3 mt-3">
+            <div className="flex gap-3 ">
               {!isEditing ? (
-                <div className="flex gap-3">
+                <div className="flex">
                   <div className="font-bold text-base">
                     <FormattedMessage id="TransportPartner.Adress" />:
                   </div>
-                  <div>{Agencydata?.detail_address}/</div>
-                  <div>{Agencydata?.town}/</div>
-                  <div>{Agencydata?.district}/</div>
+                  <div>{Agencydata?.detail_address} /</div>
+                  <div>{Agencydata?.town} /</div>
+                  <div>{Agencydata?.district} /</div>
                   <div>{Agencydata?.province}</div>
                 </div>
               ) : (
@@ -485,7 +469,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                     value={selectedDistrict}
                     onChange={handleDistrictChange}
                   >
-                    <option value="">
+                    <option value="Huyện Hoài Ân">
                       {intl.formatMessage({ id: "Choose District" })}
                     </option>
                     {districts.map((district) => (
@@ -524,54 +508,43 @@ const DetailPost: React.FC<DetailAgencyProps> = ({ onClose, dataInitial }) => {
                 </>
               )}
             </div>
-            <div className="mt-5 flex flex-col place-content-center">
-              <div className="text-base font-bold text-center">
-                Hợp đồng doanh nghiệp
-              </div>
-              {isEditing ? (
-                <div className="flex flex-col place-content-center">
-                  <div className="flex place-content-center">
-                    <label className="flex py-6">
-                      <BackupIcon className="h-6 w-6" />
-
-                      <input
-                        type="file"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          setFileContractUpdate(file);
-                        }}
-                      />
-                      {fileContractUpdate && (
-                        <div className=" font-bold text-base ">
-                          {fileContractUpdate.name}
-                        </div>
-                      )}
-                      {!fileContractUpdate && (
-                        <div className=" font-bold text-base ">Tải ảnh lên</div>
-                      )}
-                    </label>
-                  </div>
-                  <div className="flex place-content-center">
-                    <button
-                      onClick={handleUpdateContract}
-                      className=" text-white place-items-center h-full w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
-                    >
-                      Xác nhận
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex place-content-center py-6">
-                  <a href={fileContract} download>
-                    <div className="border-b-blue-500 border-b-2 text-blue-500 text-base font-bold">
-                      Tải hợp đồng
-                    </div>
-                  </a>
-                </div>
-              )}
-            </div>
           </div>
+          {/* <div className="mt-5 flex flex-col place-content-center">
+            <div className="text-base font-bold text-center">
+              Hợp đồng doanh nghiệp
+            </div>
+            {isEditing ? (
+              <Dropzone
+                className="h-32 w-full bg-white rounded-xl flex justify-center outline-gray-400 outline-dashed"
+                files={fileLicenseUpdate}
+                setFiles={setFileLicenseUpdate}
+                submit={handleSubmit}
+              />
+            ) : (
+              <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 min-h-[130px]">
+                {fileLicense?.map((file) => (
+                  <li
+                    key={file}
+                    className="relative h-32 rounded-md px-2 border border-gray-300"
+                  >
+                    <Image
+                      src={file}
+                      alt={file.name}
+                      width={100}
+                      height={100}
+                      onLoad={() => {
+                        URL.revokeObjectURL(file);
+                      }}
+                      className="h-full w-full rounded-md object-contain"
+                    />
+                    <div className="mt-1 text-[12px] font-medium text-stone-500 text-center whitespace-nowrap truncate">
+                      {file}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div> */}
           <div className="text-red-700 font-bold flex place-content-center text-base">
             {error}
           </div>

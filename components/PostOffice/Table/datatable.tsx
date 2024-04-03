@@ -41,12 +41,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   reloadData?: () => void;
+  info?: any;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   reloadData,
+  info,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -105,8 +107,9 @@ export function DataTable<TData, TValue>({
       if (error) {
         alert(error.message);
       }
+
+      reloadData();
     });
-    reloadData();
   };
   const confirmDelete = () => {
     return window.confirm("Are you sure you want to delete?");
@@ -151,7 +154,7 @@ export function DataTable<TData, TValue>({
                   ?.setFilterValue(event.target.value)
               }
               className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
-                    text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm text-white`}
+                    text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm dark:text-white`}
               placeholder=""
             />
             <label
@@ -250,10 +253,18 @@ export function DataTable<TData, TValue>({
               </DropdownMenu>
             </Dropdown>
             {modalIsOpen ? (
-              <AddOffice onClose={closeModal} reloadData={reloadData} />
+              <AddOffice
+                onClose={closeModal}
+                reloadData={reloadData}
+                info={info}
+              />
             ) : null}
             {modal2IsOpen ? (
-              <AddOffice2 onClose={closeModal2} reloadData={reloadData} />
+              <AddOffice2
+                onClose={closeModal2}
+                reloadData={reloadData}
+                info={info}
+              />
             ) : null}
           </div>
         </div>

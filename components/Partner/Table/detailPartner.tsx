@@ -1,17 +1,17 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
-import axios from "axios";
-import { Modal } from "@nextui-org/react";
 import {
   UpdatingTransportPartnerInfo,
   UpdatingTransportPartnerCondition,
   TransportPartnersOperation,
-  StaffsOperation,
+  AdministrativeOperation,
+  AdministrativeInfo,
 } from "@/TDLib/tdlogistics";
+import NotiPopup from "@/components/Common/NotiPopup";
 import { set } from "date-fns";
 
 interface FindingTransportPartnerByAdminConditions {
@@ -29,97 +29,113 @@ interface FindingTransportPartnerByAdminConditions {
   debit: string;
 }
 
-interface City {
-  Id: string;
-  Name: string;
-  Districts: District[];
-}
-
-interface District {
-  Id: string;
-  Name: string;
-  Wards: Ward[];
-}
-
-interface Ward {
-  Id: string;
-  Name: string;
-}
-const staff = new StaffsOperation();
-
 interface DetailPartnerProps {
   onClose: () => void;
   dataInitial: FindingTransportPartnerByAdminConditions;
+  reloadData?: () => void;
+  info?: any;
 }
 
 const DetailPartner: React.FC<DetailPartnerProps> = ({
   onClose,
   dataInitial,
+  reloadData,
+  info,
 }) => {
-  const [role, setRole] = useState(null);
+  const [NotiIsOpen, setNotiIsOpen] = useState(false);
+
+  const openNoti = () => {
+    setNotiIsOpen(true);
+  };
+
+  const closeNoti = () => {
+    setNotiIsOpen(false);
+  };
+  const [message, setMessage] = useState("");
+
+  const intl = useIntl();
+  const a: AdministrativeInfo = {
+    province: "",
+  };
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
+  const adminOperation = new AdministrativeOperation();
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      setRole(res.data.role);
+      const response = await adminOperation.get({});
+      console.log("Tỉnh", response);
+      setProvinces(response.data);
     };
-
     fetchData();
   }, []);
-  const intl = useIntl();
-  const [cities, setCities] = useState<City[]>([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const handleProvinceChange = async (e) => {
+    setSelectedProvince(e.target.value);
+    a.province = e.target.value;
+    handleInputChange("user_province", e.target.value);
+    console.log(a);
+    const response = await adminOperation.get(a);
+    console.log("Quận", response);
+    setDistricts(response.data);
+  };
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      const response = await axios.get(
-        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json"
-      );
-      setCities(response.data);
-    };
+  const handleDistrictChange = async (e) => {
+    setSelectedDistrict(e.target.value);
+    a.province = selectedProvince;
+    a.district = e.target.value;
+    handleInputChange("user_district", e.target.value);
+    console.log(a);
+    const response = await adminOperation.get(a);
+    console.log("Xã", response);
+    setWards(response.data);
+  };
+  const handleWardChange = (e) => {
+    setSelectedWard(e.target.value);
+    handleInputChange("user_town", e.target.value);
+  };
 
-    fetchCities();
-  }, []);
   const [PartnerData, setPartnerData] = useState(null);
 
+  const fetchData = async () => {
+    if (info?.role === "ADMIN") {
+      setPartnerData({
+        transport_partner_id: dataInitial.transport_partner_id,
+        transport_partner_name: dataInitial.transport_partner_name,
+        phone_number: dataInitial.phone_number,
+        email: dataInitial.email,
+        bank: dataInitial.bank,
+        bin: dataInitial.bin,
+        province: dataInitial.province,
+        district: dataInitial.district,
+        town: dataInitial.town,
+        detail_address: dataInitial.detail_address,
+        tax_code: dataInitial.tax_code,
+        debit: dataInitial.debit,
+      });
+    } else {
+      setPartnerData({
+        transport_partner_name: dataInitial.transport_partner_name,
+        phone_number: dataInitial.phone_number,
+        email: dataInitial.email,
+        bank: dataInitial.bank,
+        bin: dataInitial.bin,
+        province: dataInitial.province,
+        district: dataInitial.district,
+        town: dataInitial.town,
+        detail_address: dataInitial.detail_address,
+        tax_code: dataInitial.tax_code,
+        debit: dataInitial.debit,
+      });
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await staff.getAuthenticatedStaffInfo();
-      console.log("Base", dataInitial);
-      if (res.data.role === "ADMIN") {
-        setPartnerData({
-          transport_partner_id: dataInitial.transport_partner_id,
-          transport_partner_name: dataInitial.transport_partner_name,
-          phone_number: dataInitial.phone_number,
-          email: dataInitial.email,
-          bank: dataInitial.bank,
-          bin: dataInitial.bin,
-          province: dataInitial.province,
-          district: dataInitial.district,
-          town: dataInitial.town,
-          detail_address: dataInitial.detail_address,
-          tax_code: dataInitial.tax_code,
-          debit: dataInitial.debit,
-        });
-      } else {
-        setPartnerData({
-          transport_partner_name: dataInitial.transport_partner_name,
-          phone_number: dataInitial.phone_number,
-          email: dataInitial.email,
-          bank: dataInitial.bank,
-          bin: dataInitial.bin,
-          province: dataInitial.province,
-          district: dataInitial.district,
-          town: dataInitial.town,
-          detail_address: dataInitial.detail_address,
-          tax_code: dataInitial.tax_code,
-          debit: dataInitial.debit,
-        });
-      }
-    };
     fetchData();
-  }, [dataInitial]);
+  }, [dataInitial, info]);
 
   const handleInputChange = (key: string, value: string) => {
     setPartnerData((prevState) => ({
@@ -127,32 +143,7 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
       [key]: value,
     }));
   };
-  const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCity(event.target.value);
-    setSelectedDistrict("");
-    handleInputChange(
-      "province",
-      cities.find((city) => city.Id === event.target.value).Name
-    );
-  };
 
-  const handleDistrictChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedDistrict(event.target.value);
-    handleInputChange(
-      "district",
-      districts.find((district) => district.Id === event.target.value).Name
-    );
-  };
-
-  const selectedCityObj = cities.find((city) => city.Id === selectedCity);
-  const districts = selectedCityObj ? selectedCityObj.Districts : [];
-
-  const selectedDistrictObj = districts.find(
-    (district) => district.Id === selectedDistrict
-  );
-  const wards = selectedDistrictObj ? selectedDistrictObj.Wards : [];
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -193,7 +184,7 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
   const handleSaveClick = async () => {
     const editPartner = new TransportPartnersOperation();
 
-    const info: UpdatingTransportPartnerInfo = {
+    const info2: UpdatingTransportPartnerInfo = {
       transport_partner_name: PartnerData.transport_partner_name,
       phone_number: PartnerData.phone_number,
       email: PartnerData.email,
@@ -206,13 +197,24 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
       tax_code: PartnerData.tax_code,
       debit: PartnerData.debit,
     };
-    if (role === "ADMIN") {
+    if (info?.role === "ADMIN") {
       const roleAdmin: UpdatingTransportPartnerCondition = {
         transport_partner_id: PartnerData.transport_partner_id,
       };
-      const response = await editPartner.update(info, roleAdmin);
-      if (response.error) {
-        console.log("error");
+      try {
+        const response = await editPartner.update(info2, roleAdmin);
+        console.log("res", response);
+        if (response.error === true) {
+          setMessage("Cập nhật thông tin không thành công" + response.message);
+          openNoti();
+        } else {
+          setMessage("Cập nhật thông tin thành công");
+          openNoti();
+          reloadData();
+        }
+      } catch (e) {
+        setMessage("Cập nhật thông tin không thành công" + e.message);
+        openNoti();
       }
 
       setIsEditing(false);
@@ -220,7 +222,7 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
       const roleAdmin: UpdatingTransportPartnerCondition = {
         transport_partner_id: dataInitial.transport_partner_id,
       };
-      const response = await editPartner.update(info, roleAdmin);
+      const response = await editPartner.update(info2, roleAdmin);
       if (response.error) {
         console.log("error");
       }
@@ -261,9 +263,10 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
             <IoMdClose className="w-5/6 h-5/6 " />
           </Button>
         </div>
-        <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white place-content-center">
+        <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white place-content-start">
+          {NotiIsOpen && <NotiPopup message={message} onClose={closeNoti} />}
           <div className="grid grid-cols ">
-            {role === "ADMIN" && (
+            {info?.role === "ADMIN" && (
               <div className="flex gap-5">
                 <div className="font-bold text-base">
                   <FormattedMessage id="TransportPartner.PartnerCode" />:
@@ -434,15 +437,15 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
                 `}
                     id="city"
                     aria-label=".form-select-sm"
-                    value={selectedCity}
-                    onChange={handleCityChange}
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
                   >
-                    <option value="">
+                    <option value="Bình Định">
                       {intl.formatMessage({ id: "Choose Province" })}
                     </option>
-                    {cities.map((city) => (
-                      <option key={city.Id} value={city.Id}>
-                        {city.Name}
+                    {provinces.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
                       </option>
                     ))}
                   </select>
@@ -455,12 +458,12 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
                     value={selectedDistrict}
                     onChange={handleDistrictChange}
                   >
-                    <option value="">
+                    <option value="Huyện Hoài Ân">
                       {intl.formatMessage({ id: "Choose District" })}
                     </option>
                     {districts.map((district) => (
-                      <option key={district.Id} value={district.Id}>
-                        {district.Name}
+                      <option key={district} value={district}>
+                        {district}
                       </option>
                     ))}
                   </select>
@@ -469,19 +472,15 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
                 `}
                     id="ward"
                     aria-label=".form-select-sm"
-                    onChange={(e) =>
-                      handleInputChange(
-                        "town",
-                        wards.find((ward) => ward.Id === e.target.value).Name
-                      )
-                    }
+                    value={selectedWard}
+                    onChange={(e) => handleWardChange(e)}
                   >
-                    <option value="">
+                    <option value="Tăng Bạt Hổ">
                       {intl.formatMessage({ id: "Choose Ward" })}
                     </option>
                     {wards.map((ward) => (
-                      <option key={ward.Id} value={ward.Id}>
-                        {ward.Name}
+                      <option key={ward} value={ward}>
+                        {ward}
                       </option>
                     ))}
                   </select>
