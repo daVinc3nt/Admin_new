@@ -7,6 +7,8 @@ import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 import DiffCheck from "./diffCheck";
 import AddOrders from "./addOrders";
 import { ShipmentsOperation } from "@/TDLib/tdlogistics";
+import SubmitPopup from "@/components/Common/SubmitPopup";
+import NotiPopup from "@/components/Common/NotiPopup";
 
 interface DisassembleConsignmentProps {
   onClose: () => void;
@@ -21,6 +23,9 @@ const DisassembleConsignment: React.FC<DisassembleConsignmentProps> = ({ onClose
   const [page, setPage] = useState(0);
   const intl = useIntl();
   const shipmentsOperation = new ShipmentsOperation();
+  const [openError, setOpenError] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [message, setMessage] = useState("")
   const [consignment1, setConsignment1] = useState({
     order_ids: [],
     shipment_id: "",
@@ -28,23 +33,6 @@ const DisassembleConsignment: React.FC<DisassembleConsignmentProps> = ({ onClose
   const [consignment2, setConsignment2] = useState({
     order_ids: []
   });
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-      setIsShaking(true);
-      setTimeout(() => {
-        setIsShaking(false);
-      }, 300);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onClose]);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -58,34 +46,58 @@ const DisassembleConsignment: React.FC<DisassembleConsignmentProps> = ({ onClose
 
   const handleSubmitClick = async () => {
     if (page === 0) {
-      let condition = { shipment_id: shipmentID };
-      const result = await shipmentsOperation.get(condition);
-      if (result.error) {
-        alert("Error:" + result.message);
-      } else if (!result.data[0]) {
-        alert("Đơn hàng này chưa được khởi tạo.")
+      try {
+        let condition = { shipment_id: shipmentID };
+        const result = await shipmentsOperation.get(condition);
+        if (result.error) {
+          setMessage("Vui lòng kiểm tra lại id lô hàng.")
+          setOpenError(true)
+        } else if (!result.data[0]) {
+          setMessage("Đơn hàng này chưa được khởi tạo.")
+          setOpenError(true)
+        }
+        else {
+          setConsignment1({
+            shipment_id: result.data[0]?.shipment_id,
+            order_ids: result.data[0]?.order_ids
+          });
+          setPage(1);
+        }
       }
-      else {
-        setConsignment1({
-          shipment_id: result.data[0]?.shipment_id,
-          order_ids: result.data[0]?.order_ids
-        });
-        setPage(1);
+      catch {
+        setMessage("Error! Please contact admin.")
+        setOpenError(true)
       }
+
     }
     if (page === 1) setPage(2)
     if (page === 2) {
+      setMessage("Xác nhận rã lô hàng?")
+      setOpenConfirm(true)
+    }
+  };
+
+  const handleDecomposeClick = async () => {
+    try {
       const condition = { shipment_id: consignment1.shipment_id };
       const info = { order_ids: consignment2.order_ids };
       const result = await shipmentsOperation.decompose(condition, info);
       if (result.error) {
-        alert("Error:" + result.message);
+        setOpenConfirm(false)
+        setMessage("Error! Please contact admin.")
+        setOpenError(true)
       } else {
+        setMessage("Error! Please contact admin.")
+        setOpenError(true)
         handleClose();
         reloadData();
       }
     }
-  };
+    catch {
+      setMessage("Error! Please contact admin.")
+      setOpenError(true)
+    }
+  }
 
   return (
     <motion.div
@@ -95,6 +107,8 @@ const DisassembleConsignment: React.FC<DisassembleConsignmentProps> = ({ onClose
       onAnimationComplete={handleAnimationComplete}
       style={{ backdropFilter: "blur(12px)" }}
     >
+      {openError && <NotiPopup onClose={() => setOpenError(false)} message={message} />}
+      {openConfirm && <SubmitPopup onClose={() => setOpenConfirm(false)} message={message} submit={handleDecomposeClick} />}
       <motion.div
         ref={notificationRef}
         className={`relative w-[98%] sm:w-9/12 lg:w-1/2 bg-white dark:bg-[#14141a] rounded-xl p-4 overflow-y-auto ${isShaking ? 'animate-shake' : ''}`}

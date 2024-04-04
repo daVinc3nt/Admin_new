@@ -110,8 +110,8 @@ export function DataTable<TData, TValue>({
             />
             <label
               htmlFor="order_id"
-              className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all 
-                peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
+              className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all peer-placeholder-shown:hidden peer-placeholder-shown:sm:block
+                peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 peer-focus:block
                 peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
             >
               {<FormattedMessage id="order.searchbyid" />}
@@ -190,32 +190,22 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex bg-inherit flex-col-reverse sm:flex-row items-center sticky gap-2 bottom-0 justify-center space-x-2 py-4">
-        <div className="flex gap-2">
-          <Button
-            variant="light"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-              drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-              hover:shadow-md md:text-base focus:outline-none font-normal
-              text-black dark:text-white rounded-md text-sm text-center me-2"
-          >
-            <span>{<FormattedMessage id="prev" />}</span>
-          </Button>
+      <div className="flex flex-col sm:flex-row items-center gap-2 justify-between py-2 sm:py-4">
+        <div className="flex place-items-center">
           <span className="flex items-center gap-1">
             <div className="text-xs md:text-base">
-              {<FormattedMessage id="page" />}
+              <FormattedMessage id="page" />
             </div>
             <strong className="text-xs md:text-base whitespace-nowrap">
               {table.getState().pagination.pageIndex + 1}{" "}
               <FormattedMessage id="of" /> {table.getPageCount()}
             </strong>
           </span>
+
           <TbMinusVertical className="text-xl text-gray-700" />
+
           <span className="flex items-center gap-1 text-xs md:text-base whitespace-nowrap">
-            {<FormattedMessage id="gotopage" />}
+            <FormattedMessage id="gotopage" />:
             <input
               type="number"
               defaultValue={table.getState().pagination.pageIndex + 1}
@@ -226,17 +216,36 @@ export function DataTable<TData, TValue>({
               className="border border-gray-500 px-1 py-0.5 rounded w-8 sm:w-16 bg-transparent"
             />
           </span>
+        </div>
+
+        <div className="flex gap-2">
+          <Button
+            variant="light"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="px-2 py-[0.15rem] mb-0.5 w-16 bg-transparent dark:border-white dark:text-white
+    drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-20 hover:text-white border border-black hover:bg-black
+    hover:shadow-md md:text-base focus:outline-none font-normal hover:border-white
+    text-black rounded-md text-sm text-center me-2"
+          >
+            <span>
+              <FormattedMessage id="prev" />
+            </span>
+          </Button>
           <Button
             variant="light"
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="px-2 py-[0.15rem] mb-0.5 w-12 sm:w-16 bg-transparent 
-              drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-30 hover:text-white border border-black dark:border-white hover:bg-black
-              hover:shadow-md md:text-base focus:outline-none font-normal
-              text-black dark:text-white rounded-md text-sm text-center me-2"
+            className="px-2 py-[0.15rem] mb-0.5 w-16 bg-transparent dark:border-white dark:text-white
+    drop-shadow-md hover:drop-shadow-xl hover:bg-opacity-20 hover:text-white border border-black hover:bg-black
+    hover:shadow-md md:text-base focus:outline-none font-normal hover:border-white
+    text-black rounded-md text-sm text-center me-2"
           >
-            <span>{<FormattedMessage id="next" />}</span>
+            <span>
+              <FormattedMessage id="next" />
+            </span>
           </Button>
         </div>
       </div>

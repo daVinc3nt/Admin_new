@@ -20,7 +20,7 @@ const createTime = (time: string) => {
     return standardDatetime;
 }
 
-export default async function DemoPage(reloadData) {
+export default async function DemoPage(reloadData, setOpenError, setMessage) {
     const data = await getData();
     const columns: ColumnDef<any>[] = [
         {
@@ -198,5 +198,21 @@ export default async function DemoPage(reloadData) {
             },
         },
     ];
-    return <DataTable columns={columns} data={data.data} reloadData={reloadData} />;
+    try {
+        const data = await getData();
+        if (!data.error.error) return <DataTable columns={columns} data={data.data} reloadData={reloadData} />;
+        else {
+            setMessage(data.message);
+            setOpenError(true)
+            return (
+                <div className="flex place-content-center h-screen justify-center place-items-center">
+                    "Error! Please contact admin."
+                </div>
+            );
+        }
+    } catch (error) {
+        return <div className="flex place-content-center h-screen justify-center place-items-center">
+            "Error! Please contact admin."
+        </div>
+    }
 }

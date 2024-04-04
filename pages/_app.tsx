@@ -15,7 +15,7 @@ import { UserContext } from "@/Context/InfoContext/UserContext";
 import Cookies from "js-cookie";
 import { SocketContext } from "@/Context/SocketContext/SocketContext";
 import { io } from 'socket.io-client';
-import { Socket} from "socket.io-client";
+import { Socket } from "socket.io-client";
 
 const socket = io("https://api.tdlogistics.net.vn", {
   transports: ["websocket"],
@@ -71,15 +71,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   });
   return (
     <>
-    <SocketContext.Provider value={{socket}}>
-    <UserContext.Provider value={{info, setInfo}}>
-      <IntlProvider locale={locale} messages={messages[locale]}>
-        <Wrapper>
-          <Component {...pageProps} />
-        </Wrapper>
-      </IntlProvider>
-    </UserContext.Provider>
-    </SocketContext.Provider>
+      <SocketContext.Provider value={{ socket }}>
+        <UserContext.Provider value={{ info, setInfo }}>
+          <IntlProvider locale={locale} messages={messages[locale]}>
+            <Wrapper>
+              <Component {...pageProps} />
+            </Wrapper>
+          </IntlProvider>
+        </UserContext.Provider>
+      </SocketContext.Provider>
     </>
   );
 }

@@ -6,16 +6,24 @@ interface SubmitPopupProps {
     onClose: () => void;
     message: string;
     submit: () => void;
+    ref?: any;
 }
 
-const SubmitPopup: React.FC<SubmitPopupProps> = ({ onClose, message, submit }) => {
+const SubmitPopup: React.FC<SubmitPopupProps> = ({ onClose, message, submit, ref }) => {
     const notificationRef = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-                handleClose();
+            if (ref) {
+                if (ref.current && !ref.current.contains(event.target as Node)) {
+                    handleClose();
+                }
+            }
+            else {
+                if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+                    handleClose();
+                }
             }
         };
 
@@ -51,7 +59,7 @@ const SubmitPopup: React.FC<SubmitPopupProps> = ({ onClose, message, submit }) =
             onAnimationComplete={handleAnimationComplete}
         >
             <motion.div
-                ref={notificationRef}
+                ref={ref ? ref : notificationRef}
                 className="relative max-w-full sm:min-w-[300px] sm:max-w-screen-sm max-h-44 xs:max-h-64 bg-white rounded-xl p-4 flex flex-col"
                 initial={{ scale: 0 }}
                 animate={{ scale: isVisible ? 1 : 0 }}
