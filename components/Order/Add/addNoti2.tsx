@@ -105,7 +105,7 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose, reloadData }) => {
       >
         <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
           <div className="font-bold text-lg sm:text-2xl pb-2 text-black dark:text-white w-3/5 text-center">
-            Thêm hàng loạt
+            <FormattedMessage id="order.bulk"/>
           </div>
           <Button
             className="absolute right-0 w-8 h-8 rounded-full mb-2 hover:bg-gray-300"
@@ -115,7 +115,7 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose, reloadData }) => {
           </Button>
         </div>
         <div className="text-center py-5">
-          Vui lòng chọn file excel chứa thông tin đơn hàng
+          <FormattedMessage id="order.chooseexcel"/>
         </div>
         <div className="flex items-center justify-center w-full">
           <label
@@ -163,10 +163,10 @@ const AddFile: React.FC<AddNotificationProps> = ({ onClose, reloadData }) => {
           </label>
         </div>
         <div className="text-center py-5">
-          *Lưu ý: Bạn cần tải file dưới đây về trước khi tạo đơn hàng loạt. Bạn không được thay đổi tên cột, có thể đổi tên file và thêm đơn mới vào như mẫu.
+        <FormattedMessage id="order.downloadsample" />
         </div>
         <a 
-          className='ring ring-gray-300 rounded-xl p-2'
+          className='ring ring-gray-500  rounded-xl p-2'
           href="/SampleFile/Ex.xlsx" 
           download='Sample.xlsx'> 
           <FileDownloadIcon/> Download

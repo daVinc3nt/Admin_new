@@ -25,6 +25,7 @@ const socket = io("https://api.tdlogistics.net.vn", {
 const googleMapsLibraries: Libraries = ["places"];
 const staff = new StaffsOperation();
 function MyApp({ Component, pageProps }: AppProps) {
+
   const { locale } = useRouter();
   const [info, setInfo] = useState(null);
   const router = useRouter();
@@ -32,8 +33,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const fetchData = async () => {
       const res = await staff.getAuthenticatedStaffInfo();
-      console.log("nè",res)
+      if (res.data)
       setInfo(res.data);
+      else router.push("/log")
     };
     fetchData();
   }, []);
