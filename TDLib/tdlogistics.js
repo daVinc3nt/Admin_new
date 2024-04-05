@@ -54,7 +54,7 @@ var JSZip = require("jszip");
 // });
 var UserOperation = /** @class */ (function () {
     function UserOperation() {
-        this.baseUrl = "http://localhost:5000/api/v1/users";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
     }
     UserOperation.prototype.getAuthenticatedUserInfo = function () {
         var _a, _b;
@@ -86,8 +86,8 @@ var UserOperation = /** @class */ (function () {
 exports.UserOperation = UserOperation;
 var UsersAuthenticate = /** @class */ (function () {
     function UsersAuthenticate() {
-        // this.baseUrl = "http://localhost:5000/api/v1/users";
-        this.baseUrl = "http://localhost:5000/api/v1/users";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
     }
     UsersAuthenticate.prototype.sendOTP = function (phoneNumber, email) {
         var _a, _b;
@@ -150,8 +150,8 @@ var UsersAuthenticate = /** @class */ (function () {
 exports.UsersAuthenticate = UsersAuthenticate;
 var StaffsAuthenticate = /** @class */ (function () {
     function StaffsAuthenticate() {
-        // this.baseUrl = "http://localhost:5000/api/v1/staffs";
-        this.baseUrl = "http://localhost:5000/api/v1/staffs";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
     }
     StaffsAuthenticate.prototype.login = function (username, password) {
         var _a, _b;
@@ -243,8 +243,8 @@ var StaffsAuthenticate = /** @class */ (function () {
 exports.StaffsAuthenticate = StaffsAuthenticate;
 var BusinessAuthenticate = /** @class */ (function () {
     function BusinessAuthenticate() {
-        // this.baseUrl = "http://localhost:5000/api/v1/business";
-        this.baseUrl = "http://localhost:5000/api/v1/business";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
     }
     BusinessAuthenticate.prototype.login = function (username, password) {
         var _a, _b;
@@ -279,8 +279,8 @@ var BusinessAuthenticate = /** @class */ (function () {
 exports.BusinessAuthenticate = BusinessAuthenticate;
 var PartnerStaffAuthenticate = /** @class */ (function () {
     function PartnerStaffAuthenticate() {
-        // this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
-        this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
     }
     PartnerStaffAuthenticate.prototype.login = function (username, password) {
         var _a, _b;
@@ -315,8 +315,8 @@ var PartnerStaffAuthenticate = /** @class */ (function () {
 exports.PartnerStaffAuthenticate = PartnerStaffAuthenticate;
 var UsersOperation = /** @class */ (function () {
     function UsersOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/users";
-        this.baseUrl = "http://localhost:5000/api/v1/users";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
     }
     UsersOperation.prototype.findByUser = function (condition) {
         var _a, _b;
@@ -423,8 +423,8 @@ var UsersOperation = /** @class */ (function () {
 exports.UsersOperation = UsersOperation;
 var AgencyOperation = /** @class */ (function () {
     function AgencyOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/agencies";
-        this.baseUrl = "http://localhost:5000/api/v1/agencies";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/agencies";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/agencies";
     }
     AgencyOperation.prototype.checkExist = function (condition) {
         var _a, _b;
@@ -587,7 +587,7 @@ var AgencyOperation = /** @class */ (function () {
                         for (i = 0; i < info.licenseFiles.length; i++) {
                             formData.append('files', info.licenseFiles[i]);
                         }
-                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/update_agency_company_license?agency_id=").concat(condition.agency_id), formData, {
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/update_agency_company_license?agency_id=").concat(condition.agency_id), formData, {
                                 withCredentials: true,
                             })];
                     case 1:
@@ -655,8 +655,8 @@ var AgencyOperation = /** @class */ (function () {
 exports.AgencyOperation = AgencyOperation;
 var TransportPartnersOperation = /** @class */ (function () {
     function TransportPartnersOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/transport_partners";
-        this.baseUrl = "http://localhost:5000/api/v1/transport_partners";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/transport_partners";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/transport_partners";
     }
     TransportPartnersOperation.prototype.createByAdmin = function (info) {
         var _a, _b;
@@ -813,8 +813,8 @@ var TransportPartnersOperation = /** @class */ (function () {
 exports.TransportPartnersOperation = TransportPartnersOperation;
 var VehicleOperation = /** @class */ (function () {
     function VehicleOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/vehicles";
-        this.baseUrl = "http://localhost:5000/api/v1/vehicles";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/vehicles";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/vehicles";
     }
     VehicleOperation.prototype.checkExist = function (condition) {
         var _a, _b;
@@ -1074,8 +1074,8 @@ exports.VehicleOperation = VehicleOperation;
 ;
 var StaffsOperation = /** @class */ (function () {
     function StaffsOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/staffs";
-        this.baseUrl = "http://localhost:5000/api/v1/staffs";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
     }
     // ROLE: any
     StaffsOperation.prototype.getAuthenticatedStaffInfo = function () {
@@ -1370,8 +1370,8 @@ var StaffsOperation = /** @class */ (function () {
 exports.StaffsOperation = StaffsOperation;
 var BusinessOperation = /** @class */ (function () {
     function BusinessOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/business";
-        this.baseUrl = "http://localhost:5000/api/v1/business";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
     }
     BusinessOperation.prototype.signup = function (info) {
         var _a, _b;
@@ -1747,8 +1747,8 @@ exports.BusinessOperation = BusinessOperation;
 ;
 var PartnerStaffOperation = /** @class */ (function () {
     function PartnerStaffOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
-        this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
     }
     // ROLE: PARTNER_DRIVER, PARTNER_SHIPPER
     PartnerStaffOperation.prototype.getAuthenticatedPartnerStaffInfo = function () {
@@ -2124,7 +2124,7 @@ var PartnerStaffOperation = /** @class */ (function () {
 exports.PartnerStaffOperation = PartnerStaffOperation;
 var ShippersOperation = /** @class */ (function () {
     function ShippersOperation() {
-        this.baseUrl = "http://localhost:5000/api/v1/shippers";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shippers";
     }
     ShippersOperation.prototype.createNewTasks = function (info) {
         var _a, _b;
@@ -2231,7 +2231,7 @@ var ShippersOperation = /** @class */ (function () {
 exports.ShippersOperation = ShippersOperation;
 var DriversOperation = /** @class */ (function () {
     function DriversOperation() {
-        this.baseUrl = "http://localhost:5000/api/v1/drivers";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/drivers";
     }
     DriversOperation.prototype.createNewTasks = function (info) {
         var _a, _b;
@@ -2313,8 +2313,8 @@ var DriversOperation = /** @class */ (function () {
 exports.DriversOperation = DriversOperation;
 var ShipmentsOperation = /** @class */ (function () {
     function ShipmentsOperation() {
-        // this.baseUrl = "http://localhost:5000/api/v1/shipments";
-        this.baseUrl = "http://localhost:5000/api/v1/shipments";
+        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shipments";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shipments";
     }
     ShipmentsOperation.prototype.check = function (condition) {
         var _a, _b;
@@ -2607,7 +2607,7 @@ exports.ShipmentsOperation = ShipmentsOperation;
 ;
 var OrdersOperation = /** @class */ (function () {
     function OrdersOperation() {
-        this.baseUrl = "http://localhost:5000/api/v1/orders";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/orders";
     }
     OrdersOperation.prototype.get = function (conditions) {
         var _a, _b;
@@ -2977,7 +2977,7 @@ var OrdersOperation = /** @class */ (function () {
 exports.OrdersOperation = OrdersOperation;
 var ScheduleOperation = /** @class */ (function () {
     function ScheduleOperation() {
-        this.baseUrl = "http://localhost:5000/api/v1/schedules";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/schedules";
     }
     ScheduleOperation.prototype.get = function (conditions) {
         var _a, _b;
@@ -3084,7 +3084,7 @@ var ScheduleOperation = /** @class */ (function () {
 exports.ScheduleOperation = ScheduleOperation;
 var AdministrativeOperation = /** @class */ (function () {
     function AdministrativeOperation() {
-        this.baseUrl = "http://localhost:5000/api/v1/administrative";
+        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/administrative";
     }
     AdministrativeOperation.prototype.get = function (conditions) {
         var _a, _b;
