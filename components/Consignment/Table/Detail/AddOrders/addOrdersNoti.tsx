@@ -3,10 +3,11 @@ import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import LoadingSkeleton from "@/components/LoadingSkeleton/loadingSkeleton";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { columns } from "./Table/column";
 import { DataTable } from "./Table/datatable";
 import { OrdersOperation } from "@/TDLib/tdlogistics"; // Import OrdersOperation from your library
+import SubmitPopup from "@/components/Common/SubmitPopup";
 
 interface AddNotificationProps {
     onClose: () => void;
@@ -20,27 +21,12 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
     const [data, setData] = useState<any[]>([]);
     const [selectedOrders, setSelectedOrders] = useState<any[]>([]);
     const ordersOperation = new OrdersOperation(); // Initialize OrdersOperation
-
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const [message, setMessage] = useState("")
+    const intl = useIntl()
     useEffect(() => {
         fetchOrders();
     }, []);
-
-    const handleClickOutside = (event: MouseEvent) => {
-        if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-            setIsShaking(true);
-            setTimeout(() => {
-                setIsShaking(false);
-            }, 300);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [onClose]);
 
     const handleClose = () => {
         setIsVisible(false);
@@ -70,8 +56,11 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
     };
 
     const handleSubmit = () => {
-        addOrders(selectedOrders);
-        handleClose();
+        if (selectedOrders.length != 0) {
+            setMessage(intl.formatMessage({ id: "Consignment.Info.Submit3" }))
+            setOpenConfirm(true)
+        }
+        else handleClose()
     };
 
     return (
@@ -86,6 +75,11 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
                 backdropFilter: "blur(12px)"
             }}
         >
+            {openConfirm && <SubmitPopup onClose={() => setOpenConfirm(false)} message={message} submit={() => {
+                addOrders(selectedOrders);
+                handleClose();
+            }} />}
+
             <motion.div
                 ref={notificationRef}
                 className={`relative w-[98%] h-[95%] sm:w-11/12 bg-white dark:bg-[#14141a] text-black dark:text-white rounded-xl p-4 overflow-y-auto flex flex-col

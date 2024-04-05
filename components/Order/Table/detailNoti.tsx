@@ -151,9 +151,8 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </Button>
                   </div>
                   <div className="relative">
-                    {imageUrls.length != 0 && option == 0 && <CarouselSlider urls={imageUrls} />}
-                    {imageUrls2.length != 0 && option == 1 && <CarouselSlider urls={imageUrls2} />}
-                    {imageUrls2.length == 0 && imageUrls.length == 0 && <div className="w-full h-40 bg-inherit md:h-52 lg:h-96 rounded-2xl mt-2 outline outline-[1px] text-red-600 text-base flex justify-center place-items-center outline-inherit bg-white text-center">Error! Reload the page and try again.</div>}
+                    {imageUrls.length && option == 0 && <CarouselSlider urls={imageUrls} />}
+                    {imageUrls2.length && option == 1 && <CarouselSlider urls={imageUrls2} />}
                   </div>
                 </div>
 
@@ -320,14 +319,14 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
 
                   <div id="name_receiver" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                    <FormattedMessage id="order.receiver" />
+                      <FormattedMessage id="order.receiver" />
                     </div>
                     <div>{data.name_receiver}</div>
                   </div>
 
                   <div id="name_sender" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                     <FormattedMessage id="order.sender" />
+                      <FormattedMessage id="order.sender" />
                     </div>
                     <div>{data.name_sender}</div>
                   </div>
@@ -343,7 +342,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
 
                   <div id="destination" className="flex ">
                     <div className=" w-1/3 font-bold text-base">
-                    <FormattedMessage id="order.receive" />
+                      <FormattedMessage id="order.receive" />
                     </div>
                     <div className="w-8/12">
                       {data.detail_dest}, {data.ward_dest}, {data.district_dest}, {data.province_dest}

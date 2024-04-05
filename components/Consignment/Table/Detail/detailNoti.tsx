@@ -9,6 +9,8 @@ import AddOrders from "./AddOrders/addOrdersNoti";
 import { ShipmentsOperation } from "@/TDLib/tdlogistics";
 import CustomTimeline from "@/components/Common/Timeline2";
 import TimelineNoti from "./timelineNoti";
+import NotiPopup from "@/components/Common/NotiPopup";
+import SubmitPopup from "@/components/Common/SubmitPopup";
 
 interface DetailNotificationProps {
   onClose: () => void;
@@ -41,6 +43,9 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
   const [modalIsOpen2, setModalIsOpen2] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
   const intl = useIntl();
+  const [openError, setOpenError] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [message, setMessage] = useState("")
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -58,31 +63,10 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onClose]);
-
-  useEffect(() => {
     if (isVisible) {
       handleGetOrdersFromShipment();
     }
   }, [isVisible]);
-
-  useEffect(() => {
-    console.log(dataInitial.journey)
-  }, []);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-      setIsShaking(true);
-      setTimeout(() => {
-        setIsShaking(false);
-      }, 300);
-    }
-  };
 
   const handleClose = () => {
     setIsVisible(false);
@@ -101,14 +85,16 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
         const info = { order_ids: selectedOrders };
         const result = await shipmentsOperation.deleteOrderFromShipment(condition, info);
         if (result.error) {
-          alert("Error deleting selected orders: " + result.error);
+          setMessage(result.message)
+          setOpenError(true)
         } else {
           handleGetOrdersFromShipment();
           setSelectedOrders([]);
         }
       }
     } catch (error) {
-      console.error("Error deleting selected orders: ", error);
+      setMessage("Error! Please contact admin.")
+      setOpenError(true)
     }
   };
 
@@ -123,8 +109,6 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
   };
 
   const handleConfirm = async () => {
-    const shipmentID = { shipment_id: dataInitial.shipment_id };
-    const response = await shipmentsOperation.confirmCreate(shipmentID);
     handleClose();
   };
 
@@ -136,12 +120,14 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
       const info = { order_ids: orderIds };
       const result = await shipmentsOperation.addOrdersToShipment(condition, info);
       if (result.error) {
-        console.error("Error adding orders to shipment: ", result.error);
+        setMessage(result.message)
+        setOpenError(true)
       } else {
         handleGetOrdersFromShipment();
       }
     } catch (error) {
-      console.error("Error adding orders to shipment: ", error);
+      setMessage("Error! Please contact admin.")
+      setOpenError(true)
     }
   };
 
@@ -173,6 +159,8 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
         backdropFilter: "blur(12px)"
       }}
     >
+      {openError && <NotiPopup onClose={() => setOpenError(false)} message={message} />}
+      {openConfirm && <SubmitPopup onClose={() => setOpenConfirm(false)} message={message} submit={handleDeleteSelectedOrders} />}
       {modalIsOpen && <AddOrders onClose={closeModal} addOrders={addOrders} />}
       {modalIsOpen2 && <TimelineNoti onClose={closeModal2} dataInitial={dataInitial} />}
       <motion.div
@@ -242,7 +230,10 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
                 className={` self-start h-10 rounded-lg mt-5 mb-1 p-3 border-red-700 hover:bg-red-700 text-red-500
                   bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border 
                   hover:shadow-md mr-2`}
-                onClick={handleDeleteSelectedOrders}
+                onClick={() => {
+                  setMessage(intl.formatMessage({ id: "Consignment.Info.Submit" }))
+                  setOpenConfirm(true)
+                }}
               >
                 <FaTrash className="hidden sm:block mr-2" />
                 <span className="block"><FormattedMessage id="Consignment.Info.Confirm" /></span>
@@ -407,7 +398,7 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({ onClose, dataIn
           >
             <>
               <FaPen className="mr-2" />
-              <span className="truncate"><FormattedMessage id="Consignment.Info.Submit" /></span>
+              <span className="truncate"><FormattedMessage id="Consignment.Info.Submit2" /></span>
             </>
           </Button>
         </div>

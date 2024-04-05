@@ -14,16 +14,6 @@ const timelineNoti = ({ onClose, dataInitial }) => {
     const [isShaking, setIsShaking] = useState(false);
     const notificationRef = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(true);
-    const [data, setData] = useState(dataInitial);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const intl = useIntl();
-    const openModal = () => {
-        setModalIsOpen(true);
-    };
-
-    const closeModal = () => {
-        setModalIsOpen(false);
-    };
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
@@ -32,10 +22,6 @@ const timelineNoti = ({ onClose, dataInitial }) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [onClose]);
-
-    useEffect(() => {
-        console.log(dataInitial.journey)
-    }, []);
 
     const handleClickOutside = (event: MouseEvent) => {
         if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {

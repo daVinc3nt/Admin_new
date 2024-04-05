@@ -5,6 +5,8 @@ import { Button } from "@nextui-org/react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 import { ShipmentsOperation } from "@/TDLib/tdlogistics";
+import SubmitPopup from "@/components/Common/SubmitPopup";
+import NotiPopup from "@/components/Common/NotiPopup";
 
 interface AddNotificationProps {
   onClose: () => void;
@@ -20,23 +22,9 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
   const [transportPartnerId, setTransportPartnerId] = useState('');
   const intl = useIntl();
   const shipmentsOperation = new ShipmentsOperation();
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-      setIsShaking(true);
-      setTimeout(() => {
-        setIsShaking(false);
-      }, 300);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onClose]);
+  const [openError, setOpenError] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [message, setMessage] = useState("")
 
   const handleClose = () => {
     setIsVisible(false);
@@ -49,40 +37,39 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
   };
 
   const handleConfirm = async () => {
-    if (option === 1) {
-      const shipmentID = { shipment_id: shipmentIdInput };
-      const response = await shipmentsOperation.receive(shipmentID);
+    try {
+      if (option === 1) {
+        const shipmentID = { shipment_id: shipmentIdInput };
+        const response = await shipmentsOperation.receive(shipmentID);
+        console.log(response)
 
-      if (response.error) {
-        alert('Error: ' + response.message);
-      } else {
-        const startIndex = response.message.indexOf("mã");
-        const nextSpaceIndex = response.message.indexOf(" ", startIndex + 3);
-        if (startIndex !== -1 && nextSpaceIndex !== -1 && startIndex < nextSpaceIndex) {
-          const shipmentId = response.message.substring(startIndex + 3, nextSpaceIndex).trim();
-          alert(intl.formatMessage({ id: "Consignment.Add.Success" }) + shipmentId);
+        if (response.error) {
+          setOpenConfirm(false)
+          setMessage(response.message)
+          setOpenError(true)
+        } else {
+          setOpenConfirm(false)
+          setMessage(response.message)
+          setOpenError(true)
+          reloadData();
         }
-        setIsVisible(false);
-        reloadData();
-        handleClose();
-      }
-    } else {
-      const response = await shipmentsOperation.create(transportPartnerId ? { transport_partner_id: transportPartnerId } : {});
-      if (response.error) {
-        alert('Error: ' + response.message);
       } else {
-        const firstOccurrenceIndex = response.message.indexOf("lô");
-        const secondOccurrenceIndex = response.message.indexOf("lô", firstOccurrenceIndex + 1);
-        const endIndex = response.message.indexOf("cho");
-        if (firstOccurrenceIndex !== -1 && secondOccurrenceIndex !== -1 && endIndex !== -1 &&
-          firstOccurrenceIndex < secondOccurrenceIndex && secondOccurrenceIndex < endIndex) {
-          const shipmentId = response.message.substring(secondOccurrenceIndex + 3, endIndex).trim();
-          alert(intl.formatMessage({ id: "Consignment.Add.Success" }) + shipmentId);
+        const response = await shipmentsOperation.create(transportPartnerId ? { transport_partner_id: transportPartnerId } : {});
+        console.log(response)
+        if (response.error) {
+          setOpenConfirm(false)
+          setMessage(response.message)
+          setOpenError(true)
+        } else {
+          setOpenConfirm(false)
+          setMessage(response.message)
+          setOpenError(true)
+          reloadData();
         }
-        setIsVisible(false);
-        reloadData();
-        handleClose();
       }
+    } catch (error) {
+      setMessage("Error! Please contact admin.")
+      setOpenError(true)
     }
   };
 
@@ -94,6 +81,8 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
       onAnimationComplete={handleAnimationComplete}
       style={{ backdropFilter: "blur(12px)" }}
     >
+      {openError && <NotiPopup onClose={() => setOpenError(false)} message={message} ref={notificationRef} />}
+      {openConfirm && <SubmitPopup onClose={() => setOpenConfirm(false)} message={message} submit={handleConfirm} ref={notificationRef} />}
       <motion.div
         ref={notificationRef}
         className={`relative w-[98%] sm:w-9/12 lg:w-1/2 bg-white dark:bg-[#14141a] rounded-xl p-4 overflow-y-auto ${isShaking ? 'animate-shake' : ''}`}
@@ -154,7 +143,10 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
         </div>
         <Button className="w-full rounded-lg mt-5 mb-1 py-2 sm:py-3 border-green-700 hover:bg-green-700 text-green-500
         bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md"
-          onClick={handleConfirm}>
+          onClick={() => {
+            setMessage("Xác nhận tạo lô hàng?")
+            setOpenConfirm(true)
+          }}>
           <span ><FormattedMessage id="Consignment.Add.Button" /></span>
         </Button>
       </motion.div>
