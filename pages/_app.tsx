@@ -25,18 +25,20 @@ const socket = io("https://api.tdlogistics.net.vn", {
 const googleMapsLibraries: Libraries = ["places"];
 const staff = new StaffsOperation();
 function MyApp({ Component, pageProps }: AppProps) {
+
   const { locale } = useRouter();
   const [info, setInfo] = useState(null);
   const router = useRouter();
   const [value, setValue] = useState(false);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await staff.getAuthenticatedStaffInfo();
-  //     console.log("nè",res)
-  //     setInfo(res.data);
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await staff.getAuthenticatedStaffInfo();
+      if (res.data)
+      setInfo(res.data);
+      else router.push("/log")
+    };
+    fetchData();
+  }, []);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
