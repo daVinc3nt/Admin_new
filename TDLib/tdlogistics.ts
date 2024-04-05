@@ -1708,20 +1708,20 @@ export interface FindingPartnerStaffsByPartnerCondtions {
 }
 
 export interface FindingPartnerStaffsByAdminConditions {
-	partner_id: string,
-	agency_id: string,
-	staff_id: string,
-	username: string,
-	fullname: string ,
-	date_of_birth: string, 
-	email: string,
-	phone_number: string,
-	province: string,
-	district: string,
-	town: string,
-	position: string,
-	bin: string,
-	bank: string,
+	partner_id?: string,
+	agency_id?: string,
+	staff_id?: string,
+	username?: string,
+	fullname?: string ,
+	date_of_birth?: string, 
+	email?: string,
+	phone_number?: string,
+	province?: string,
+	district?: string,
+	town?: string,
+	position?: string,
+	bin?: string,
+	bank?: string,
 }
 
 export interface UpdatingPartnerStaffCondition {

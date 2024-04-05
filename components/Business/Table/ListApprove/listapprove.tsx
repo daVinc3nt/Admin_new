@@ -18,7 +18,7 @@ const ListApprove = ({ onClose, reloadData, info }) => {
   const [columns, setColumns] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const columns2 = await createColumns(reloadData);
+      const columns2 = await createColumns(reloadData, info);
       setColumns(columns2);
       try {
         const input: FindingBusinessByAdminCondition = {

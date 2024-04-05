@@ -14,7 +14,7 @@ const MenuHambuger = ({ toggle}: { toggle: any}) => {
             }`}
         ref={containerRef}
         >
-        <MenuToggle IconColor={"white"} toggle1={toggleOpen} toggle2={toggle} />
+        <MenuToggle IconColor={"black"} toggle1={toggleOpen} toggle2={toggle} />
         </motion.nav>
     )
 }
