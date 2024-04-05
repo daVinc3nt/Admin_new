@@ -22,7 +22,7 @@ export default async function DemoPage(reloadData, setOpenError, setMessage) {
             setOpenError(true)
             return (
                 <div className="flex place-content-center h-screen justify-center place-items-center">
-                    "Error! Please contact admin."
+                    {data.message}
                 </div>
             );
         }

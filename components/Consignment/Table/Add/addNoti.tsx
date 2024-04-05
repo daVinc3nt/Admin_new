@@ -7,6 +7,7 @@ import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 import { ShipmentsOperation } from "@/TDLib/tdlogistics";
 import SubmitPopup from "@/components/Common/SubmitPopup";
 import NotiPopup from "@/components/Common/NotiPopup";
+import OfficePopup from "./ChooseOffice/chooseOfficeNoti";
 
 interface AddNotificationProps {
   onClose: () => void;
@@ -19,12 +20,13 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
   const [isVisible, setIsVisible] = useState(true);
   const [option, setOption] = useState(0);
   const [shipmentIdInput, setShipmentIdInput] = useState('');
-  const [transportPartnerId, setTransportPartnerId] = useState('');
+  const [agencyID, setAgencyID] = useState('');
   const intl = useIntl();
   const shipmentsOperation = new ShipmentsOperation();
   const [openError, setOpenError] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [message, setMessage] = useState("")
+  const [openOffice, setOpenOffice] = useState(false);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -41,7 +43,6 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
       if (option === 1) {
         const shipmentID = { shipment_id: shipmentIdInput };
         const response = await shipmentsOperation.receive(shipmentID);
-        console.log(response)
 
         if (response.error) {
           setOpenConfirm(false)
@@ -54,8 +55,8 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
           reloadData();
         }
       } else {
-        const response = await shipmentsOperation.create(transportPartnerId ? { transport_partner_id: transportPartnerId } : {});
-        console.log(response)
+        const response = await shipmentsOperation.create(agencyID ? { agency_id_dest: agencyID } : {});
+        console.log(agencyID)
         if (response.error) {
           setOpenConfirm(false)
           setMessage(response.message)
@@ -81,8 +82,10 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
       onAnimationComplete={handleAnimationComplete}
       style={{ backdropFilter: "blur(12px)" }}
     >
-      {openError && <NotiPopup onClose={() => setOpenError(false)} message={message} ref={notificationRef} />}
-      {openConfirm && <SubmitPopup onClose={() => setOpenConfirm(false)} message={message} submit={handleConfirm} ref={notificationRef} />}
+      {openError && <NotiPopup onClose={() => setOpenError(false)} message={message} />}
+      {openConfirm && <SubmitPopup onClose={() => setOpenConfirm(false)} message={message} submit={handleConfirm} />}
+      {openOffice && <OfficePopup onClose={() => setOpenOffice(false)} setAgency={setAgencyID} />}
+
       <motion.div
         ref={notificationRef}
         className={`relative w-[98%] sm:w-9/12 lg:w-1/2 bg-white dark:bg-[#14141a] rounded-xl p-4 overflow-y-auto ${isShaking ? 'animate-shake' : ''}`}
@@ -102,14 +105,20 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
           {option === 0 &&
             <div className="flex flex-col justify-center w-full">
               <span className="w-full text-center font-bold"><FormattedMessage id="Consignment.Add.InputPartnerID" /></span>
-              <input
-                className={`h-10 rounded-lg mt-2 mb-1 p-3 w-full border-green-700 text-black
+              <div className="flex mt-2 mb-1 ">
+                <input
+                  className={`h-10 rounded-lg p-3 w-full border-green-700 text-black
                   bg-transparent drop-shadow-md hover:drop-shadow-xl border 
                   hover:shadow-md mr-2`}
-                placeholder={intl.formatMessage({ id: "Consignment.Add.Add1" })}
-                value={transportPartnerId}
-                onChange={(e) => setTransportPartnerId(e.target.value)}
-              />
+                  placeholder={intl.formatMessage({ id: "Consignment.Add.Add1" })}
+                  value={agencyID}
+                  onChange={(e) => setAgencyID(e.target.value)}
+                />
+                <Button
+                  className="rounded-lg border border-green-700 text-green-500 drop-shadow-md hover:drop-shadow-xl h-10 px-2"
+                  onClick={() => setOpenOffice(true)}
+                >Chọn</Button>
+              </div>
             </div>
           }
           <span className="text-sm">&#8212; <FormattedMessage id="Consignment.Add.Or" /> &#8212;</span>

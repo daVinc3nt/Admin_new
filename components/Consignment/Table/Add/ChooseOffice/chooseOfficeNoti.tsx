@@ -6,28 +6,24 @@ import LoadingSkeleton from "@/components/LoadingSkeleton/loadingSkeleton";
 import { FormattedMessage, useIntl } from "react-intl";
 import { columns } from "./Table/column";
 import { DataTable } from "./Table/datatable";
-import { OrdersOperation } from "@/TDLib/tdlogistics"; // Import OrdersOperation from your library
 import SubmitPopup from "@/components/Common/SubmitPopup";
 import NotiPopup from "@/components/Common/NotiPopup";
+import getData from "@/api/getOffice";
 
-interface AddNotificationProps {
+interface OfficePopupProps {
     onClose: () => void;
-    addOrders: (orders: any[]) => void;
+    setAgency: (agency: string) => void;
 }
 
-const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders }) => {
-    const [isShaking, setIsShaking] = useState(false);
+const OfficePopup: React.FC<OfficePopupProps> = ({ onClose, setAgency }) => {
     const notificationRef = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(true);
     const [data, setData] = useState<any[]>([]);
-    const [selectedOrders, setSelectedOrders] = useState<any[]>([]);
-    const ordersOperation = new OrdersOperation(); // Initialize OrdersOperation
-    const [openConfirm, setOpenConfirm] = useState(false);
     const [message, setMessage] = useState("")
-    const intl = useIntl()
     const [openError, setOpenError] = useState(false);
+
     useEffect(() => {
-        fetchOrders();
+        fetchOffice();
     }, []);
 
     const handleClose = () => {
@@ -40,9 +36,9 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
         }
     };
 
-    const fetchOrders = async () => {
+    const fetchOffice = async () => {
         try {
-            const result = await ordersOperation.get({});
+            const result = await getData()
             if (!result.error) {
                 setData(result.data);
             } else {
@@ -55,16 +51,12 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
         }
     };
 
-    const handleSetSelectedOrders = (orders: any[]) => {
-        setSelectedOrders(orders);
+    const handleSetAgency = (agency: string) => {
+        setAgency(agency);
     };
 
     const handleSubmit = () => {
-        if (selectedOrders.length != 0) {
-            setMessage(intl.formatMessage({ id: "Consignment.Info.Submit3" }))
-            setOpenConfirm(true)
-        }
-        else handleClose()
+        handleClose()
     };
 
     return (
@@ -79,22 +71,17 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
                 backdropFilter: "blur(12px)"
             }}
         >
-            {openConfirm && <SubmitPopup onClose={() => setOpenConfirm(false)} message={message} submit={() => {
-                addOrders(selectedOrders);
-                handleClose();
-            }} />}
             {openError && <NotiPopup onClose={() => setOpenError(false)} message={message} />}
             <motion.div
                 ref={notificationRef}
-                className={`relative w-[98%] h-[95%] sm:w-11/12 bg-white dark:bg-[#14141a] text-black dark:text-white rounded-xl p-4 overflow-y-auto flex flex-col
-          ${isShaking ? 'animate-shake' : ''}`}
+                className={`relative w-[98%] h-[95%] sm:w-11/12 bg-white dark:bg-[#14141a] text-black dark:text-white rounded-xl p-4 overflow-y-auto flex flex-col`}
                 initial={{ scale: 0 }}
                 animate={{ scale: isVisible ? 1 : 0 }}
                 exit={{ scale: 0 }}
                 transition={{ duration: 0.3 }}
             >
                 <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
-                    <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">Danh sách đơn hàng</div>
+                    <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">Danh sách bưu cục</div>
                     <Button className="absolute right-0 w-8 h-8 rounded-full mb-2 hover:bg-gray-300" onClick={handleClose}>
                         <IoMdClose className="w-5/6 h-5/6" />
                     </Button>
@@ -104,8 +91,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
                         <DataTable
                             columns={columns}
                             data={data}
-                            selectedOrders={selectedOrders}
-                            setSelectedOrders={handleSetSelectedOrders}
+                            setAgencyID={handleSetAgency}
                         />
                     ) : (
                         <LoadingSkeleton />
@@ -126,4 +112,4 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, addOrders })
     );
 };
 
-export default AddNotification;
+export default OfficePopup;

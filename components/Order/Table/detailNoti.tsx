@@ -151,8 +151,8 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                     </Button>
                   </div>
                   <div className="relative">
-                    {imageUrls.length && option == 0 && <CarouselSlider urls={imageUrls} />}
-                    {imageUrls2.length && option == 1 && <CarouselSlider urls={imageUrls2} />}
+                    {option == 0 && <CarouselSlider urls={imageUrls} />}
+                    {option == 1 && <CarouselSlider urls={imageUrls2} />}
                   </div>
                 </div>
 
