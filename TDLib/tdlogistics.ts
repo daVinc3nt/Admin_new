@@ -313,7 +313,7 @@ export interface CreatingAgencyInfo {
     user_bin: string,
     user_bank: string,
     user_salary: number,
-    individual: boolean,
+    individual_company: boolean,
     
     tax_number?: string,
     type: string,
@@ -484,7 +484,7 @@ class AgencyOperation {
                 formData.append('files', info.licenseFiles[i]);
             }
 			// Gửi yêu cầu POST để tải lên hình ảnh
-			const response: AxiosResponse = await axios.put(`${this.baseUrl}/update_agency_company_license?agency_id=${condition.agency_id}`, formData , {
+			const response: AxiosResponse = await axios.post(`${this.baseUrl}/update_agency_company_license?agency_id=${condition.agency_id}`, formData , {
 				withCredentials: true,
 			});
 		

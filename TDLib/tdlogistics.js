@@ -587,7 +587,7 @@ var AgencyOperation = /** @class */ (function () {
                         for (i = 0; i < info.licenseFiles.length; i++) {
                             formData.append('files', info.licenseFiles[i]);
                         }
-                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/update_agency_company_license?agency_id=").concat(condition.agency_id), formData, {
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/update_agency_company_license?agency_id=").concat(condition.agency_id), formData, {
                                 withCredentials: true,
                             })];
                     case 1:
