@@ -7,7 +7,7 @@ import { FaMapMarkedAlt } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
 import PasswordToggle from "./PasswordToggle";
 import axios from "axios";
-import { CreatingStaffByAdminInfo, CreatingStaffByAgencyInfo, StaffsOperation } from "@/TDLib/tdlogistics";
+import { AdministrativeOperation, CreatingStaffByAdminInfo, CreatingStaffByAgencyInfo, StaffsOperation } from "@/TDLib/tdlogistics";
 interface AddStaffProps {
   onClose: () => void;
   info: any;
@@ -32,20 +32,18 @@ interface Ward {
 const validValue= ["ADMIN", "MANAGER", "HUMAN_RESOURCE_MANAGER"]
 const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   const role = info.role
-  const [cities, setCities] = useState<City[]>([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const isAdmin = validValue.includes(role)
-  useEffect(() => {
-    const fetchCities = async () => {
-      const response = await axios.get(
-        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json"
-      );
-      setCities(response.data);
-    };
+  const [city, setCity] = useState([])
+  const [district, setDistrict] = useState([])
+  const [town, setWard] =useState([])
 
-    fetchCities();
-  }, []);
+  const isAdmin = validValue.includes(role)
+  const openModal = (type) => {
+    setType(type);
+    setModalIsOpen(true);
+  };
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
   const agency = validValue.includes(role);
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -53,16 +51,6 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [type, setType] = useState();
   const intl = useIntl();
-
-  const openModal = (type) => {
-    setType(type);
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
   const [Staffdata, setStaffdata] = useState<CreatingStaffByAdminInfo>({
     agency_id: "",
     fullname: "",
@@ -81,7 +69,7 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
     town: "",
     detail_address: "",
   });
-
+  const fetch_city_ward_district = new AdministrativeOperation()
   const handleClickOutside = (event: MouseEvent) => {
     if (
       notificationRef.current &&
@@ -93,7 +81,6 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
       }, 300);
     }
   };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -118,26 +105,38 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
       [key]: value,
     }));
   };
-  const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCity(event.target.value);
-    setSelectedDistrict("");
-    handleInputChange("province", event.target.value);
-  };
 
-  const handleDistrictChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedDistrict(event.target.value);
-    handleInputChange("district", event.target.value);
-  };
+  // chỗ này dùng để lấy thành phố huyện xã
+  useEffect(() => {
+    const fetchCity = async () => {
+      const get = await fetch_city_ward_district.get({})
+      setCity(get.data)
+      console.log(city)
+    };
+    fetchCity();
+  }, []);
+  useEffect(() => {
+    const fetchDistrict = async () => {
+      if (Staffdata.province !== "")
+      {
+        const get = await fetch_city_ward_district.get({province: Staffdata.province})
+        setDistrict(get.data)
+      }
+    };
+    fetchDistrict();
+  }, [Staffdata.province]);
+  useEffect(() => {
+    const fetchWard = async () => {
+    if (Staffdata.district)
+      {
+        const get = await fetch_city_ward_district.get({province: Staffdata.province, district: Staffdata.district})
+        setWard(get.data)
+      }
+    };
+    fetchWard();
+  }, [Staffdata.district]);
 
-  const selectedCityObj = cities.find((city) => city.Id === selectedCity);
-  const districts = selectedCityObj ? selectedCityObj.Districts : [];
 
-  const selectedDistrictObj = districts.find(
-    (district) => district.Id === selectedDistrict
-  );
-  const wards = selectedDistrictObj ? selectedDistrictObj.Wards : [];
 
   const roleSelectAgency = [
     "AGENCY_MANAGER",
@@ -226,107 +225,12 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   };
   const [error, setError] = useState("");
   const handleSubmit = () => {
-    console.log(Staffdata)
-    console.log(role)
-    console.log(isAdmin)
     const staff =new StaffsOperation()
     if (isAdmin)
     staff.createByAgency(Staffdata)
     else {
     staff.createByAdmin(Staffdata)
     }
-    // if (
-    //   Staffdata.age === "" ||
-    //   Staffdata.cccd === "" ||
-    //   Staffdata.date_of_birth === "" ||
-    //   Staffdata.detail_address === "" ||
-    //   Staffdata.district === "" ||
-    //   Staffdata.email === "" ||
-    //   Staffdata.fullname === "" ||
-    //   Staffdata.password === "" ||
-    //   Staffdata.phone_number === "" ||
-    //   Staffdata.position === "" ||
-    //   Staffdata.province === "" ||
-    //   Staffdata.role === "" ||
-    //   Staffdata.salary === "" ||
-    //   Staffdata.town === "" ||
-    //   Staffdata.username === ""
-    // ) {
-    //   setError("Vui lòng điền đầy đủ thông tin!");
-    // } else {
-    //   setError("");
-    // }
-    // if (Staffdata.cccd === "") {
-    //   handleCheckMissing("cccd", true);
-    // } else {
-    //   handleCheckMissing("cccd", false);
-    // }
-    // if (Staffdata.date_of_birth === "") {
-    //   handleCheckMissing("date_of_birth", true);
-    // } else {
-    //   handleCheckMissing("date_of_birth", false);
-    // }
-    // if (Staffdata.detail_address === "") {
-    //   handleCheckMissing("detail_address", true);
-    // } else {
-    //   handleCheckMissing("detail_address", false);
-    // }
-
-    // if (Staffdata.district === "") {
-    //   handleCheckMissing("district", true);
-    // } else {
-    //   handleCheckMissing("district", false);
-    // }
-    // if (Staffdata.email === "") {
-    //   handleCheckMissing("email", true);
-    // } else {
-    //   handleCheckMissing("email", false);
-    // }
-    // if (Staffdata.fullname === "") {
-    //   handleCheckMissing("fullname", true);
-    // } else {
-    //   handleCheckMissing("fullname", false);
-    // }
-    // if (Staffdata.password === "") {
-    //   handleCheckMissing("password", true);
-    // } else {
-    //   handleCheckMissing("password", false);
-    // }
-    // if (Staffdata.phone_number === "") {
-    //   handleCheckMissing("phone_number", true);
-    // } else {
-    //   handleCheckMissing("phone_number", false);
-    // }
-    // if (Staffdata.position === "") {
-    //   handleCheckMissing("position", true);
-    // } else {
-    //   handleCheckMissing("position", false);
-    // }
-    // if (Staffdata.province === "") {
-    //   handleCheckMissing("province", true);
-    // } else {
-    //   handleCheckMissing("province", false);
-    // }
-    // if (Staffdata.role === "") {
-    //   handleCheckMissing("role", true);
-    // } else {
-    //   handleCheckMissing("role", false);
-    // }
-    // if (Staffdata.salary === "") {
-    //   handleCheckMissing("salary", true);
-    // } else {
-    //   handleCheckMissing("salary", false);
-    // }
-    // if (Staffdata.town === "") {
-    //   handleCheckMissing("town", true);
-    // } else {
-    //   handleCheckMissing("town", false);
-    // }
-    // if (Staffdata.username === "") {
-    //   handleCheckMissing("username", true);
-    // } else {
-    //   handleCheckMissing("username", false);
-    // }
   };
 
   return (
@@ -423,15 +327,15 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   ${checkmissing.province ? "border-red-500" : ""}`}
                   id="city"
                   aria-label=".form-select-sm"
-                  value={selectedCity}
-                  onChange={handleCityChange}
+                  value={Staffdata.province}
+                  onChange={e =>  setStaffdata({ ...Staffdata, province: e.target.value })}
                 >
                   <option value="">
                     <FormattedMessage id="Staff.PersonalDetail.SelectProvince" />
                   </option>
-                  {cities.map((city) => (
-                    <option key={city.Id} value={city.Id}>
-                      {city.Name}
+                  {city.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
                     </option>
                   ))}
                 </select>
@@ -441,16 +345,16 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   `}
                   id="district"
                   aria-label=".form-select-sm"
-                  value={selectedDistrict}
-                  onChange={handleDistrictChange}
+                  value={Staffdata.district}
+                  onChange={e =>  setStaffdata({ ...Staffdata, district: e.target.value })}
                 >
                   <option value="">
                     <FormattedMessage id="Staff.PersonalDetail.SelectDistrict" />
                   </option>
-                  {districts.map((district) => (
-                    <option key={district.Id} value={district.Id}>
-                      {district.Name}
-                    </option>
+                  {district.map((district) => (
+                            <option key={district} value={district}>
+                              {district}
+                            </option>
                   ))}
                 </select>
                 <select
@@ -458,14 +362,14 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   ${checkmissing.town ? "border-red-500" : ""}`}
                   id="ward"
                   aria-label=".form-select-sm"
-                  onChange={(e) => handleInputChange("town", e.target.value)}
+                  onChange={e =>  setStaffdata({ ...Staffdata, town: e.target.value })}
                 >
                   <option value="">
                     <FormattedMessage id="Staff.PersonalDetail.SelectWard" />
                   </option>
-                  {wards.map((ward) => (
-                    <option key={ward.Id} value={ward.Id}>
-                      {ward.Name}
+                  {town.map((town) => (
+                    <option key={town} value={town}>
+                      {town}
                     </option>
                   ))}
                 </select>

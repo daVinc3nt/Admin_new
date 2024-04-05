@@ -24,7 +24,7 @@ const Wrapper = ({ children }: LayoutProps) => {
   <Provider>
    <div className="flex overflow-hidden">
       <SideBar toggleCollapseMobile={toggleCollapseMobile}/>
-      <div className="flex-1 flex ring-2 flex-col h-screen ">
+      <div className="flex-1 flex  flex-col h-screen ">
       <div className="flex flex-col">
         <header className="h-14 flex justify-end w-full bg-red-800 dark:bg-[#111319] items-center px-4 xl:px-2 border-b  dark:border-gray-700">
           <div className="flex items-center">

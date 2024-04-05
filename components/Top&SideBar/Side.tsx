@@ -49,7 +49,7 @@ export default function Side({menuItems, toggleCollapseMobile }) {
   }
 
   const wrapperClasses = classNames(
-    "h-screen hidden lg:px-4 lg:flex pt-8 pb-4 bg-white dark:bg-[#1a1b23] justify-between flex-col border-r border-gray-700",
+    "h-screen hidden lg:px-4 lg:flex pt-8 pb-4 bg-white dark:bg-[#1a1b23] justify-between flex-col",
     {
       ["lg:w-80"]: !toggleCollapse,
       ["lg:w-20"]: toggleCollapse,
@@ -100,23 +100,31 @@ export default function Side({menuItems, toggleCollapseMobile }) {
     >
       <div className="flex flex-col">
         <div className="flex whitespace-nowrap items-center justify-between relative">
-          <div className="flex items-center pl-1 gap-4">
-            <Image
-              src="/Logo.png"
-              alt="/"
-              width="40"
-              height="40"
-              style={{objectFit: "cover"}}
-            />
-            {!toggleCollapse && <motion.span
-              variants={leftSideVariant} initial="initial" animate="enter"
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className={classNames("mt-2 text-3xl font-bold")}
-            >
-              TDLogistics
-            </motion.span>}
-          </div>
-          {isCollapsible && (
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              {toggleCollapse && (
+                <Image
+                  src="/Logo.png"
+                  alt="/"
+                  width="100"
+                  height="100"
+                />
+              )}
+              {!toggleCollapse && (
+                <motion.img
+                variants={leftSideVariant}
+                initial="initial"
+                animate="enter"
+                exit="exit"
+                transition={{ duration: 0.7 }}
+                src={"/Logo_name.png"}
+                alt=""
+                width="250"
+                height="250"
+              />
+              )}
+            </div>
+            {isCollapsible && (
             <button
               className={collapseIconClasses}
               onClick={handleSidebarToggle}
@@ -124,6 +132,7 @@ export default function Side({menuItems, toggleCollapseMobile }) {
               <KeyboardDoubleArrowLeft/>
             </button>
           )}
+          </div>
         </div>
         <div className={`flex flex-col items-start mt-10 text-[#545e7b] `}>
            {menuItems.map((menu, index) => {
