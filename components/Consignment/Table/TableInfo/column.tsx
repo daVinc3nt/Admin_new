@@ -12,14 +12,13 @@ import {
   MdOutlineRadioButtonChecked,
   MdOutlineRadioButtonUnchecked,
 } from "react-icons/md";
-import TaskMenu from "@/components/Task/TaskMenu";
-import { set } from "date-fns";
 const createTime = (time: string) => {
-  const moment = require('moment-timezone');
-  const standardDatetime = moment(time).tz(moment.tz.guess()).format('DD/MM/YYYY HH:mm:ss');
+  const moment = require("moment-timezone");
+  const standardDatetime = moment(time)
+    .tz(moment.tz.guess())
+    .format("DD/MM/YYYY HH:mm:ss");
   return standardDatetime;
-}
-
+};
 export const columns: ColumnDef<any>[] = [
   {
     id: "select",
@@ -127,7 +126,11 @@ export const columns: ColumnDef<any>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="flex justify-center">{createTime(row.original.created_at)}</div>;
+      return (
+        <div className="flex justify-center">
+          {createTime(row.original.created_at)}
+        </div>
+      );
     },
   },
   {
@@ -147,11 +150,14 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       return (
         <div className="w-full flex justify-center">
-          {row.original.status === 1 ? (
-            <MdOutlineRadioButtonChecked />
-          ) : (
-            <MdOutlineRadioButtonUnchecked />
-          )}
+          {row.original.status === 0 && "Đã tạo ở bưu cục"}
+          {row.original.status === 1 && "Chưa được tổng cục tiếp nhận"}
+          {row.original.status === 2 && "Đã được tổng cục phê duyệt"}
+          {row.original.status === 3 &&
+            "Đã được tiếp nhận bởi nhân viên vận tải"}
+          {row.original.status === 4 && "Đang được vận chuyển"}
+          {row.original.status === 5 && "Đã tới bưu cục đích"}
+          {row.original.status === 6 && "Đã rã lô"}
         </div>
       );
     },
