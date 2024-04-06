@@ -8,12 +8,17 @@ import DetailNoti from "../Detail/detailNoti";
 import { Checkbox } from "@/components/TableUI/checkbox";
 import { FormattedMessage, useIntl } from "react-intl";
 import Consignment from "@/pages/dashboard/consignment";
-import { MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+import {
+  MdOutlineRadioButtonChecked,
+  MdOutlineRadioButtonUnchecked,
+} from "react-icons/md";
 const createTime = (time: string) => {
-  const moment = require('moment-timezone');
-  const standardDatetime = moment(time).tz(moment.tz.guess()).format('DD/MM/YYYY HH:mm:ss');
+  const moment = require("moment-timezone");
+  const standardDatetime = moment(time)
+    .tz(moment.tz.guess())
+    .format("DD/MM/YYYY HH:mm:ss");
   return standardDatetime;
-}
+};
 export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "number",
@@ -97,7 +102,11 @@ export const columns: ColumnDef<any>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="flex justify-center">{createTime(row.original.created_at)}</div>;
+      return (
+        <div className="flex justify-center">
+          {createTime(row.original.created_at)}
+        </div>
+      );
     },
   },
   {
@@ -115,10 +124,18 @@ export const columns: ColumnDef<any>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="w-full flex justify-center">
-        {row.original.status === 1 ? <MdOutlineRadioButtonChecked /> : <MdOutlineRadioButtonUnchecked />}
-      </div>
-
+      return (
+        <div className="w-full flex justify-center">
+          {row.original.status === 0 && "Đã tạo ở bưu cục"}
+          {row.original.status === 1 && "Chưa được tổng cục tiếp nhận"}
+          {row.original.status === 2 && "Đã được tổng cục phê duyệt"}
+          {row.original.status === 3 &&
+            "Đã được tiếp nhận bởi nhân viên vận tải"}
+          {row.original.status === 4 && "Đang được vận chuyển"}
+          {row.original.status === 5 && "Đã tới bưu cục đích"}
+          {row.original.status === 6 && "Đã rã lô"}
+        </div>
+      );
     },
   },
   {
