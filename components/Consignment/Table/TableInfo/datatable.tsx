@@ -21,14 +21,20 @@ import {
     TableHeader,
     TableRow,
 } from "./table";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@nextui-org/react";
 import AddNoti from "../Add/addNoti";
 import { FormattedMessage, useIntl } from "react-intl";
 import BasicPopover from "@/components/Common/Popover";
 import Filter from "@/components/Common/Filters";
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import DisassembleConsignment from "../Disassemble/disConsignment";
-
+import TaskMenu from "@/components/Task/TaskMenu";
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
@@ -40,74 +46,110 @@ export function DataTable<TData, TValue>({
     data,
     reloadData,
 }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
-    const intl = useIntl()
-    const table = useReactTable({
-        data,
-        columns,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
-        state: {
-            sorting,
-            columnFilters,
-            columnVisibility,
-            rowSelection,
-        },
-    });
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsOpen2, setModalIsOpen2] = useState(false);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
+  const intl = useIntl();
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen2, setModalIsOpen2] = useState(false);
+  const [modalIsOpen3, setModalIsOpen3] = useState(false);
 
     const openModal = () => {
         setModalIsOpen(true);
     };
 
-    const openModal2 = () => {
-        setModalIsOpen2(true);
-    };
+  const openModal2 = () => {
+    setModalIsOpen2(true);
+  };
+
+  const openModal3 = () => {
+    setModalIsOpen3(true);
+  };
 
     const closeModal = () => {
         setModalIsOpen(false);
     };
 
-    const closeModal2 = () => {
-        setModalIsOpen2(false);
-    };
+  const closeModal2 = () => {
+    setModalIsOpen2(false);
+  };
 
-    const paginationButtons = [];
-    for (let i = 0; i < table.getPageCount(); i++) {
-        paginationButtons.push(
-            <Button key={i} onClick={() => table.setPageIndex(i)}>
-                {i + 1}
-            </Button>
-        );
+  const closeModal3 = () => {
+    setModalIsOpen3(false);
+  };
+
+  const paginationButtons = [];
+  for (let i = 0; i < table.getPageCount(); i++) {
+    paginationButtons.push(
+      <Button key={i} onClick={() => table.setPageIndex(i)}>
+        {i + 1}
+      </Button>
+    );
+  }
+  const [shipment_id, setShipment_id] = useState<string[]>([]);
+  const handleAddRowsSelected = () => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+    const selectedShipment_id = selectedRows.map(
+      (row) => row.original.shipment_id
+    );
+    setShipment_id(selectedShipment_id);
+  };
+  const confirmDelete = () => {
+    return window.confirm("Are you sure you want to delete?");
+  };
+  const deleteRows = () => {
+    // Gọi hàm confirmDelete và lưu kết quả vào biến result
+    const result = confirmDelete();
+    // Nếu result là true, tức là người dùng nhấn yes
+    if (result) {
+      // Gọi hàm handleDeleteRowsSelected để xóa các hàng đã chọn
+      handleAddRowsSelected();
     }
-
-    return (
-        <div>
-            <div className="flex items-center py-4">
-                <div className="w-full flex flex-col sm:flex-row">
-                    <div className="relative w-full lg:w-1/2 flex">
-                        <input
-                            id="consSearch"
-                            type="text"
-                            value={
-                                (table.getColumn("shipment_id")?.getFilterValue() as string) ?? ""
-                            }
-                            onChange={(event) =>
-                                table.getColumn("shipment_id")?.setFilterValue(event.target.value)
-                            }
-                            className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
+    // Nếu result là false, tức là người dùng nhấn no
+    else {
+      // Không làm gì cả
+    }
+  };
+  return (
+    <div>
+      <div className="flex items-center py-4">
+        <div className="w-full flex flex-col sm:flex-row">
+          <div className="relative w-full lg:w-1/2 flex">
+            <input
+              id="consSearch"
+              type="text"
+              value={
+                (table.getColumn("shipment_id")?.getFilterValue() as string) ??
+                ""
+              }
+              onChange={(event) =>
+                table
+                  .getColumn("shipment_id")
+                  ?.setFilterValue(event.target.value)
+              }
+              className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
               text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm dark:text-white`}
                             placeholder=""
                         />
@@ -116,116 +158,156 @@ export function DataTable<TData, TValue>({
                             className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all w-full hidden xs:block
               peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
               peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
-                        >
-                            <FormattedMessage id="Consignment.SearchBox" />
-                        </label>
-                        <Dropdown className="z-30">
-                            <DropdownTrigger>
-                                <Button
-                                    className="text-xs md:text-sm border border-gray-600 rounded ml-2 w-40 text-center"
-                                    aria-label="Show items per page"
-                                >
-                                    Show {table.getState().pagination.pageSize}
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu
-                                className="bg-white dark:bg-[#1a1b23] text-black dark:text-white border border-gray-300 rounded w-24"
-                                aria-labelledby="dropdownMenuButton"
-                            >
-                                {[10, 20, 30, 40, 50].map((pageSize, index) => (
-                                    <DropdownItem key={pageSize} textValue={`Show ${pageSize} items per page`}>
-                                        <Button
-                                            onClick={() => table.setPageSize(pageSize)}
-                                            variant="bordered"
-                                            aria-label={`Show ${pageSize}`}
-                                            className="text-center  text-black dark:text-white w-full"
-                                        >
-                                            Show {pageSize}
-                                        </Button>
-                                    </DropdownItem>
-                                ))}
-                            </DropdownMenu>
-                        </Dropdown>
-                        <BasicPopover icon={<FilterAltIcon />}>
-                            <Filter type="range" column={table.getColumn("mass")} table={table} title="Mass" />
-                        </BasicPopover>
-                    </div>
-                    <div className="h-10 grow hidden sm:block"></div>
-                    <div className="h-10 flex mt-4 sm:mt-0 justify-center sm:justify-end">
-                        <Button className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 px-2 text-center h-full grow sm:flex-grow-0"
-                            onClick={openModal2}>
-                            <FormattedMessage id="Consignment.DisButton" />
-                        </Button>
-                        <Button className="text-xs md:text-sm border border-gray-600 rounded ml-2 px-2 text-center h-full grow sm:flex-grow-0"
-                            onClick={openModal}>
-                            <FormattedMessage id="Consignment.AddButton" />
-                        </Button>
-                        {modalIsOpen && <AddNoti onClose={closeModal} reloadData={reloadData} />}
-                        {modalIsOpen2 && <DisassembleConsignment onClose={closeModal2} reloadData={reloadData} />}
-                    </div>
-                </div>
+            >
+              <FormattedMessage id="Consignment.SearchBox" />
+            </label>
+            <Dropdown className="z-30">
+              <DropdownTrigger>
+                <Button
+                  className="text-xs md:text-sm border border-gray-600 rounded ml-2 w-40 text-center"
+                  aria-label="Show items per page"
+                >
+                  Show {table.getState().pagination.pageSize}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                className="bg-white dark:bg-[#1a1b23] text-black dark:text-white border border-gray-300 rounded w-24"
+                aria-labelledby="dropdownMenuButton"
+              >
+                {[10, 20, 30, 40, 50].map((pageSize, index) => (
+                  <DropdownItem
+                    key={pageSize}
+                    textValue={`Show ${pageSize} items per page`}
+                  >
+                    <Button
+                      onClick={() => table.setPageSize(pageSize)}
+                      variant="bordered"
+                      aria-label={`Show ${pageSize}`}
+                      className="text-center  text-white w-full"
+                    >
+                      Show {pageSize}
+                    </Button>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <BasicPopover icon={<FilterAltIcon />}>
+              <Filter
+                type="range"
+                column={table.getColumn("mass")}
+                table={table}
+                title="Mass"
+              />
+            </BasicPopover>
+          </div>
+          <div className="h-10 grow hidden sm:block"></div>
+          <div className="h-10 flex mt-4 sm:mt-0 justify-center sm:justify-end">
+            <Button
+              className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 px-2 text-center h-full grow sm:flex-grow-0"
+              onClick={openModal2}
+            >
+              <FormattedMessage id="Consignment.DisButton" />
+            </Button>
+            <Button
+              className="text-xs md:text-sm border border-gray-600 rounded ml-2 px-2 text-center h-full grow sm:flex-grow-0"
+              onClick={openModal}
+            >
+              <FormattedMessage id="Consignment.AddButton" />
+            </Button>
+            {modalIsOpen && (
+              <AddNoti onClose={closeModal} reloadData={reloadData} />
+            )}
+            {modalIsOpen2 && (
+              <DisassembleConsignment
+                onClose={closeModal2}
+                reloadData={reloadData}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="rounded-md border border-gray-700">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="border-gray-700">
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className={`border-gray-700 ${
+                    row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
+                  }`}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      {modalIsOpen3 && (
+        <TaskMenu onClose={closeModal3} DataInitial={shipment_id} />
+      )}
+      <div className="flex flex-col sm:flex-row items-center gap-2 justify-between py-2 sm:py-4">
+        <button
+          className={`text-xs md:text-md justify-self-start text-muted-foreground rounded-lg border border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 hover:text-white hover:shadow-md focus:outline-none font-normal dark:text-white
+          ${
+            table.getFilteredSelectedRowModel().rows.length > 0
+              ? "border-green-500"
+              : "border-gray-600"
+          }`}
+          onClick={() => {
+            handleAddRowsSelected();
+            openModal3();
+          }}
+        >
+          Thêm vào phương tiện
+          {table.getFilteredSelectedRowModel().rows.length}/
+          {table.getFilteredRowModel().rows.length}
+        </button>
+        <div className="flex place-items-center">
+          <span className="flex items-center gap-1">
+            <div className="text-xs md:text-base">
+              <FormattedMessage id="page" />
             </div>
-            <div className="rounded-md border border-gray-700">
-                <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id} className="border-gray-700">
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    );
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    className={`border-gray-700 ${row.getIsSelected() ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-2 justify-between py-2 sm:py-4">
-                <div className="flex place-items-center">
-                    <span className="flex items-center gap-1">
-                        <div className="text-xs md:text-base">
-                            <FormattedMessage id="page" />
-                        </div>
-                        <strong className="text-xs md:text-base whitespace-nowrap">
-                            {table.getState().pagination.pageIndex + 1}{" "}
-                            <FormattedMessage id="of" /> {table.getPageCount()}
-                        </strong>
-                    </span>
+            <strong className="text-xs md:text-base whitespace-nowrap">
+              {table.getState().pagination.pageIndex + 1}{" "}
+              <FormattedMessage id="of" /> {table.getPageCount()}
+            </strong>
+          </span>
 
                     <TbMinusVertical className="text-xl text-gray-700" />
 

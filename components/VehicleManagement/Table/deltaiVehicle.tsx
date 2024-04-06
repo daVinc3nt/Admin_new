@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { User, Pencil } from "lucide-react";
+import DetailShipment from "@/components/Task/Table/detailShipment";
 import {
   StaffsOperation,
   VehicleOperation,
@@ -47,7 +48,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-
+  const [openModalId, setOpenModalId] = useState(null);
   const handleClickOutside = (event: MouseEvent) => {
     if (
       notificationRef.current &&
@@ -70,7 +71,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
         } else {
           console.log("Data Ma lo hang", response);
           response.data.map((item: any) => {
-            ShipmentData.push(item.shipment_id);
+            ShipmentData.push(item);
           });
           console.log("Data Ma lo hang", ShipmentData);
         }
@@ -155,8 +156,6 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
     fetchShipment();
   };
 
-  const [shipmentValue, setshipmentValue] = useState("");
-
   const [Error2, setError2] = useState("");
   // const handleAddShipment = async (shipmentValue) => {
   //   const shipment = new ShipmentsOperation();
@@ -209,22 +208,30 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
   //     alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
   //   }
   // };
-  // const handleDeleteShipment = async (shipment_id: string) => {
-  //   const vehicle = new VehicleOperation();
-  //   const condition: DeletingShipmentsFromVehicleCondition = {
-  //     vehicle_id: VehicleData.vehicle_id,
-  //   };
-  //   const Info: DeletingShipmentsFromVehicleInfo = {
-  //     shipment_ids: [shipment_id],
-  //   };
-  //   const response = await vehicle.deleteShipments(Info, condition);
-  //   console.log(response);
-  //   if (response.error == false) {
-  //     alert(response.message);
-  //     fetchShipment();
-  //     return;
-  //   }
-  // };
+  const handleDeleteShippment = async (shipmentValue) => {
+    const vehicle = new VehicleOperation();
+    const Info: DeletingShipmentsFromVehicleInfo = {
+      shipment_ids: shipmentValue,
+    };
+    const condition: DeletingShipmentsFromVehicleCondition = {
+      vehicle_id: VehicleData.vehicle_id,
+    };
+    console.log("DELETE", Info);
+    try {
+      const response = await vehicle.deleteShipments(Info, condition);
+      console.log("RSSSS", response);
+      if (response.error === true) {
+        setError2(response.message);
+        alert(response.message);
+        return;
+      }
+      alert(response.message);
+      fetchShipment();
+    } catch (e) {
+      console.log(e);
+      alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
+    }
+  };
 
   return (
     <motion.div
@@ -416,33 +423,71 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
                 <div className="text-red-500">{Error2}</div>
               </div>
               <div className="mt-3 relative flex flex-col w-full   text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
-                <table className="w-full text-left table-auto min-w-max">
+                <table className="table-auto w-full border border-gray-200">
                   <thead>
                     <tr>
-                      <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50 dark:bg-[#1a1b23]">
-                        <p className="block font-sans text-sm antialiased font-normal leading-none dark:bg-[#1a1b23] text-blue-gray-900 opacity-70">
-                          Mã lô hàng
-                        </p>
-                      </th>
+                      <th className="border border-gray-200">ID </th>
+                      <th className="border border-gray-200">Trạng thái </th>
+                      <th className="border border-gray-200">Khối lượng </th>
+                      <th className="border border-gray-200">Chi tiết </th>
+                      {isEditing && (
+                        <th className="border border-gray-200">Xóa</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
-                    {Shipment ? (
-                      Shipment.map((item: any) => {
-                        console.log(item);
-                        return (
-                          <tr className="dark:bg-[#1a1b23]">
-                            <td className="p-4 border-b border-blue-gray-50 dark:bg-[#1a1b23]">
-                              <p className="block dark:bg-[#1a1b23] font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {item.shipment_id}
-                              </p>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <div>Không có lô hàng nào</div>
-                    )}
+                    {ShipmentData.map((item: any) => (
+                      <tr key={item} className="border border-gray-200">
+                        <td className="text-center border border-gray-200">
+                          {item.shipment_id}
+                        </td>
+                        <td className="text-center border border-gray-200">
+                          {item.parent === null
+                            ? "Chưa tiếp nhận"
+                            : "Đã tiếp nhận"}
+                        </td>
+                        <td className="text-center border border-gray-200">
+                          {item.mass} kg
+                        </td>
+
+                        <td className="text-center border border-gray-200">
+                          <Button
+                            className="delay-50  w-10 rounded-lg  bg-blue-500
+      py-1   text-white  drop-shadow-md
+      transition duration-200
+      ease-in-out hover:translate-x-px hover:scale-110
+      hover:bg-blue-400 hover:shadow-md
+      hover:drop-shadow-xl "
+                            onClick={() => setOpenModalId(item.shipment_id)}
+                          >
+                            ...
+                          </Button>
+                        </td>
+                        {openModalId === item.shipment_id && (
+                          <DetailShipment
+                            onClose={() => setOpenModalId(null)}
+                            dataInitial={item}
+                          />
+                        )}
+                        {isEditing && (
+                          <td className="flex items-center place-content-center border border-gray-200">
+                            <Button
+                              className="delay-50  w-10 rounded-lg  bg-green-500
+      py-1   text-white  drop-shadow-md
+      transition duration-200 
+      ease-in-out hover:translate-x-px hover:scale-110 
+      hover:bg-emerald-400 hover:shadow-md
+      hover:drop-shadow-xl "
+                              onClick={() =>
+                                handleDeleteShippment(item.shipment_id)
+                              }
+                            >
+                              -
+                            </Button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
