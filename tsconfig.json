@@ -36,7 +36,7 @@
     "**/*.tsx",
     "data/siteMetadata.js",
     ".next/types/**/*.ts"
-  ],
+, "pages/500.jx"  ],
   "exclude": [
     "node_modules"
   ]

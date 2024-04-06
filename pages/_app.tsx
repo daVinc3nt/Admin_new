@@ -29,7 +29,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { locale } = useRouter();
   const [info, setInfo] = useState(null);
   const router = useRouter();
-  const [value, setValue] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const res = await staff.getAuthenticatedStaffInfo();

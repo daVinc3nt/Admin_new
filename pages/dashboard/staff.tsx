@@ -18,7 +18,7 @@ const ValidRole_StaffMenu =
 ]
 const staff: NextPage = () => {
   const {info} = useContext(UserContext)
-  if (info)
+  if (!info) return
   return (
     <>
       {
