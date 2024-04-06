@@ -8,8 +8,37 @@ import DetailNoti from "../Detail/detailNoti";
 import { Checkbox } from "@/components/TableUI/checkbox";
 import { FormattedMessage, useIntl } from "react-intl";
 import Consignment from "@/pages/dashboard/consignment";
-import { MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+import {
+  MdOutlineRadioButtonChecked,
+  MdOutlineRadioButtonUnchecked,
+} from "react-icons/md";
+import TaskMenu from "@/components/Task/TaskMenu";
+import { set } from "date-fns";
 export const columns: ColumnDef<any>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="border border-black dark:border-white"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="border border-black dark:border-white"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "number",
     header: ({ column }) => {
@@ -91,10 +120,15 @@ export const columns: ColumnDef<any>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="w-full flex justify-center">
-        {row.original.status === 1 ? <MdOutlineRadioButtonChecked /> : <MdOutlineRadioButtonUnchecked />}
-      </div>
-
+      return (
+        <div className="w-full flex justify-center">
+          {row.original.status === 1 ? (
+            <MdOutlineRadioButtonChecked />
+          ) : (
+            <MdOutlineRadioButtonUnchecked />
+          )}
+        </div>
+      );
     },
   },
   {
@@ -126,6 +160,41 @@ export const columns: ColumnDef<any>[] = [
           </Button>
           {modalIsOpen && (
             <DetailNoti onClose={closeModal} dataInitial={row.original} />
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "Add",
+    header: () => {
+      return (
+        <div className="text-right whitespace-nowrap w-full flex justify-center">
+          Thêm vào phương tiện
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const [modalIsOpen, setModalIsOpen] = useState(false);
+      const [shipment_id, setShipment_id] = useState<string[]>([]);
+      const openModal = () => {
+        setShipment_id(row.original.shipment_id);
+        setModalIsOpen(true);
+      };
+
+      const closeModal = () => {
+        setModalIsOpen(false);
+      };
+      return (
+        <div className="relative mr-2 w-full flex justify-center">
+          <Button
+            onClick={openModal}
+            className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full "
+          >
+            +
+          </Button>
+          {modalIsOpen && (
+            <TaskMenu onClose={closeModal} DataInitial={shipment_id} />
           )}
         </div>
       );
