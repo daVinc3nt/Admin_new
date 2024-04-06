@@ -112,8 +112,10 @@ export function DataTable<TData, TValue>({
   const handleAddRowsSelected = () => {
     const selectedRows = table.getFilteredSelectedRowModel().rows;
     const selectedShipment_id = selectedRows.map(
-      (row) => row.original.shipment_id
-    );
+      (row) => {
+        const a: any = row.original
+        return a.shipment_id} 
+    );         
     setShipment_id(selectedShipment_id);
   };
   const confirmDelete = () => {
