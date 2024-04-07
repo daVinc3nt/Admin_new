@@ -6,12 +6,11 @@ import { FaTrash, FaPen } from "react-icons/fa";
 import { FormattedMessage, useIntl } from "react-intl";
 import { IoAddCircleOutline } from "react-icons/io5";
 import AddOrders from "./AddOrders/addOrdersNoti";
-import { ShipmentsOperation } from "@/TDLib/tdlogistics";
 import CustomTimeline from "@/components/Common/Timeline2";
 import TimelineNoti from "./timelineNoti";
 import NotiPopup from "@/components/Common/NotiPopup";
 import SubmitPopup from "@/components/Common/SubmitPopup";
-
+import { ShipmentsOperation, ShipmentID } from "@/TDLib/tdlogistics";
 interface DetailNotificationProps {
   onClose: () => void;
   dataInitial: {
@@ -115,6 +114,21 @@ const DetailNotification: React.FC<DetailNotificationProps> = ({
   };
 
   const handleConfirm = async () => {
+    const a = new ShipmentsOperation();
+    try {
+      const ID: ShipmentID = { shipment_id: dataInitial.shipment_id };
+      const result = await a.confirmCreate(ID);
+      console.log(result);
+      if (result.error) {
+        setMessage(result.message);
+        setOpenError(true);
+      } else {
+        setMessage("Success!");
+        setOpenError(true);
+      }
+    } catch (error) {
+      console.error("Error confirming shipment: ", error);
+    }
     handleClose();
   };
 
