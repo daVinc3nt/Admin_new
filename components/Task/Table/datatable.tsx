@@ -38,12 +38,14 @@ import { AgencyOperation, DeletingAgencyCondition } from "@/TDLib/tdlogistics";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  reloadData?: () => void;
+  reloadData2?: () => void;
   info?: any;
+  reloadData: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
+  reloadData2,
   data,
   reloadData,
   info,

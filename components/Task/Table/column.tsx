@@ -153,21 +153,23 @@ export async function createColumns(
         const [shipment_ids, setShipment_ids] = useState<string[]>([]);
 
         const handleAddTask = async () => {
-          setShipment_ids(dataInitial);
-          console.log("Row", row.original);
-          console.log("DataInitial", dataInitial);
+          dataInitial.map((item) => {
+            shipment_ids.push(item);
+          });
           const create: CreatingNewDriverTasksInfo = {
             shipment_ids: shipment_ids,
             vehicle_id: row.original.vehicle_id,
           };
+
           console.log("Create", create);
           const response = await OJ.createNewTasks(create);
           console.log("Response", response);
           if (response.error.error) {
             alert(response.error.message);
           } else {
-            alert("Tạo công việc thành công");
+            alert(response.message);
           }
+          reloadData();
         };
         const handleAddTask2 = async () => {
           setShipment_ids(dataInitial);
@@ -185,6 +187,7 @@ export async function createColumns(
           } else {
             alert("Tạo công việc thành công");
           }
+          reloadData();
         };
         if (
           info?.role === "ADMIN" ||
