@@ -791,6 +791,10 @@ export interface DeletingShipmentsFromVehicleCondition {
     vehicle_id: string,
 }
 
+export interface UndertakingShipmentInfo {
+    shipment_id: string,
+}
+
 export interface DeletingVehicleCondition {
     vehicle_id: string,
 }
@@ -893,7 +897,6 @@ class VehicleOperation {
         }
     }
 
-
     async update(info: UpdatingVehicleInfo, condition: UpdatingVehicleCondition) {
         try {
             const response = await axios.put(`${this.baseUrl}/update?vehicle_id=${condition.vehicle_id}`, info, {
@@ -934,6 +937,22 @@ class VehicleOperation {
             return { error: data.error, info: data.info, message: data.message };
         } catch (error: any) {
             console.log("Error deleting shipments from vehicle: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
+
+    // ROLE: DRIVER, PARTNER_DRIVER
+    async undertakeShipment(info: UndertakingShipmentInfo) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/undertake?shipment_id=${info.shipment_id}`, {
+                withCredentials: true,
+            });
+
+            const data = response.data;
+            return { error: data.error, message: data.message };
+        } catch (error: any) {
+            console.log("Error undertaking shipment: ", error?.response?.data);
             console.error("Request that caused the error: ", error?.request);
             return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
         }
@@ -1431,6 +1450,21 @@ class BusinessOperation {
 		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
 
 	}
+
+    async getAuthenticatedBusinessInfo() {
+        try {
+            const response: AxiosResponse<any> = await axios.get(`${this.baseUrl}/get_info`, {
+                withCredentials: true,
+            });
+
+            const data = response.data;
+            return { error: data.error, info: data.info, message: data.message };
+        } catch (error: any) {
+            console.log("Error getting authenticated business info: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
 
     async signup(info: SigningUpInfo) {
         try {
@@ -2020,7 +2054,7 @@ class PartnerStaffOperation {
 	} 
 }
   
-export interface CreatingNewTasksInfo {
+export interface CreatingNewShipperTasksInfo {
     shipment_id: string,
     vehicle_id: string,
 }
@@ -2044,7 +2078,24 @@ class ShippersOperation {
 		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shippers";
 	}
 
-    async createNewTasks(info: CreatingNewTasksInfo) {
+    // ROLE: AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
+    async getObjectsCanHandleTask() {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.baseUrl}/get_objects`, {
+                withCredentials: true,
+            });
+
+            const data = response.data;
+            return { error: data.error, data: data.data, message: data.message };
+        } catch (error: any) {
+            console.log("Error getting object can handle task: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
+
+    // ROLE: AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
+    async createNewTasks(info: CreatingNewShipperTasksInfo) {
         try {
             const response: AxiosResponse = await axios.post(`${this.baseUrl}/create_tasks`, info, {
                 withCredentials: true,
@@ -2059,6 +2110,7 @@ class ShippersOperation {
         }
     }
 
+    // ROLE: AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER, AGENCY_SHIPPER
 	async getTask(condition: GettingTasksCondition) {
 		try {
 			const response: AxiosResponse = await axios.post(`${this.baseUrl}/get_tasks`, condition, {
@@ -2074,6 +2126,7 @@ class ShippersOperation {
 		}
 	}
 
+    // ROLE: AGENCY_SHIPPER
 	async confirmCompletedTask(condition: ConfirmingCompletedTaskCondition) {
 		try {
 			const response: AxiosResponse = await axios.patch(`${this.baseUrl}/confirm_completed?id=${condition.id}`, {
@@ -2089,6 +2142,7 @@ class ShippersOperation {
 		}
 	}
 
+    // ROLE: AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER, AGENCY_SHIPPER 
 	async getHistory(condition: GettingHistoryInfo) {
 		try {
 			const response: AxiosResponse = await axios.post(`${this.baseUrl}/get_history`, condition, {
@@ -2105,7 +2159,7 @@ class ShippersOperation {
 	}
 }
 
-export interface CreatingNewTasksInfo {
+export interface CreatingNewDriverTasksInfo {
     shipment_ids: Array<string>,
     vehicle_id: string,
 }
@@ -2130,7 +2184,24 @@ class DriversOperation {
 		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/drivers";
 	}
 
-    async createNewTasks(info: CreatingNewTasksInfo) {
+    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER
+    async getObjectsCanHandleTask() {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.baseUrl}/get_objects`, {
+                withCredentials: true,
+            });
+
+            const data = response.data;
+            return { error: data.error, data: data.data, message: data.message };
+        } catch (error: any) {
+            console.log("Error getting object can handle task: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
+
+    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER 
+    async createNewTasks(info: CreatingNewDriverTasksInfo) {
         try {
             const response: AxiosResponse = await axios.post(`${this.baseUrl}/create_tasks`, info, {
                 withCredentials: true,
@@ -2145,6 +2216,7 @@ class DriversOperation {
         }
     }
 
+    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER, PARTNER_DRIVER
 	async getTask(condition: GettingTasksCondition) {
 		try {
 			const response: AxiosResponse = await axios.post(`${this.baseUrl}/get_tasks`, condition, {
@@ -2160,6 +2232,7 @@ class DriversOperation {
 		}
 	}
 
+    // ROLE: PARTNER_DRIVER
 	async confirmCompletedTask(condition: ConfirmingCompletedTaskCondition) {
 		try {
 			const response: AxiosResponse = await axios.delete(`${this.baseUrl}/confirm_completed?id=${condition.id}`, {
@@ -2178,7 +2251,7 @@ class DriversOperation {
 
 //Shipment Operation
 export interface CreatingShipmentInfo {
-    agency_destination?: string
+    agency_id_dest?: string
 }
 
 export interface FindingShipmentConditions {
@@ -2221,6 +2294,21 @@ class ShipmentsOperation {
 			return { error: data.error, existed: data.existed, message: data.message };
 		} catch (error: any) {
 			console.log("Error checking exist shipment: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+		}
+    }
+
+    async getAllAgencies() {
+        try {
+			const response = await axios.get(`${this.baseUrl}/get_agencies`, {
+				withCredentials: true,
+			});
+
+			const data = response.data;
+			return { error: data.error, data: data.data, message: data.message };
+		} catch (error: any) {
+			console.log("Error getting all agencies: ", error?.response?.data);
             console.error("Request that caused the error: ", error?.request);
             return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
 		}
@@ -2380,6 +2468,22 @@ class ShipmentsOperation {
 			return { error: data.error, message: data.message };
 		} catch (error: any) {
 			console.log("Error undertaking shipment: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+		}
+    }
+
+    // ROLE: ADMIN, MANAGER, TELLER
+    async approve(condition: ShipmentID) {
+        try {
+			const response = await axios.put(`${this.baseUrl}/accept?shipment_id=${condition.shipment_id}`, {
+				withCredentials: true,
+			});
+
+			const data = response.data;
+			return { error: data.error, message: data.message };
+		} catch (error: any) {
+			console.log("Error approve shipment: ", error?.response?.data);
             console.error("Request that caused the error: ", error?.request);
             return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
 		}
