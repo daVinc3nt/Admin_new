@@ -152,7 +152,7 @@ export default function Side({menuItems, toggleCollapseMobile }) {
 
       <div className={`${getNavItemClasses({})}`}>
         <button
-        onClick={Logout}
+        onClick={() => Logout(router)}
         className="flex py-4 px-3 items-center w-full h-full text-[#545e7b] hover:bg-red-200 dark:hover:bg-black hover:text-[#e1201c]">
           <div style={ !toggleCollapse? { width: "2.5rem" }: { width: "0rem" }}>
             <LogoutOutlined />
@@ -224,7 +224,7 @@ export default function Side({menuItems, toggleCollapseMobile }) {
 
       <div className={`${getNavItemClasses({})}`}>
         <button 
-        onClick={Logout}
+        onClick={()=> Logout(router)}
         className="flex py-4 px-3 items-center w-full h-full text-[#545e7b] hover:bg-black hover:text-[#e1201c]">
           {!toggleCollapseMobile && <div style={ { width: "2.5rem" }}>
             <LogoutOutlined />
