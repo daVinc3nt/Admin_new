@@ -10,6 +10,7 @@ import {
   CreateBusinessByAgencyInfo,
   BusinessOperation,
 } from "@/TDLib/tdlogistics";
+import NotiPopup from "@/components/Common/NotiPopup";
 interface AddBusinessProps {
   onClose: () => void;
   reloadData: () => void;
@@ -92,17 +93,14 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [type, setType] = useState();
   const intl = useIntl();
-
-  const openModal = (type) => {
-    setType(type);
-    setModalIsOpen(true);
+  const [message, setMessage] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const onClick = () => {
+    setOpenModal(true);
   };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const onCloseModal = () => {
+    setOpenModal(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -228,7 +226,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
     }
     if (!check) {
       setError("Vui lòng nhập đầy đủ thông tin");
-      console.log(BusinessData);
+      // console.log(BusinessData);
     } else {
       setError("");
       if (
@@ -238,9 +236,11 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
       ) {
         const response = await Business.createByAdmin(BusinessData);
         if (response.error) {
-          alert("Thêm đối tác thất bại" + response.error.message);
+          setMessage(response.message);
+          onClick();
         } else {
-          alert("Thêm đối tác thành công");
+          setMessage("Thêm doanh nghiệp thành công");
+          onClick();
           reloadData();
           setBusinessData({
             username: "",
@@ -276,11 +276,12 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
         role === "AGENCY_HUMAN_RESOURCE_MANAGER"
       ) {
         const response = await Business.createByAgency(BusinessData);
-        console.log(response);
+        // console.log(response);
         if (response.error) {
           setError(response.message);
         } else {
-          alert("Thêm đối tác thành công");
+          setMessage("Thêm doanh nghiệp thành công");
+          onClick();
           reloadData();
           setBusinessData({
             user_fullname: "",
@@ -313,7 +314,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
       }
     }
   };
-  // console.log(BusinessData);
+  console.log(BusinessData);
   const a: AdministrativeInfo = {
     province: "",
   };
@@ -342,7 +343,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
-      console.log("Tỉnh", response);
+      // console.log("Tỉnh", response);
       setProvinces(response.data);
       setProvincesBusiness(response.data);
     };
@@ -353,9 +354,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
     setSelectedProvince(e.target.value);
     a.province = e.target.value;
     handleInputChange("user_province", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistricts(response.data);
   };
 
@@ -364,9 +365,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
     a.province = selectedProvince;
     a.district = e.target.value;
     handleInputChange("user_district", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWards(response.data);
   };
   const handleWardChange = (e) => {
@@ -378,9 +379,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
     setSelectedProvinceBusiness(e.target.value);
     b.province = e.target.value;
     handleInputChange("province", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistrictsBusiness(response.data);
   };
 
@@ -389,9 +390,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
     b.province = selectedProvinceBusiness;
     b.district = e.target.value;
     handleInputChange("district", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWardsBusiness(response.data);
   };
   const handleWardChangeBusiness = (e) => {
@@ -421,7 +422,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
       >
         <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
           <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">
-            Thêm doanh nghiệp
+            <FormattedMessage id="Business.AddBusiness" />
           </div>
           <Button
             className="absolute right-0 w-8 h-8 rounded-full mb-2 hover:bg-gray-300"
@@ -433,12 +434,17 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
 
         <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar flex flex-col items-center bg-white dark:bg-[#14141a] p-2 rounded-md dark:text-white">
           <div className="w-[98%] sm:w-10/12">
+            {openModal && (
+              <NotiPopup onClose={onCloseModal} message={message} />
+            )}
             <h1 className="font-semibold pb-2 text-center dark:text-white">
-              Thông tin người quản lý
+              <FormattedMessage id="Business.LeaderName" />
             </h1>
             <div className="flex gap-3">
               <div className="w-full">
-                <div className="text-center dark:text-white">Họ và tên</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.LeaderName" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -450,7 +456,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
                 />
               </div>
               <div className="w-full">
-                <div className="text-center dark:text-white">Số điện thoại</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.LeaderPhone" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -464,19 +472,23 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
             </div>
             <div className="flex gap-3 mt-3">
               <div className="w-full">
-                <div className="text-center dark:text-white">Ngày sinh</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.LeaderDateOfBirth" />
+                </div>
                 <input
                   type="date"
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_date_of_birth ? "border-red-500" : ""}`}
-                  placeholder="Ngày sinh"
+                  // placeholder="VD: 01/01/2000"
                   onChange={(e) =>
                     handleInputChange("user_date_of_birth", e.target.value)
                   }
                 />
               </div>
               <div className="w-full">
-                <div className="text-center dark:text-white">Số CCCD</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.LeaderCCCD" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -502,7 +514,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
             </div>
             <div className="flex gap-3 mt-3">
               <div className="w-full">
-                <div className="text-center dark:text-white">Ngân hàng</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.LeaderBank" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -513,7 +527,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
                 />
               </div>
               <div className="w-full">
-                <div className="text-center dark:text-white">Số tài khoản</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.LeaderBankNumber" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -652,14 +668,16 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
           </div>
           <div className="w-[98%] sm:w-10/12 mt-5">
             <h1 className="font-semibold pb-2 text-center">
-              Thông tin doanh nghiệp
+              <FormattedMessage id="Business.InformationBusiness" />
             </h1>
             <div className="flex gap-3">
               {role === "ADMIN" ||
               role === "MANAGER" ||
               role === "HUMAN_RESOURCE_MANAGER" ? (
                 <div className="w-full">
-                  <div className="text-center dark:text-white">Agency ID</div>
+                  <div className="text-center dark:text-white">
+                    <FormattedMessage id="Business.AgencyID" />
+                  </div>
                   <input
                     type=""
                     className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -672,7 +690,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
                 </div>
               ) : null}
               <div className="w-full">
-                <div className="text-center dark:text-white">Mã số thuế</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.TaxNumber" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -686,7 +706,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
             </div>
             <div className="flex gap-3 mt-3">
               <div className="w-full">
-                <div className="text-center dark:text-white">Số điện thoại</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.Phonenumber" />
+                </div>
                 <input
                   type="number"
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -709,7 +731,7 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
               </div>
               <div className="w-full">
                 <div className="text-center dark:text-white">
-                  Tên doanh nghiệp
+                  <FormattedMessage id="Business.Name" />
                 </div>
                 <input
                   type=""
@@ -724,7 +746,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
             </div>
             <div className="flex gap-3 mt-3">
               <div className="w-full">
-                <div className="text-center dark:text-white">Ngân hàng</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.Bank" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -734,7 +758,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
                 />
               </div>
               <div className="w-full">
-                <div className="text-center dark:text-white">Số tài khoản</div>
+                <div className="text-center dark:text-white">
+                  <FormattedMessage id="Business.BankNumber" />
+                </div>
                 <input
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-white dark:bg-[#14141a] h-10 p-2 w-full
@@ -816,7 +842,9 @@ const AddBusiness: React.FC<AddBusinessProps> = ({
         bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md"
           onClick={handleSubmit}
         >
-          <span className="hidden xs:block">Thêm doanh nghiệp</span>
+          <span className="hidden xs:block">
+            <FormattedMessage id="Business.AddBusiness" />
+          </span>
         </Button>
         <div className=" flex place-content-center text-red-500 font-bold ">
           {error && <p>{error}</p>}

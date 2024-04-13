@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({
         alert("Phê duyệt thành công");
         reloadData();
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     });
   };
@@ -139,7 +139,7 @@ export function DataTable<TData, TValue>({
 
   const ApproveRows = () => {
     const result = confirm();
-    console.log(result);
+    // console.log(result);
     if (result) {
       setIsModalOpen(true);
     }

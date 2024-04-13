@@ -69,7 +69,9 @@ const Dropzone = ({ className, files, setFiles, submit }) => {
         <div className="flex flex-col items-center justify-center gap-4 px-2">
           {/* <ArrowUpTrayIcon className='h-5 w-5 fill-current' /> */}
           {isDragActive ? (
-            <p>Tải ảnh lên</p>
+            <p>
+              <FormattedMessage id="PostOffice.Info.UpdateImg" />
+            </p>
           ) : (
             <p className="text-center">Tải ảnh lên hoặc kéo thả vào đây</p>
           )}
@@ -79,7 +81,7 @@ const Dropzone = ({ className, files, setFiles, submit }) => {
       {/* Preview */}
       <section className="mt-5 bg-white p-2 pb-6 rounded-lg shadow-sm">
         <h2 className="title text-lg font-semibold whitespace-nowrap w-full text-center">
-          Ảnh xem trước
+          <FormattedMessage id="PostOffice.Info.PreviewImg" />
         </h2>
 
         {/* Accepted files */}
@@ -89,14 +91,14 @@ const Dropzone = ({ className, files, setFiles, submit }) => {
             onClick={removeAll}
             className="mt-1 rounded-md border border-rose-400 px-3 py-1 text-[12px] font-bold uppercase tracking-wider text-red-500 transition-colors hover:bg-rose-400 hover:text-white"
           >
-            Xóa tất cả
+            <FormattedMessage id="PostOffice.Info.DeleteAll" />
           </Button>
           <Button
             type="button"
             onClick={submit}
             className="mt-1 rounded-md border border-green-400 px-3 py-1 text-[12px] font-bold uppercase tracking-wider text-green-400 transition-colors hover:bg-green-400 hover:text-white"
           >
-            Tải lên
+            <FormattedMessage id="PostOffice.Info.UpdateImg" />
           </Button>
         </div>
 

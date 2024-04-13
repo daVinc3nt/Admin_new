@@ -18,8 +18,8 @@ async function getData(info): Promise<any> {
     return response.data;
   } else {
     const response = await service.findByTransportPartner(conditions2[0]);
-    console.log(response);
-    console.log("RoleTransportPartner");
+    // console.log(response);
+    // console.log("RoleTransportPartner");
     return response.data;
   }
 }

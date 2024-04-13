@@ -4,6 +4,7 @@ import { TbMinusVertical } from "react-icons/tb";
 import { useState } from "react";
 import AddBusiness from "./AddBusiness/addBusiness";
 import ListApprove from "./ListApprove/listapprove";
+import NotiPopup from "@/components/Common/NotiPopup";
 import {
   ColumnDef,
   SortingState,
@@ -39,7 +40,6 @@ import {
   BusinessOperation,
   DeletingBusinessCondition,
 } from "@/TDLib/tdlogistics";
-
 import BasicPopover from "@/components/Common/Popover";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -98,6 +98,16 @@ export function DataTable<TData, TValue>({
   const closeModal2 = () => {
     setModalIsOpen2(false);
   };
+  const [message, setMessage] = useState("");
+  const [modalIsOpen3, setModalIsOpen3] = useState(false);
+
+  const openModal3 = () => {
+    setModalIsOpen3(true);
+  };
+
+  const closeModal3 = () => {
+    setModalIsOpen3(false);
+  };
 
   const paginationButtons = [];
   for (let i = 0; i < table.getPageCount(); i++) {
@@ -118,27 +128,30 @@ export function DataTable<TData, TValue>({
       info?.role === "AGENCY_TELLER"
     ) {
       table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
-        console.log();
+        // console.log();
         const condition: DeletingBusinessCondition = {
           business_id: (row.original as any).business_id,
           agency_id: (row.original as any).agency_id,
         };
-        console.log(condition);
+        // console.log(condition);
         try {
           const response = await deletepartner.removeBusiness(condition);
           if (response.error) {
-            alert("Xóa không thành công");
+            setMessage(response.message);
+            openModal3();
           } else {
-            alert("Xóa thành công");
+            setMessage(response.message);
+            openModal3();
           }
         } catch (e) {
-          alert(e);
-          console.log(e);
+          setMessage("Lỗi kết nối");
+          openModal3();
         }
         reloadData();
       });
     } else {
-      alert("Bạn không có quyền xóa doanh nghiệp");
+      setMessage(useIntl().formatMessage({ id: "Business.NoPermission" }));
+      openModal3();
     }
   };
   const confirmDelete = () => {
@@ -186,7 +199,7 @@ export function DataTable<TData, TValue>({
                     peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
                     peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
             >
-              Tìm kiếm theo tên doanh nghiệp
+              <FormattedMessage id="Business.SearchBar" />
             </label>
             <Dropdown className="z-30">
               <DropdownTrigger>
@@ -242,7 +255,7 @@ export function DataTable<TData, TValue>({
                 className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 w-full sm:w-44 text-center h-full"
                 onClick={openModal2}
               >
-                Danh sách chờ phê duyệt
+                <FormattedMessage id="Business.ApproveList" />
               </Button>
             ) : null}
             {modalIsOpen2 && (
@@ -256,7 +269,7 @@ export function DataTable<TData, TValue>({
               className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 w-full sm:w-44 text-center h-full"
               onClick={openModal}
             >
-              Thêm doanh nghiệp
+              <FormattedMessage id="Business.AddBusiness" />
             </Button>
             {modalIsOpen && (
               <AddBusiness
@@ -264,6 +277,9 @@ export function DataTable<TData, TValue>({
                 reloadData={reloadData}
                 info={info}
               />
+            )}
+            {modalIsOpen3 && (
+              <NotiPopup onClose={closeModal3} message={message} />
             )}
           </div>
         </div>

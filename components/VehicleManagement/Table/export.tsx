@@ -16,7 +16,7 @@ async function getData(info: any): Promise<any> {
   if (info?.role === "ADMIN") {
     try {
       const response = await vehicle.findByAdmin(condition[0]);
-      console.log(response);
+      // console.log(response);
       return response.data;
     } catch (e) {
       alert("Error: " + e);
@@ -26,7 +26,7 @@ async function getData(info: any): Promise<any> {
     try {
       const response = await vehicle.findByStaff(condition2[0]);
 
-      console.log(response);
+      // console.log(response);
       return response.data;
     } catch (e) {
       alert("Error: " + e);
@@ -37,7 +37,7 @@ async function getData(info: any): Promise<any> {
 
 export default async function DemoPage(reloadData, info) {
   const data = await getData(info);
-  console.log(data);
+  // console.log(data);
   const columns = await createColumns(reloadData, info);
   if (info?.role === "ADMIN") {
     return (

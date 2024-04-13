@@ -28,7 +28,7 @@ const BusinessMenu = () => {
           <div className="container shadow-sm rounded-xl px-3 bg-white dark:text-white dark:bg-[#1a1b23]">
             <div className="relative text-3xl font-bold border-b-[1px] border-gray-600">
               <div className=" font-bold text-xl sm:text-3xl pt-3 pb-2 text-center">
-                Doanh nghiệp
+                <FormattedMessage id="Business.Title" />
               </div>
             </div>
             <div className="w-full">{demoPage}</div>

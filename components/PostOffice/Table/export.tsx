@@ -20,7 +20,7 @@ async function getData(info: any): Promise<any> {
   ) {
     try {
       const response = await service.findByAdmin(conditions[0]);
-      console.log(response);
+      // console.log(response);
       return response.data;
     } catch (e) {
       alert("Error: " + e);
@@ -30,7 +30,7 @@ async function getData(info: any): Promise<any> {
   } else {
     try {
       const response = await service.findByAgency(conditions2[0]);
-      console.log(response);
+      // console.log(response);
       return response.data;
     } catch (e) {
       alert("Error: " + e);
@@ -41,7 +41,7 @@ async function getData(info: any): Promise<any> {
 
 export default async function DemoPage(reloadData, info) {
   const data = await getData(info);
-  console.log("Data", data);
+  // console.log("Data", data);
   const columns = await createColumns(reloadData, info);
   if (
     (info?.role === "ADMIN" ||

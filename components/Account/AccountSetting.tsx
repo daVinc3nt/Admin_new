@@ -104,7 +104,7 @@ const AccountSetting = (info) => {
 
   const fetchData = async () => {
     const res2 = await userOp2.getAuthenticatedStaffInfo();
-    console.log("res2", res2);
+    // console.log("res2", res2);
     setStaff_id(res2.data.staff_id);
     setStaffInfo({
       agency_id: res2.data.agency_id,
@@ -145,9 +145,9 @@ const AccountSetting = (info) => {
     const get: FindingAvatarCondition = {
       staff_id: res2.data.staff_id,
     };
-    console.log("get", get);
+    // console.log("get", get);
     const url = await userOp2.getAvatar(get);
-    console.log("AVT", url);
+    // console.log("AVT", url);
     setAvatar(url);
   };
   useEffect(() => {
@@ -179,7 +179,7 @@ const AccountSetting = (info) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
-      console.log("Tỉnh", response);
+      // console.log("Tỉnh", response);
       setProvinces(response.data);
     };
     fetchData();
@@ -188,9 +188,9 @@ const AccountSetting = (info) => {
     setSelectedProvince(e.target.value);
     a.province = e.target.value;
     handleInputChange("province", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistricts(response.data);
   };
 
@@ -199,9 +199,9 @@ const AccountSetting = (info) => {
     a.province = selectedProvince;
     a.district = e.target.value;
     handleInputChange("district", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWards(response.data);
   };
   const handleWardChange = (e) => {
@@ -213,14 +213,27 @@ const AccountSetting = (info) => {
     setIsEditInfo(!isEditInfo);
   };
   const handleUpdateInfo = async () => {
-    console.log("iddddd", staff_id);
-    console.log("update", Update);
+    // console.log("iddddd", staff_id);
+    // console.log("update", Update);
     const Staffcondition: UpdatingStaffCondition = {
       staff_id: staff_id,
     };
     try {
+      setUpdate((previous) => ({
+        ...previous,
+        fullname: previous.fullname.trim(),
+        username: previous.username.trim(),
+        date_of_birth: previous.date_of_birth.trim(),
+        email: previous.email.trim(),
+        phone_number: previous.phone_number.trim(),
+        role: previous.role.trim(),
+        province: previous.province.trim(),
+        district: previous.district.trim(),
+        town: previous.town.trim(),
+        detail_address: previous.detail_address.trim(),
+      }));
       const response = await userOp2.update(Update, Staffcondition);
-      console.log("response", response);
+      // console.log("response", response);
 
       if (response.error.error === false) {
         setMessage("Cập nhật thông tin thành công");
@@ -243,7 +256,7 @@ const AccountSetting = (info) => {
     };
     try {
       const reponse = await userOp2.updatePassword(passwordInfo, up);
-      console.log("reponse", reponse);
+      // console.log("reponse", reponse);
       if (reponse.error.error === false) {
         setMessage("Đổi mật khẩu thành công");
         openNoti();
@@ -266,7 +279,7 @@ const AccountSetting = (info) => {
       staff_id: staff_id,
     };
     const response = await userOp2.updateAvatar(staffInfo, id);
-    console.log("response", response);
+    // console.log("response", response);
     if (response.error === false) {
       setMessage("Cập nhật ảnh đại diện thành công");
       openNoti();
@@ -281,11 +294,13 @@ const AccountSetting = (info) => {
     <div className="flex flex-col gap-5  h-full bg-white dark:bg-[#1a1b23] pb-5">
       <div className="flex flex-col place-content-center mt-3">
         <div className="text-xl font-bold md:text-start text-center">
-          Thông tin cá nhân
+          <FormattedMessage id="Account.info" />
         </div>
         <div className="flex flex-col text-xs font-base gap-3 mt-3 ">
           <div>
-            <div className="text-base font-light">Ảnh đại diện :</div>
+            <div className="text-base font-light">
+              <FormattedMessage id="Account.IMG" /> :
+            </div>
             <div className=" flex flex-row place place-content-center justify-center items-center  border-2 h-20 border-blue-200  rounded-lg mt-3">
               {avatar && (
                 <div className="pl-5 py-2 w-20 h-20 ">
@@ -321,7 +336,9 @@ const AccountSetting = (info) => {
                     </div>
                   )}
                   {!avaterUpload && (
-                    <div className="ml-3 font-bold text-base">Tải ảnh lên</div>
+                    <div className="ml-3 font-bold text-base">
+                      <FormattedMessage id="Account.UpdateImg" />
+                    </div>
                   )}
                 </label>
               </div>
@@ -329,7 +346,7 @@ const AccountSetting = (info) => {
                 onClick={handleUpdateAvatar}
                 className="text-white place-items-center h-full w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
               >
-                Xác nhận
+                <FormattedMessage id="Account.Confirm" />
               </button>
             </div>
           </div>
@@ -354,13 +371,17 @@ const AccountSetting = (info) => {
         <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mt-3">
           <div className="flex flex-col text-xs font-base gap-3 ">
             <div>
-              <div className="text-base font-light">Họ và tên :</div>
+              <div className="text-base font-light">
+                <FormattedMessage id="Account.fullname" /> :
+              </div>
             </div>
             {!isEditInfo ? (
               <input
                 type="text"
                 className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md   border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 "
-                placeholder="Nhập họ và tên mới"
+                placeholder={intl.formatMessage({
+                  id: "Account.inputfullname",
+                })}
                 value={Update.fullname}
                 onChange={(e) => handleInputChange("fullname", e.target.value)}
               />
@@ -372,13 +393,17 @@ const AccountSetting = (info) => {
           </div>
           <div className="flex flex-col text-xs font-base gap-3">
             <div>
-              <div className="text-base font-light">Số điện thoại :</div>
+              <div className="text-base font-light">
+                <FormattedMessage id="Account.phonenumber" /> :
+              </div>
             </div>
             {!isEditInfo ? (
               <input
                 type="text"
                 className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
-                placeholder="Nhập số điện thoại mới"
+                placeholder={intl.formatMessage({
+                  id: "Account.inputphonenumber",
+                })}
                 value={Update.phone_number}
                 onChange={(e) =>
                   handleInputChange("phone_number", e.target.value)
@@ -392,14 +417,16 @@ const AccountSetting = (info) => {
           </div>
           <div className="flex flex-col text-xs font-base gap-3 ">
             <div>
-              <div className="text-base font-light">CCCD :</div>
+              <div className="text-base font-light">
+                <FormattedMessage id="Account.CCCD" /> :
+              </div>
             </div>
             {!isEditInfo ? (
               <div>
                 <input
                   type="text"
                   className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
-                  placeholder="Nhập số CCCD mới"
+                  placeholder={intl.formatMessage({ id: "Account.inputCCCD" })}
                   value={staffInfo.cccd}
                   onChange={(e) => handleInputChange("cccd", e.target.value)}
                 />
@@ -413,7 +440,9 @@ const AccountSetting = (info) => {
 
           <div className="flex flex-col text-xs font-base gap-3">
             <div>
-              <div className="text-base font-light">Chức vụ :</div>
+              <div className="text-base font-light">
+                <FormattedMessage id="Account.position" /> :
+              </div>
             </div>
             <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
               {Update.role}
@@ -427,7 +456,7 @@ const AccountSetting = (info) => {
               <input
                 type="text"
                 className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
-                placeholder="Nhập email mới"
+                placeholder={intl.formatMessage({ id: "Account.inputEmail" })}
                 value={Update.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
               />
@@ -439,7 +468,9 @@ const AccountSetting = (info) => {
           </div>
           <div className="flex flex-col text-xs font-base gap-3">
             <div>
-              <div className="text-base font-light">Ngày sinh :</div>
+              <div className="text-base font-light">
+                <FormattedMessage id="Account.dateofbirth" /> :
+              </div>
             </div>
 
             <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
@@ -479,7 +510,9 @@ const AccountSetting = (info) => {
           </div> */}
         </div>
         <div className="flex flex-row text-xs font-base h-10 mt-5 mb-3">
-          <div className="text-base font-light w-20">Địa chỉ:</div>
+          <div className="text-base font-light w-20">
+            <FormattedMessage id="Account.address" />:
+          </div>
 
           {!isEditInfo ? (
             <div className="md:flex md:flex-row grid grid-cols-2 gap-3 w-full">
@@ -540,7 +573,9 @@ const AccountSetting = (info) => {
                 type=""
                 className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
                 `}
-                placeholder="Số nhà- tên đường"
+                placeholder={intl.formatMessage({
+                  id: "Account.detailaddress",
+                })}
                 onChange={(e) =>
                   handleInputChange("user_detail_address", e.target.value)
                 }
@@ -561,13 +596,13 @@ const AccountSetting = (info) => {
               onClick={handleUpdateInfo}
               className="mt-3 flex place-content-center bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded w-1/2 md:w-1/6"
             >
-              Cập nhật
+              <FormattedMessage id="Account.Update" />
             </button>
             <button
               onClick={handleEditInfo}
               className="mt-3 flex place-content-center bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded w-1/2 md:w-1/6"
             >
-              Hủy bỏ
+              <FormattedMessage id="Account.Cantel" />
             </button>
           </div>
         ) : (
@@ -576,18 +611,22 @@ const AccountSetting = (info) => {
               onClick={handleEditInfo}
               className="w-full md:w-1/3 mt-3 flex place-content-center bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
             >
-              Chỉnh sửa thông tin cá nhân
+              <FormattedMessage id="Account.AdjustInfomation" />
             </button>
           </div>
         )}
       </div>
       <div className="flex flex-col place-content-center">
-        <div className="text-xl font-bold">Cài đặt tài khoản</div>
+        <div className="text-xl font-bold">
+          <FormattedMessage id="Account.SettingAccount" />
+        </div>
         <div className="grid md:grid-cols-2 grid-cols-1 gap-5 mt-3">
           <div>
             <div className="flex flex-col text-xs font-base gap-3">
               <div>
-                <div className="text-base font-light">Tên đăng nhập :</div>
+                <div className="text-base font-light">
+                  <FormattedMessage id="Account.UserName" /> :
+                </div>
               </div>
               <div className="text-base font-base w-1/2 pb-2 pl-2">
                 {staffInfo.username}
@@ -595,9 +634,13 @@ const AccountSetting = (info) => {
             </div>
             <div className="flex flex-col text-xs font-base gap-3">
               <div>
-                <div className="text-base font-light">Đổi mật khẩu :</div>
+                <div className="text-base font-light">
+                  <FormattedMessage id="Account.ChangePassword" /> :
+                </div>
               </div>
-              <div>Mật khẩu mới</div>
+              <div>
+                <FormattedMessage id="Account.NewPassword" />
+              </div>
               <input
                 type="password"
                 onChange={(e) =>
@@ -608,7 +651,9 @@ const AccountSetting = (info) => {
                 }
                 className="w-full flex place-content-center h-8 border pl-2  hover:bg-gray-100 dark:hover:bg-gray-600 dark:focus:bg-gray-700 focus:bg-slate-200 rounded-md md:w-1/2 py-2 hover:border-gray-500 hover:shadow-md focus:outline-none "
               />
-              <div>Xác nhận mật khẩu mới</div>
+              <div>
+                <FormattedMessage id="Account.ConfirmNewPassword" />
+              </div>
               <input
                 type="password"
                 onChange={(e) =>
@@ -625,23 +670,34 @@ const AccountSetting = (info) => {
                 onClick={handleChangePassword}
                 className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
               >
-                Đổi mật khẩu
+                <FormattedMessage id="Account.ChangePassword" />
               </button>
             </div>
           </div>
           <div className="border p-3 rounded-md">
-            <div className="font-bold text-red-600">Lưu ý:</div>
+            <div className="font-bold text-red-600">
+              <FormattedMessage id="Account.War" />:
+            </div>
             <div className="font-extralight">
-              Để đảm bảo an toàn tài khoản, mật khẩu mới cần đáp ứng các yêu cầu
-              sau :
+              <FormattedMessage id="Account.Warning" />
             </div>
             <div className="font-light">
               <ul>
-                <li>* Chứa ít nhất 8 ký tự </li>
-                <li>* Chứa ít nhất 1 ký tự viết hoa </li>
-                <li>* Chứa ít nhất 1 ký tự viết thường </li>
-                <li>* Chứa ít nhất 1 ký tự số </li>
-                <li>* Chứa ít nhất 1 ký tự đặc biệt</li>
+                <li>
+                  *<FormattedMessage id="Account.Warning.1" />
+                </li>
+                <li>
+                  *<FormattedMessage id="Account.Warning.2" />{" "}
+                </li>
+                <li>
+                  *<FormattedMessage id="Account.Warning.3" />
+                </li>
+                <li>
+                  *<FormattedMessage id="Account.Warning.4" />{" "}
+                </li>
+                <li>
+                  *<FormattedMessage id="Account.Warning.5" />
+                </li>
                 <li> VD: NTd123@123</li>
               </ul>
             </div>

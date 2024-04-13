@@ -106,7 +106,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({
   const vehicle = new VehicleOperation();
   const handleSubmit = async () => {
     let check = true;
-    console.log(Vehicledata);
+    // console.log(Vehicledata);
     for (let key in Vehicledata) {
       if (key === "max_load" && Vehicledata[key] < 0) {
         handleCheckMissing(key, true);
@@ -135,7 +135,7 @@ const AddVehicle: React.FC<AddVehicleProps> = ({
         };
         try {
           const response = await vehicle.createByAdmin(submit);
-          console.log(response);
+          // console.log(response);
           if (response.error.error === true) {
             alert(response.error.message);
           } else {

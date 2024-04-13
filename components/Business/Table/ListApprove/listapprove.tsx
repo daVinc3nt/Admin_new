@@ -26,16 +26,16 @@ const ListApprove = ({ onClose, reloadData, info }) => {
         };
         const res = await func.findByAdmin(input);
         setData(res.data);
-        console.log("Data approve", res);
-        console.log("data approve", data);
+        // console.log("Data approve", res);
+        // console.log("data approve", data);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchData();
   }, [info]);
   useEffect(() => {
-    console.log("data approve", data);
+    // console.log("data approve", data);
   }, [data]);
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);

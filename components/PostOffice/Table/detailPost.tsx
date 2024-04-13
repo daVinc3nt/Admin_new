@@ -16,6 +16,7 @@ import {
   AdministrativeInfo,
   UpdatingLicenseInfo,
 } from "@/TDLib/tdlogistics";
+import NotiPopup from "@/components/Common/NotiPopup";
 
 interface Postdetail {
   agency_id: string;
@@ -55,6 +56,15 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
   const [isShaking, setIsShaking] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
+
+  const [message, setMessage] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const onClick = () => {
+    setModalIsOpen(true);
+  };
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
   // const [fileLicense, setFileLicense] = useState([]);
   // const [fileLicenseUpdate, setFileLicenseUpdate] = useState([]);
   const a: AdministrativeInfo = {
@@ -73,13 +83,13 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
-      console.log("Tỉnh", response);
+      // console.log("Tỉnh", response);
       setProvinces(response.data);
     };
     fetchData();
   }, []);
   // const handleSubmit = async () => {
-  //   console.log("File", fileLicenseUpdate);
+  // console.log("File", fileLicenseUpdate);
   //   const orders = new AgencyOperation();
   //   if (!fileLicenseUpdate) {
   //     alert("Please select at least one file.");
@@ -95,7 +105,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
 
   //   try {
   //     const result = await orders.updateLicense(updatingOrderInfo, condition);
-  //     console.log("Result", result);
+  // console.log("Result", result);
   //     if (result.error) {
   //       alert(result.message);
   //     }
@@ -103,7 +113,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
   //     alert("Cập nhật thành công");
   //     setFileLicenseUpdate([]);
   //   } catch (error) {
-  //     console.error("Error:", error);
+  // console.error("Error:", error);
   //   }
   // };
   // const fetchIMG = async () => {
@@ -111,13 +121,13 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
   //   const findID: UpdatingAgencyCondition = {
   //     agency_id: dataInitial.agency_id,
   //   };
-  //   console.log("ID", findID);
+  // console.log("ID", findID);
   //   try {
   //     const response = await a.findLicense(findID);
   //     setFileLicense(response);
-  //     console.log("Agency", response);
+  // console.log("Agency", response);
   //   } catch (error) {
-  //     console.log(error);
+  // console.log(error);
   //   }
   // };
   // const reloadIMG = async () => {
@@ -131,9 +141,9 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
     setSelectedProvince(e.target.value);
     a.province = e.target.value;
     handleInputChange("user_province", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistricts(response.data);
   };
 
@@ -142,9 +152,9 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
     a.province = selectedProvince;
     a.district = e.target.value;
     handleInputChange("user_district", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWards(response.data);
   };
   const handleWardChange = (e) => {
@@ -241,16 +251,18 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
       };
       try {
         const response = await updateAgency.update(data, condition);
-        console.log(response);
-        if (response.error) {
-          setError(response.message);
+        console.log("hi", response);
+        if (response.error.error) {
+          setMessage(response.error.message);
+          onClick();
         } else {
-          alert("Cập nhật thành công");
+          setMessage(response.error.message);
+          onClick();
           reloadData();
         }
       } catch (e) {
-        console.log(e);
-        alert("Cập nhật thất bại");
+        setMessage("Có lỗi xảy ra");
+        onClick();
       }
     }
 
@@ -289,6 +301,7 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
             <IoMdClose className="w-5/6 h-5/6 " />
           </Button>
         </div>
+        {modalIsOpen && <NotiPopup message={message} onClose={closeModal} />}
         <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white ">
           <div className="grid md:grid-cols-2 gap-2 w-full">
             {info.role === "ADMIN" && (
@@ -321,7 +334,9 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
               )}
             </div>
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base">Postalcode:</div>
+              <div className="font-bold text-base">
+                <FormattedMessage id="PostOffice.Info.PostalCode" />:
+              </div>
               <div>{Agencydata.postal_code}</div>
             </div>
             <div className="flex gap-5 w-full">
@@ -395,7 +410,9 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
               )}
             </div>
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base">Commission_rate</div>
+              <div className="font-bold text-base">
+                <FormattedMessage id="PostOffice.Info.CommissionRate" />:
+              </div>
               {isEditing ? (
                 <input
                   className="w-1/2 bg-transparent border-b-2 border-[#545e7b] dark:text-white"
@@ -413,7 +430,9 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
               )}
             </div>
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base">Doanh thu :</div>
+              <div className="font-bold text-base">
+                <FormattedMessage id="PostOffice.Income" />:
+              </div>
               {isEditing ? (
                 <input
                   className="w-1/2 bg-transparent border-b-2 border-[#545e7b] dark:text-white"
@@ -500,7 +519,9 @@ const DetailPost: React.FC<DetailAgencyProps> = ({
                     type=""
                     className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
                 `}
-                    placeholder="Số nhà- tên đường"
+                    placeholder={intl.formatMessage({
+                      id: "PostOffice.Address",
+                    })}
                     onChange={(e) =>
                       handleInputChange("detail_address", e.target.value)
                     }

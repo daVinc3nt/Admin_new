@@ -69,11 +69,11 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
         const response = await temp.get({});
         if (response.error == true) {
         } else {
-          console.log("Data Ma lo hang", response);
+          // console.log("Data Ma lo hang", response);
           response.data.map((item: any) => {
             ShipmentData.push(item);
           });
-          console.log("Data Ma lo hang", ShipmentData);
+          // console.log("Data Ma lo hang", ShipmentData);
         }
       } catch (e) {
         alert(
@@ -89,7 +89,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
       vehicle_id: dataInitial.vehicle_id,
     };
     const response = await vehicle.getShipment(condition);
-    console.log(response);
+    // console.log(response);
     if (response.error == true) {
       setShipment(response.data);
     }
@@ -113,7 +113,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
     transport_partner_name: dataInitial.transport_partner_name,
     fullname: dataInitial.fullname,
   });
-  console.log(dataInitial);
+  // console.log(dataInitial);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -147,10 +147,10 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
     const condition: UpdatingVehicleCondition = {
       vehicle_id: VehicleData.vehicle_id,
     };
-    console.log(Info);
-    console.log(condition);
+    // console.log(Info);
+    // console.log(condition);
     const response = await vehicle.update(Info, condition);
-    console.log(response);
+    // console.log(response);
     alert(response.message);
     setIsEditing(false);
     fetchShipment();
@@ -164,8 +164,8 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
   //   };
   //   try {
   //     const check = await shipment.check(checkExist);
-  //     console.log("check", check);
-  //     console.log("check2", checkExist);
+  // console.log("check", check);
+  // console.log("check2", checkExist);
 
   //     if (check.error === true) {
   //       setError2(check.message);
@@ -176,7 +176,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
   //       return;
   //     }
   //   } catch (e) {
-  //     console.log(e);
+  // console.log(e);
   //     alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
   //   }
   //   const vehicle = new VehicleOperation();
@@ -186,10 +186,10 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
   //   const condition: AddingShipmentsToVehicleCondition = {
   //     vehicle_id: VehicleData.vehicle_id,
   //   };
-  //   console.log(Info.shipment_ids);
+  // console.log(Info.shipment_ids);
   //   try {
   //     const response = await vehicle.addShipments(Info, condition);
-  //     console.log("RSSSS", response);
+  // console.log("RSSSS", response);
   //     if (response.error.error == 0) {
   //       // setError2("Lô hàng đã tồn tại trong phương tiện");
   //       alert("Lô hàng đã tồn tại trong phương tiện");
@@ -204,7 +204,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
   //     setshipmentValue("");
   //     fetchShipment();
   //   } catch (e) {
-  //     console.log(e);
+  // console.log(e);
   //     alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
   //   }
   // };
@@ -216,10 +216,10 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
     const condition: DeletingShipmentsFromVehicleCondition = {
       vehicle_id: VehicleData.vehicle_id,
     };
-    console.log("DELETE", Info);
+    // console.log("DELETE", Info);
     try {
       const response = await vehicle.deleteShipments(Info, condition);
-      console.log("RSSSS", response);
+      // console.log("RSSSS", response);
       if (response.error === true) {
         setError2(response.message);
         alert(response.message);
@@ -228,7 +228,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
       alert(response.message);
       fetchShipment();
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       alert("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau!");
     }
   };
@@ -385,7 +385,7 @@ const DetailVehicle: React.FC<DetailVehicleProps> = ({
                     <tbody>
                       {ShipmentData ? (
                         ShipmentData.map((item: any) => {
-                          console.log(item);
+                          // console.log(item);
                           return (
                             <tr className="">
                               <td className="p-4 border-b border-blue-gray-50">

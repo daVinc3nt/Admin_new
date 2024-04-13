@@ -125,7 +125,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
-      console.log("Tỉnh", response);
+      // console.log("Tỉnh", response);
       setProvinces(response.data);
       setProvincesRepresentor(response.data);
     };
@@ -136,9 +136,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     setSelectedProvince(e.target.value);
     a.province = e.target.value;
     handleInputChange("user_province", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistricts(response.data);
   };
 
@@ -147,9 +147,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     a.province = selectedProvince;
     a.district = e.target.value;
     handleInputChange("user_district", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWards(response.data);
   };
   const handleWardChange = (e) => {
@@ -161,9 +161,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     setSelectedProvinceRepresentor(e.target.value);
     b.province = e.target.value;
     handleInputChange2("province", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistrictsRepresentor(response.data);
   };
   const handleDistrictChangeRepresentor = async (e) => {
@@ -171,9 +171,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
     b.province = selectedProvinceRepresentor;
     b.district = e.target.value;
     handleInputChange2("district", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWardsRepresentor(response.data);
   };
   const handleWardChangeRepresentor = (e) => {
@@ -183,7 +183,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("Base", dataInitial);
+      // console.log("Base", dataInitial);
       if (
         info?.role === "ADMIN" ||
         info?.role === "MANAGER" ||
@@ -214,7 +214,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("Base", dataInitial);
+      // console.log("Base", dataInitial);
       if (
         info?.role === "ADMIN" ||
         info?.role === "MANAGER" ||
@@ -228,9 +228,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
         };
         try {
           const response = await a.findRepresentorByBusiness(FindByID);
-          console.log("Response data before setting state", response.data);
+          // console.log("Response data before setting state", response.data);
 
-          console.log("Response", response);
+          // console.log("Response", response);
           setRepresentorData({
             bank: response.data[0].bank,
             bin: response.data[0].bin,
@@ -258,16 +258,16 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             town: response.data[0].town,
           });
 
-          console.log("Data", BusinessData);
+          // console.log("Data", BusinessData);
         } catch (error) {
-          console.error("Error fetching representor data", error);
+          // console.error("Error fetching representor data", error);
         }
         try {
           const response = await a.findContract(FindByID);
           setFileContract(response);
-          console.log("Contract", response);
+          // console.log("Contract", response);
         } catch (error) {
-          console.error("Error fetching contract data", error);
+          // console.error("Error fetching contract data", error);
         }
       }
     };
@@ -309,7 +309,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
         reloadData();
       }
     } catch (error) {
-      console.error("Error updating contract", error);
+      // console.error("Error updating contract", error);
       alert(error.message || "Có lỗi xảy ra khi cập nhật hợp đồng");
     }
   };
@@ -420,7 +420,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
           reloadData();
         }
       } catch (error) {
-        console.log("error");
+        // console.log("error");
       }
       try {
         const response2 = await editPartner.updateBusinessRepresentor(
@@ -434,7 +434,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
           reloadData();
         }
       } catch (error) {
-        console.log("error");
+        // console.log("error");
       }
       setIsEditing(false);
     } else {
@@ -465,7 +465,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
       >
         <div className="relative items-center justify-center flex-col flex h-10 w-full border-b-2 border-[#545e7b]">
           <div className="font-bold text-lg sm:text-2xl pb-2 dark:text-white w-full text-center">
-            Thông tin
+            <FormattedMessage id="Business.Information" />
           </div>
           <Button
             className="absolute right-0 w-8 h-8 rounded-full mb-2 hover:bg-gray-300"
@@ -476,7 +476,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
         </div>
         <div className="h-screen_3/5 overflow-y-scroll border border-[#545e7b] mt-4 no-scrollbar  dark:bg-[#14141a] p-2 rounded-md dark:text-white place-content-start">
           <div className="font-bold text-base text-center">
-            Thông tin Doanh nghiệp
+            <FormattedMessage id="Business.InformationBusiness" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5 mt-3">
             {(info?.role === "ADMIN" ||
@@ -486,13 +486,13 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
               info?.role === "AGENCY_TELLER") && (
               <div className="flex gap-5 w-full">
                 <div className="font-bold text-base w-48">
-                  <FormattedMessage id="TransportPartner.PartnerCode" />:
+                  <FormattedMessage id="Business.ID" />:
                 </div>
                 {isEditing ? (
                   <input
                     className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
                     type="text"
-                    value={BusinessData?.business_id}
+                    value={BusinessData.business_id}
                     onChange={(e) =>
                       setBusinessData({
                         ...BusinessData,
@@ -501,13 +501,15 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                     }
                   />
                 ) : (
-                  <div>BusinessData?.business_id</div>
+                  <div>{BusinessData?.business_id}</div>
                 )}
               </div>
             )}
 
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base w-48">Tên doanh nghiệp</div>
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="Business.Name" />:
+              </div>
               {isEditing ? (
                 <input
                   className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
@@ -527,7 +529,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
 
             <div className="flex gap-5 w-full">
               <div className="font-bold text-base w-48">
-                <FormattedMessage id="PostOffice.Phone" />:
+                <FormattedMessage id="Business.Phone" />:
               </div>
               {isEditing ? (
                 <input
@@ -566,7 +568,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
 
             <div className="flex gap-5 w-full">
               <div className="font-bold text-base w-48">
-                <FormattedMessage id="PostOffice.BankName" />:
+                <FormattedMessage id="PostOffice.Bank" />:
               </div>
               {isEditing ? (
                 <input
@@ -583,7 +585,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             </div>
             <div className="flex gap-5 w-full">
               <div className="font-bold text-base w-48">
-                <FormattedMessage id="PostOffice.BankNumber" />:
+                <FormattedMessage id="Business.BankNumber" />:
               </div>
               {isEditing ? (
                 <input
@@ -601,7 +603,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
 
             <div className="flex gap-5 w-full">
               <div className="font-bold text-base w-48">
-                <FormattedMessage id="TransportPartner.TaxCode" />:
+                <FormattedMessage id="Business.Taxnumber" />:
               </div>
               {isEditing ? (
                 <input
@@ -621,7 +623,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             </div>
             <div className="flex gap-5 w-full">
               <div className="font-bold text-base w-48">
-                <FormattedMessage id="TransportPartner.Debit" />:
+                <FormattedMessage id="Business.Debit" />:
               </div>
               {isEditing ? (
                 <input
@@ -642,7 +644,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
           </div>
           <div className="flex gap-5 mt-3">
             <div className="font-bold text-base w-48">
-              <FormattedMessage id="TransportPartner.Adress" />:
+              <FormattedMessage id="Business.Address" />:
             </div>
             {!isEditing ? (
               <div className="flex">
@@ -709,7 +711,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
                 `}
-                  placeholder="Số nhà- tên đường"
+                  placeholder={intl.formatMessage({ id: "Business.Address" })}
                   onChange={(e) =>
                     handleInputChange("detail_address", e.target.value)
                   }
@@ -718,11 +720,13 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             )}
           </div>
           <div className="font-bold text-base  text-center mt-3">
-            Thông tin người đại diện
+            <FormattedMessage id="Business.InfoLeader" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5 mt-3">
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base w-48">Họ và tên:</div>
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="Business.LeaderName" />:
+              </div>
               {isEditing ? (
                 <input
                   className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
@@ -740,7 +744,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
               )}
             </div>
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base w-48">Số điện thoại:</div>
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="Business.LeaderPhone" />:
+              </div>
               {isEditing ? (
                 <input
                   className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
@@ -776,7 +782,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
               )}
             </div>
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base w-48">Số CMND/CCCD:</div>
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="Business.LeaderCCCD" />:
+              </div>
               {isEditing ? (
                 <input
                   className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
@@ -794,7 +802,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
               )}
             </div>
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base w-48">Ngày sinh:</div>
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="Business.LeaderDateOfBirth" />:
+              </div>
               {isEditing ? (
                 <input
                   className="w-full bg-transparent border-b-2 border-[#545e7b] dark:text-white"
@@ -818,7 +828,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             </div>
 
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base w-48">Ngân hàng:</div>
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="Business.LeaderBank" />:
+              </div>
 
               {isEditing ? (
                 <input
@@ -837,7 +849,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
               )}
             </div>
             <div className="flex gap-5 w-full">
-              <div className="font-bold text-base w-48">Số tài khoản:</div>
+              <div className="font-bold text-base w-48">
+                <FormattedMessage id="Business.LeaderBankNumber" />:
+              </div>
 
               {isEditing ? (
                 <input
@@ -857,7 +871,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
             </div>
           </div>
           <div className="flex gap-5 w-full mt-3">
-            <div className="font-bold text-base w-48">Địa chỉ:</div>
+            <div className="font-bold text-base w-48">
+              <FormattedMessage id="Business.LeaderAddress" />:
+            </div>
             {isEditing ? (
               <>
                 <select
@@ -916,7 +932,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                   type=""
                   className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
                 `}
-                  placeholder="Số nhà- tên đường"
+                  placeholder={intl.formatMessage({ id: "Business.Address" })}
                   onChange={(e) =>
                     handleInputChange2("detail_address", e.target.value)
                   }
@@ -931,7 +947,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
           </div>
           <div className="mt-5 flex flex-col place-content-center ">
             <div className="text-base font-bold text-center">
-              Hợp đồng doanh nghiệp
+              <FormattedMessage id="Business.Contract" />
             </div>
             {isEditing ? (
               <div className="flex flex-col place-content-center">
@@ -953,7 +969,9 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                       </div>
                     )}
                     {!fileContractUpdate && (
-                      <div className=" font-bold text-base ">Tải ảnh lên</div>
+                      <div className=" font-bold text-base ">
+                        <FormattedMessage id="Business.UpdateImg" />
+                      </div>
                     )}
                   </label>
                 </div>
@@ -962,7 +980,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
                     onClick={handleUpdateContract}
                     className=" text-white place-items-center h-full w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
                   >
-                    Xác nhận
+                    <FormattedMessage id="Business.Confirm" />
                   </button>
                 </div>
               </div>
@@ -970,7 +988,7 @@ const DetailBusiness: React.FC<DetailBusinessProps> = ({
               <div className="flex place-content-center py-6">
                 <a href={fileContract} download>
                   <div className="border-b-blue-500 border-b-2 text-blue-500 text-base font-bold">
-                    Tải hợp đồng
+                    <FormattedMessage id="Business.Download" />
                   </div>
                 </a>
               </div>

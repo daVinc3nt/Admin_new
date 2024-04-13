@@ -148,7 +148,7 @@ export async function createColumns(
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            SDT
+            <FormattedMessage id="PostOffice.Phone" />
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -162,7 +162,7 @@ export async function createColumns(
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Mã bưu cục
+            <FormattedMessage id="PostOffice.Info.PostalCode" />
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -178,8 +178,8 @@ export async function createColumns(
 
         const openModal = () => {
           setModalIsOpen(true);
-          console.log(row.original);
-          console.log(row.original.individual_company);
+          // console.log(row.original);
+          // console.log(row.original.individual_company);
         };
 
         const closeModal = () => {

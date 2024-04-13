@@ -69,7 +69,7 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
-      console.log("Tỉnh", response);
+      // console.log("Tỉnh", response);
       setProvinces(response.data);
     };
     fetchData();
@@ -78,9 +78,9 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
     setSelectedProvince(e.target.value);
     a.province = e.target.value;
     handleInputChange("user_province", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistricts(response.data);
   };
 
@@ -89,9 +89,9 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
     a.province = selectedProvince;
     a.district = e.target.value;
     handleInputChange("user_district", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWards(response.data);
   };
   const handleWardChange = (e) => {
@@ -203,7 +203,7 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
       };
       try {
         const response = await editPartner.update(info2, roleAdmin);
-        console.log("res", response);
+        // console.log("res", response);
         if (response.error === true) {
           setMessage("Cập nhật thông tin không thành công" + response.message);
           openNoti();
@@ -224,7 +224,7 @@ const DetailPartner: React.FC<DetailPartnerProps> = ({
       };
       const response = await editPartner.update(info2, roleAdmin);
       if (response.error) {
-        console.log("error");
+        // console.log("error");
       }
 
       setIsEditing(false);

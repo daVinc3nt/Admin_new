@@ -154,7 +154,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
-      console.log("Tỉnh", response);
+      // console.log("Tỉnh", response);
       setProvinces(response.data);
       setProvincesPartner(response.data);
     };
@@ -165,9 +165,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
     setSelectedProvince(e.target.value);
     a.province = e.target.value;
     handleInputChange("user_province", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistricts(response.data);
   };
 
@@ -176,9 +176,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
     a.province = selectedProvince;
     a.district = e.target.value;
     handleInputChange("user_district", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWards(response.data);
   };
   const handleWardChange = (e) => {
@@ -190,9 +190,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
     setSelectedProvincePartner(e.target.value);
     b.province = e.target.value;
     handleInputChange("province", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistrictsPartner(response.data);
   };
 
@@ -201,9 +201,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
     b.province = selectedProvincePartner;
     b.district = e.target.value;
     handleInputChange("district", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWardsPartner(response.data);
   };
   const handleWardChangePartner = (e) => {
@@ -288,14 +288,14 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
         handleCheckMissing(key, false);
       }
     }
-    console.log(checkmissing);
+    // console.log(checkmissing);
     if (!check) {
       setError("Vui lòng nhập đầy đủ thông tin");
-      console.log(OfficeData);
+      // console.log(OfficeData);
     } else {
       setError("");
       const response = await agency.create(OfficeData);
-      console.log(response);
+      // console.log(response);
       if (response.error.error) {
         alert(response.error.message);
       } else {
@@ -720,7 +720,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
                       managed_wards: [...prevState.managed_wards, inputValue],
                     }));
                     setInputValue("");
-                    console.log(OfficeData.managed_wards);
+                    // console.log(OfficeData.managed_wards);
                   }
                 }}
               >

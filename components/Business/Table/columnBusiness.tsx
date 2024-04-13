@@ -68,7 +68,6 @@ export async function createColumns(
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            <FormattedMessage id="TransportPartner.TaxCode" />
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -76,14 +75,13 @@ export async function createColumns(
     },
     {
       accessorKey: "business_name",
-
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            <FormattedMessage id="TransportPartner.Name" />
+            <FormattedMessage id="Business.Name" />
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -113,7 +111,7 @@ export async function createColumns(
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            <FormattedMessage id="Phone" />
+            <FormattedMessage id="Business.Phone" />
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -122,7 +120,7 @@ export async function createColumns(
     {
       accessorKey: "Chi tiết/Sửa đổi",
       header: () => {
-        return <FormattedMessage id="TransportPartner.Detail" />;
+        return <FormattedMessage id="Business.Detail/Edit" />;
       },
       cell: ({ row }) => {
         const [modalIsOpen, setModalIsOpen] = useState(false);

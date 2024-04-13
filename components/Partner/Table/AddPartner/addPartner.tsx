@@ -221,7 +221,7 @@ const AddPartner: React.FC<AddPartnerProps> = ({
     }
     if (!check) {
       setError("Vui lòng nhập đầy đủ thông tin");
-      console.log(PartnerData);
+      // console.log(PartnerData);
     } else {
       setError("");
       if (role === "ADMIN") {
@@ -300,7 +300,7 @@ const AddPartner: React.FC<AddPartnerProps> = ({
       }
     }
   };
-  // console.log(PartnerData);
+  console.log(PartnerData);
   const a: AdministrativeInfo = {
     province: "",
   };
@@ -329,7 +329,7 @@ const AddPartner: React.FC<AddPartnerProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       const response = await adminOperation.get({});
-      console.log("Tỉnh", response);
+      // console.log("Tỉnh", response);
       setProvinces(response.data);
       setProvincesPartner(response.data);
     };
@@ -340,9 +340,9 @@ const AddPartner: React.FC<AddPartnerProps> = ({
     setSelectedProvince(e.target.value);
     a.province = e.target.value;
     handleInputChange("user_province", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistricts(response.data);
   };
 
@@ -351,9 +351,9 @@ const AddPartner: React.FC<AddPartnerProps> = ({
     a.province = selectedProvince;
     a.district = e.target.value;
     handleInputChange("user_district", e.target.value);
-    console.log(a);
+    // console.log(a);
     const response = await adminOperation.get(a);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWards(response.data);
   };
   const handleWardChange = (e) => {
@@ -365,9 +365,9 @@ const AddPartner: React.FC<AddPartnerProps> = ({
     setSelectedProvincePartner(e.target.value);
     b.province = e.target.value;
     handleInputChange("province", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Quận", response);
+    // console.log("Quận", response);
     setDistrictsPartner(response.data);
   };
 
@@ -376,9 +376,9 @@ const AddPartner: React.FC<AddPartnerProps> = ({
     b.province = selectedProvincePartner;
     b.district = e.target.value;
     handleInputChange("district", e.target.value);
-    console.log(b);
+    // console.log(b);
     const response = await adminOperation.get(b);
-    console.log("Xã", response);
+    // console.log("Xã", response);
     setWardsPartner(response.data);
   };
   const handleWardChangePartner = (e) => {

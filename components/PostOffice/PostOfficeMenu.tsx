@@ -14,7 +14,7 @@ const PostOfficeMenu = () => {
 
   const fetchDemoPage = async () => {
     const result = await DemoPage(reloadData, info);
-    console.log("info", info);
+    // console.log("info", info);
     setDemoPage(result);
   };
 

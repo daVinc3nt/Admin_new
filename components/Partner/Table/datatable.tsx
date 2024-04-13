@@ -100,7 +100,7 @@ export function DataTable<TData, TValue>({
   const deletepartner = new TransportPartnersOperation();
   const handleDeleteRowsSelected = async () => {
     table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
-      console.log();
+      // console.log();
       const condition: DeletingTransportPartnerCondition = {
         transport_partner_id: (row.original as any).transport_partner_id,
       };

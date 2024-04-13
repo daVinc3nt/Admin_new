@@ -99,7 +99,7 @@ export function DataTable<TData, TValue>({
   const deleteAgency = new AgencyOperation();
   const handleDeleteRowsSelected = async () => {
     table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
-      console.log();
+      // console.log();
       const condition: DeletingAgencyCondition = {
         agency_id: (row.original as any).agency_id,
       };
@@ -223,7 +223,7 @@ export function DataTable<TData, TValue>({
                   className="text-xs md:text-base border border-gray-600 rounded w-48 text-center"
                   aria-label="Show items per page"
                 >
-                  Thêm Bưu cục-Đại lý
+                  <FormattedMessage id="PostOffice.AddButton" />
                 </button>
               </DropdownTrigger>
               <DropdownMenu
@@ -237,7 +237,7 @@ export function DataTable<TData, TValue>({
                     aria-label="Add Office"
                     className="text-center dark:text-white w-full"
                   >
-                    Cá nhân
+                    <FormattedMessage id="PostOffice.AddPersonal" />
                   </Button>
                 </DropdownItem>
                 <DropdownItem textValue="Add Office2">
@@ -247,7 +247,7 @@ export function DataTable<TData, TValue>({
                     aria-label="Add Office2"
                     className="text-center dark:text-white w-full"
                   >
-                    Tập thể
+                    <FormattedMessage id="PostOffice.AddCompany" />
                   </Button>
                 </DropdownItem>
               </DropdownMenu>

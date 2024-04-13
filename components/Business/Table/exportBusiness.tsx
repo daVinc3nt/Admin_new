@@ -28,19 +28,19 @@ async function getData(info: any): Promise<any> {
     info?.role === "AGENCY_COMPLAINTS_SOLVER"
   ) {
     const response = await service.findByAdmin(conditions[0]);
-    console.log("RoleAdmin");
-    console.log(response.data);
+    // console.log("RoleAdmin");
+    // console.log(response.data);
     return response.data;
   } else {
     const response = await service.findByBusiness(conditions2[0]);
-    console.log("RoleBusiness");
+    // console.log("RoleBusiness");
     return response.data;
   }
 }
 
 export default async function DemoPage(reloadData, info) {
   const data = await getData(info);
-  console.log("Data Admin", data);
+  // console.log("Data Admin", data);
   const columns = await createColumns(reloadData, info);
   return (
     <>

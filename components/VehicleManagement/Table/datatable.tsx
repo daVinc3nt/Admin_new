@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
   const deleteVehicle = new VehicleOperation();
   const handleDeleteRowsSelected = async () => {
     table.getFilteredSelectedRowModel().rows.forEach(async (row) => {
-      console.log();
+      // console.log();
       const condition: DeletingVehicleCondition = {
         vehicle_id: (row.original as any).vehicle_id,
       };
