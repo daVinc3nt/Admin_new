@@ -25,7 +25,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageUrls2, setImageUrls2] = useState<string[]>([]);
   const [option, setOption] = useState(0)
-
+  console.log(data)
   const handleUpdateData = (e, key: string) => {
     setupdateData({ ...updateData, [key]: parseInt(e.target.value) });
   }
@@ -199,7 +199,7 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
                         }
                       />
                     ) : (
-                      <div>{data.mass} kg</div>
+                      <div>{data.mass} g</div>
                     )}
                   </div>
 

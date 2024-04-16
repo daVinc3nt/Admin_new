@@ -274,7 +274,7 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
                             : "Đã tiếp nhận"}
                         </td>
                         <td className="text-center border border-gray-200">
-                          {item.mass} kg
+                          {item.mass} g
                         </td>
 
                         <td className="text-center border border-gray-200">
@@ -335,7 +335,7 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
                           {item.shipment_id}
                         </td>
                         <td className="text-center border border-gray-200">
-                          {item.mass} kg
+                          {item.mass} g
                         </td>
 
                         <td className="text-center border border-gray-200">
@@ -413,7 +413,7 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
                           : "Đã tiếp nhận"}
                       </td>
                       <td className="text-center border border-gray-200">
-                        {item.shipment.mass} kg
+                        {item.shipment.mass} g
                       </td>
 
                       <td className="text-center border border-gray-200">

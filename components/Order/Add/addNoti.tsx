@@ -69,6 +69,8 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, socket }) =>
   const [selectedCity_dest, setselectedCity_dest] = useState("");
   const [selectedDistrict_dest, setselectedDistrict_dest] = useState("");
   const intl = useIntl();
+  const action = new OrdersOperation()
+  const  [price, setPrice] = useState();
   const [checkmissing, setCheckmissing] = useState({
     user_fullname: false,
     username: false,
@@ -236,9 +238,30 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, socket }) =>
 
     fetchCities();
   }, []);
+  useEffect(() => {
+    const calculate = async () => {
+      if (orderData.province_source &&
+          orderData.district_source &&
+          orderData.ward_source &&
+          orderData.detail_source &&
+          orderData.province_dest &&
+          orderData.district_dest &&
+          orderData.ward_dest &&
+          orderData.detail_dest &&
+          orderData.service_type &&
+          orderData.length &&
+          orderData.width &&
+          orderData.height
+      )
+      {
+        const res= await action.calculateFee(orderData);
+        setPrice(res.data);
+      }
+    }
+      calculate();
+  }, [orderData])
   const handleSubmit = () => {
     console.log(orderData)
-    const action =new OrdersOperation()
     action.createByAdminAndAgency(socket, orderData)
   }
   const handleClickOutside = (event: MouseEvent) => {
@@ -465,7 +488,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, socket }) =>
               <input id="detail_source"
                 className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
                 ${checkmissing.user_detail_address ? "border-red-500" : ""}`}
-                placeholder="Số nhà- tên đường"
+                placeholder="Số nhà-tên đường"
                 onChange={(e) =>
                   handleInputChange("detail_source", e.target.value)
                 }
@@ -587,12 +610,17 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, socket }) =>
               />
             )}
         </div>
+        <div className="flex items-center gap-10">
+        <div className="my-3 text-xl w-2/3 bg-inherit">
+          Thành tiền (vnd): {price}
+        </div>
         <Button 
         onClick={handleSubmit}
         className="w-full rounded-lg mt-5 mb-1 py-3 border-green-700 hover:bg-green-700 text-green-500
         bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border hover:shadow-md">
           <span className="hidden xs:block"><FormattedMessage id="order.add"/></span>
         </Button>
+        </div>
       </motion.div>
     </motion.div>
   );

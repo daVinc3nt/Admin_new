@@ -54,7 +54,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
           reloadData();
         }
       } else {
-        const response = await shipmentsOperation.create(transportPartnerId ? { transport_partner_id: transportPartnerId } : {});
+        const response = await shipmentsOperation.create(transportPartnerId ? { agency_id_dest: transportPartnerId } : {});
         console.log(response)
         if (response.error) {
           setOpenConfirm(false)
