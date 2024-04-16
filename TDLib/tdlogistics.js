@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdministrativeOperation = exports.ScheduleOperation = exports.OrdersOperation = exports.ShipmentsOperation = exports.DriversOperation = exports.ShippersOperation = exports.PartnerStaffOperation = exports.BusinessOperation = exports.VehicleOperation = exports.StaffsOperation = exports.TransportPartnersOperation = exports.AgencyOperation = exports.UsersOperation = exports.PartnerStaffAuthenticate = exports.BusinessAuthenticate = exports.StaffsAuthenticate = exports.UsersAuthenticate = exports.UserOperation = void 0;
+exports.RoutesOperation = exports.AdministrativeOperation = exports.ScheduleOperation = exports.OrdersOperation = exports.ShipmentsOperation = exports.DriversOperation = exports.ShippersOperation = exports.PartnerStaffOperation = exports.BusinessOperation = exports.VehicleOperation = exports.StaffsOperation = exports.TransportPartnersOperation = exports.AgencyOperation = exports.UsersOperation = exports.PartnerStaffAuthenticate = exports.BusinessAuthenticate = exports.StaffsAuthenticate = exports.UsersAuthenticate = exports.UserOperation = void 0;
 var axios_1 = require("axios");
 var FormData = require("form-data");
 var JSZip = require("jszip");
@@ -54,7 +54,7 @@ var JSZip = require("jszip");
 // });
 var UserOperation = /** @class */ (function () {
     function UserOperation() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
     UserOperation.prototype.getAuthenticatedUserInfo = function () {
         var _a, _b;
@@ -86,8 +86,8 @@ var UserOperation = /** @class */ (function () {
 exports.UserOperation = UserOperation;
 var UsersAuthenticate = /** @class */ (function () {
     function UsersAuthenticate() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        // this.baseUrl = "http://localhost:5000/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
     UsersAuthenticate.prototype.sendOTP = function (phoneNumber, email) {
         var _a, _b;
@@ -150,8 +150,8 @@ var UsersAuthenticate = /** @class */ (function () {
 exports.UsersAuthenticate = UsersAuthenticate;
 var StaffsAuthenticate = /** @class */ (function () {
     function StaffsAuthenticate() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
+        // this.baseUrl = "http://localhost:5000/api/v1/staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/staffs";
     }
     StaffsAuthenticate.prototype.login = function (username, password) {
         var _a, _b;
@@ -243,8 +243,8 @@ var StaffsAuthenticate = /** @class */ (function () {
 exports.StaffsAuthenticate = StaffsAuthenticate;
 var BusinessAuthenticate = /** @class */ (function () {
     function BusinessAuthenticate() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
+        // this.baseUrl = "http://localhost:5000/api/v1/business";
+        this.baseUrl = "http://localhost:5000/api/v1/business";
     }
     BusinessAuthenticate.prototype.login = function (username, password) {
         var _a, _b;
@@ -279,8 +279,8 @@ var BusinessAuthenticate = /** @class */ (function () {
 exports.BusinessAuthenticate = BusinessAuthenticate;
 var PartnerStaffAuthenticate = /** @class */ (function () {
     function PartnerStaffAuthenticate() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
+        // this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
     }
     PartnerStaffAuthenticate.prototype.login = function (username, password) {
         var _a, _b;
@@ -315,8 +315,8 @@ var PartnerStaffAuthenticate = /** @class */ (function () {
 exports.PartnerStaffAuthenticate = PartnerStaffAuthenticate;
 var UsersOperation = /** @class */ (function () {
     function UsersOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        // this.baseUrl = "http://localhost:5000/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
     UsersOperation.prototype.findByUser = function (condition) {
         var _a, _b;
@@ -423,8 +423,8 @@ var UsersOperation = /** @class */ (function () {
 exports.UsersOperation = UsersOperation;
 var AgencyOperation = /** @class */ (function () {
     function AgencyOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/agencies";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/agencies";
+        // this.baseUrl = "http://localhost:5000/api/v1/agencies";
+        this.baseUrl = "http://localhost:5000/api/v1/agencies";
     }
     AgencyOperation.prototype.checkExist = function (condition) {
         var _a, _b;
@@ -655,8 +655,8 @@ var AgencyOperation = /** @class */ (function () {
 exports.AgencyOperation = AgencyOperation;
 var TransportPartnersOperation = /** @class */ (function () {
     function TransportPartnersOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/transport_partners";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/transport_partners";
+        // this.baseUrl = "http://localhost:5000/api/v1/transport_partners";
+        this.baseUrl = "http://localhost:5000/api/v1/transport_partners";
     }
     TransportPartnersOperation.prototype.createByAdmin = function (info) {
         var _a, _b;
@@ -813,8 +813,8 @@ var TransportPartnersOperation = /** @class */ (function () {
 exports.TransportPartnersOperation = TransportPartnersOperation;
 var VehicleOperation = /** @class */ (function () {
     function VehicleOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/vehicles";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/vehicles";
+        // this.baseUrl = "http://localhost:5000/api/v1/vehicles";
+        this.baseUrl = "http://localhost:5000/api/v1/vehicles";
     }
     VehicleOperation.prototype.checkExist = function (condition) {
         var _a, _b;
@@ -1100,8 +1100,8 @@ exports.VehicleOperation = VehicleOperation;
 ;
 var StaffsOperation = /** @class */ (function () {
     function StaffsOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
+        // this.baseUrl = "http://localhost:5000/api/v1/staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/staffs";
     }
     // ROLE: any
     StaffsOperation.prototype.getAuthenticatedStaffInfo = function () {
@@ -1396,8 +1396,8 @@ var StaffsOperation = /** @class */ (function () {
 exports.StaffsOperation = StaffsOperation;
 var BusinessOperation = /** @class */ (function () {
     function BusinessOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
+        // this.baseUrl = "http://localhost:5000/api/v1/business";
+        this.baseUrl = "http://localhost:5000/api/v1/business";
     }
     BusinessOperation.prototype.getAuthenticatedBusinessInfo = function () {
         var _a, _b;
@@ -1798,8 +1798,8 @@ exports.BusinessOperation = BusinessOperation;
 ;
 var PartnerStaffOperation = /** @class */ (function () {
     function PartnerStaffOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
+        // this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
     }
     // ROLE: PARTNER_DRIVER, PARTNER_SHIPPER
     PartnerStaffOperation.prototype.getAuthenticatedPartnerStaffInfo = function () {
@@ -2175,7 +2175,7 @@ var PartnerStaffOperation = /** @class */ (function () {
 exports.PartnerStaffOperation = PartnerStaffOperation;
 var ShippersOperation = /** @class */ (function () {
     function ShippersOperation() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shippers";
+        this.baseUrl = "http://localhost:5000/api/v1/shippers";
     }
     // ROLE: AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
     ShippersOperation.prototype.getObjectsCanHandleTask = function () {
@@ -2264,7 +2264,7 @@ var ShippersOperation = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         _c.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.patch("".concat(this.baseUrl, "/confirm_completed?id=").concat(condition.id), {
+                        return [4 /*yield*/, axios_1.default.patch("".concat(this.baseUrl, "/confirm_completed?id=").concat(condition.id), null, {
                                 withCredentials: true,
                             })];
                     case 1:
@@ -2312,7 +2312,7 @@ var ShippersOperation = /** @class */ (function () {
 exports.ShippersOperation = ShippersOperation;
 var DriversOperation = /** @class */ (function () {
     function DriversOperation() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/drivers";
+        this.baseUrl = "http://localhost:5000/api/v1/drivers";
     }
     // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER
     DriversOperation.prototype.getObjectsCanHandleTask = function () {
@@ -2423,8 +2423,8 @@ var DriversOperation = /** @class */ (function () {
 exports.DriversOperation = DriversOperation;
 var ShipmentsOperation = /** @class */ (function () {
     function ShipmentsOperation() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shipments";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shipments";
+        // this.baseUrl = "http://localhost:5000/api/v1/shipments";
+        this.baseUrl = "http://localhost:5000/api/v1/shipments";
     }
     ShipmentsOperation.prototype.check = function (condition) {
         var _a, _b;
@@ -2744,7 +2744,7 @@ var ShipmentsOperation = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         _c.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/accept?shipment_id=").concat(condition.shipment_id), {
+                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/accept?shipment_id=").concat(condition.shipment_id), null, {
                                 withCredentials: true,
                             })];
                     case 1:
@@ -2768,7 +2768,7 @@ exports.ShipmentsOperation = ShipmentsOperation;
 ;
 var OrdersOperation = /** @class */ (function () {
     function OrdersOperation() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/orders";
+        this.baseUrl = "http://localhost:5000/api/v1/orders";
     }
     OrdersOperation.prototype.get = function (conditions) {
         var _a, _b;
@@ -2945,7 +2945,7 @@ var OrdersOperation = /** @class */ (function () {
                     case 1:
                         response = _c.sent();
                         data = response.data;
-                        return [2 /*return*/, { error: data.error, message: data.message }];
+                        return [2 /*return*/, { error: data.error, data: data.data, message: data.message }];
                     case 2:
                         error_105 = _c.sent();
                         console.log("Error updating order: ", (_a = error_105 === null || error_105 === void 0 ? void 0 : error_105.response) === null || _a === void 0 ? void 0 : _a.data);
@@ -3138,7 +3138,7 @@ var OrdersOperation = /** @class */ (function () {
 exports.OrdersOperation = OrdersOperation;
 var ScheduleOperation = /** @class */ (function () {
     function ScheduleOperation() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/schedules";
+        this.baseUrl = "http://localhost:5000/api/v1/schedules";
     }
     ScheduleOperation.prototype.get = function (conditions) {
         var _a, _b;
@@ -3245,7 +3245,7 @@ var ScheduleOperation = /** @class */ (function () {
 exports.ScheduleOperation = ScheduleOperation;
 var AdministrativeOperation = /** @class */ (function () {
     function AdministrativeOperation() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/administrative";
+        this.baseUrl = "http://localhost:5000/api/v1/administrative";
     }
     AdministrativeOperation.prototype.get = function (conditions) {
         var _a, _b;
@@ -3275,3 +3275,114 @@ var AdministrativeOperation = /** @class */ (function () {
     return AdministrativeOperation;
 }());
 exports.AdministrativeOperation = AdministrativeOperation;
+var RoutesOperation = /** @class */ (function () {
+    function RoutesOperation() {
+        this.baseUrl = "http://localhost:5000/api/v1/routes";
+    }
+    // ROLE: any
+    RoutesOperation.prototype.get = function (conditions) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function () {
+            var response, data, error_117;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/search"), conditions, {
+                                withCredentials: true
+                            })];
+                    case 1:
+                        response = _c.sent();
+                        data = response.data;
+                        return [2 /*return*/, { error: data, data: data.data, message: data.message }];
+                    case 2:
+                        error_117 = _c.sent();
+                        console.error("Error getting routes: ", (_a = error_117 === null || error_117 === void 0 ? void 0 : error_117.response) === null || _a === void 0 ? void 0 : _a.data);
+                        console.error("Request that caused the error: ", error_117 === null || error_117 === void 0 ? void 0 : error_117.request);
+                        return [2 /*return*/, { error: (_b = error_117 === null || error_117 === void 0 ? void 0 : error_117.response) === null || _b === void 0 ? void 0 : _b.data, request: error_117 === null || error_117 === void 0 ? void 0 : error_117.request, status: error_117.response ? error_117.response.status : null }];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // ROLE: ADMIN, MANAGER
+    RoutesOperation.prototype.create = function (info) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function () {
+            var response, data, error_118;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/create"), info, {
+                                withCredentials: true
+                            })];
+                    case 1:
+                        response = _c.sent();
+                        data = response.data;
+                        return [2 /*return*/, { error: data, message: data.message }];
+                    case 2:
+                        error_118 = _c.sent();
+                        console.error("Error creating new routes: ", (_a = error_118 === null || error_118 === void 0 ? void 0 : error_118.response) === null || _a === void 0 ? void 0 : _a.data);
+                        console.error("Request that caused the error: ", error_118 === null || error_118 === void 0 ? void 0 : error_118.request);
+                        return [2 /*return*/, { error: (_b = error_118 === null || error_118 === void 0 ? void 0 : error_118.response) === null || _b === void 0 ? void 0 : _b.data, request: error_118 === null || error_118 === void 0 ? void 0 : error_118.request, status: error_118.response ? error_118.response.status : null }];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // ROLE: ADMIN, MANAGER
+    RoutesOperation.prototype.update = function (condition, info) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function () {
+            var response, data, error_119;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/update?id=").concat(condition.id), info, {
+                                withCredentials: true
+                            })];
+                    case 1:
+                        response = _c.sent();
+                        data = response.data;
+                        return [2 /*return*/, { error: data, message: data.message }];
+                    case 2:
+                        error_119 = _c.sent();
+                        console.error("Error updating route: ", (_a = error_119 === null || error_119 === void 0 ? void 0 : error_119.response) === null || _a === void 0 ? void 0 : _a.data);
+                        console.error("Request that caused the error: ", error_119 === null || error_119 === void 0 ? void 0 : error_119.request);
+                        return [2 /*return*/, { error: (_b = error_119 === null || error_119 === void 0 ? void 0 : error_119.response) === null || _b === void 0 ? void 0 : _b.data, request: error_119 === null || error_119 === void 0 ? void 0 : error_119.request, status: error_119.response ? error_119.response.status : null }];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // ROLE: ADMIN, MANAGER
+    RoutesOperation.prototype.delete = function (condition) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function () {
+            var response, data, error_120;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.delete("".concat(this.baseUrl, "/delete?id=").concat(condition.id), {
+                                withCredentials: true
+                            })];
+                    case 1:
+                        response = _c.sent();
+                        data = response.data;
+                        return [2 /*return*/, { error: data, message: data.message }];
+                    case 2:
+                        error_120 = _c.sent();
+                        console.error("Error deleting route: ", (_a = error_120 === null || error_120 === void 0 ? void 0 : error_120.response) === null || _a === void 0 ? void 0 : _a.data);
+                        console.error("Request that caused the error: ", error_120 === null || error_120 === void 0 ? void 0 : error_120.request);
+                        return [2 /*return*/, { error: (_b = error_120 === null || error_120 === void 0 ? void 0 : error_120.response) === null || _b === void 0 ? void 0 : _b.data, request: error_120 === null || error_120 === void 0 ? void 0 : error_120.request, status: error_120.response ? error_120.response.status : null }];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return RoutesOperation;
+}());
+exports.RoutesOperation = RoutesOperation;

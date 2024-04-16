@@ -144,12 +144,15 @@ export async function createColumns(
     {
       accessorKey: "Add",
       header: () => {
-        return "Thêm công việc";
+        return (
+          <div className="text-right whitespace-nowrap">
+            Thêm công việc
+          </div>
+        );
       },
       cell: ({ row }) => {
         const OJ = new DriversOperation();
         const OJ2 = new ShippersOperation();
-        console.log("Info", info);
         const [shipment_ids, setShipment_ids] = useState<string[]>([]);
 
         const handleAddTask = async () => {
@@ -160,10 +163,7 @@ export async function createColumns(
             shipment_ids: shipment_ids,
             vehicle_id: row.original.vehicle_id,
           };
-
-          console.log("Create", create);
           const response = await OJ.createNewTasks(create);
-          console.log("Response", response);
           if (response.error.error) {
             alert(response.error.message);
           } else {
@@ -195,7 +195,7 @@ export async function createColumns(
           info?.role === "HUMAN_RESOURCE_MANAGER"
         ) {
           return (
-            <div className="relative flex  mr-2">
+            <div className="relative flex justify-end mr-8">
               <Button
                 onClick={handleAddTask}
                 className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full"
@@ -209,7 +209,7 @@ export async function createColumns(
           info?.role === "AGENCY_HUMAN_RESOURCE_MANAGER"
         ) {
           return (
-            <div className="relative flex  mr-2">
+            <div className="relative flex justify-end mr-8">
               <Button
                 onClick={handleAddTask2}
                 className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full"

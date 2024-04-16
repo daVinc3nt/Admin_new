@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { TbMinusVertical } from "react-icons/tb";
 import { useState } from "react";
 import {
@@ -12,7 +12,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   getFilteredRowModel,
-  VisibilityState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -31,32 +30,26 @@ import {
   Button,
 } from "@nextui-org/react";
 import { FormattedMessage } from "react-intl";
-import Filter from "@/components/Common/Filters";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import {
+  VehicleOperation,
+  DeletingVehicleCondition,
+} from "@/TDLib/tdlogistics";
 import BasicPopover from "@/components/Common/Popover";
-import { AdministrativeOperation, AgencyOperation, DeletingAgencyCondition } from "@/TDLib/tdlogistics";
-import { MdLocationCity, MdLocationSearching } from "react-icons/md";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  reloadData2?: () => void;
-  info?: any;
-  reloadData: () => void;
+  setSelectedID: (id: string) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  reloadData2,
   data,
-  reloadData,
-  info,
+  setSelectedID
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
     data,
@@ -66,58 +59,76 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    enableMultiRowSelection: false,
     state: {
       sorting,
       columnFilters,
-
-      columnVisibility,
       rowSelection,
     },
   });
 
+  const paginationButtons = [];
+  for (let i = 0; i < table.getPageCount(); i++) {
+    paginationButtons.push(
+      <Button key={i} onClick={() => table.setPageIndex(i)}>
+        {i + 1}
+      </Button>
+    );
+  }
+
+  React.useEffect(() => {
+    const selectedIds = Object.keys(rowSelection).filter(id => rowSelection[id]);
+    if (selectedIds.length === 1) {
+      const selectedRow = table.getRow(selectedIds[0]);
+      if (selectedRow) {
+        //@ts-ignore
+        const vehicleId = selectedRow.original.vehicle_id;
+        setSelectedID(vehicleId);
+      }
+    } else {
+      setSelectedID("");
+    }
+  }, [rowSelection]);
+
   return (
     <div>
       <div className="flex items-center py-4">
-        <div className="w-full flex flex-row">
-          <div className="relative w-full flex lg:w-1/2">
+        <div className="w-full flex flex-col sm:flex-row">
+          <div className="relative w-full sm:w-1/2 lg:w-1/3 flex">
             <input
-              id="postSearch"
+              id="VehicleSearch"
               type="text"
               value={
-                (table.getColumn("fullname")?.getFilterValue() as string) ??
-                ""
+                (table.getColumn("fullname")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table
-                  .getColumn("fullname")
-                  ?.setFilterValue(event.target.value)
+                table.getColumn("fullname")?.setFilterValue(event.target.value)
               }
               className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
                     text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm dark:text-white`}
-              placeholder=""
             />
             <label
-              htmlFor="postSearch"
+              htmlFor="VehicleSearch"
               className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all 
-                    peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
+                    peer-placeholder-shown:tsext-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
                     peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
             >
-              Tìm kiếm theo tên
+              Tìm kiếm theo tên Nhân viên
             </label>
             <Dropdown className="z-30">
               <DropdownTrigger>
                 <Button
-                  className="text-xs md:text-base border border-gray-600 rounded ml-2 w-32 text-center"
+                  className="text-xs md:text-base border border-gray-600 rounded ml-2 w-36 text-center"
                   aria-label="Show items per page"
                 >
-                  Show {table.getState().pagination.pageSize}
+                  <FormattedMessage id="Show" />{" "}
+                  {table.getState().pagination.pageSize}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
-                className="dark:bg-[#1a1b23] bg-white border border-black dark:border-gray-300 rounded w-24"
+                className="bg-white dark:bg-[#1a1b23] border border-gray-300 rounded w-36"
                 aria-labelledby="dropdownMenuButton"
               >
                 {[10, 20, 30, 40, 50].map((pageSize, index) => (
@@ -131,13 +142,21 @@ export function DataTable<TData, TValue>({
                       aria-label={`Show ${pageSize}`}
                       className="text-center  dark:text-white w-full"
                     >
-                      Show {pageSize}
+                      <FormattedMessage id="Show" /> {pageSize}
                     </Button>
                   </DropdownItem>
                 ))}
               </DropdownMenu>
             </Dropdown>
           </div>
+          {/* <BasicPopover icon={<FilterAltIcon />}>
+            <Filter
+              type="search"
+              column={table.getColumn("fullname")}
+              table={table}
+              title="Tên nhân viên"
+            />
+          </BasicPopover> */}
         </div>
       </div>
       <div className="rounded-md border border-gray-700">
@@ -165,8 +184,8 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`border-gray-900 ${row.getIsSelected() ? "dark:bg-gray-700 bg-slate-300" : ""
-                    }`}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="border-gray-700"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -193,19 +212,6 @@ export function DataTable<TData, TValue>({
       </div>
 
       <div className="flex items-center justify-center space-x-2 py-4">
-        {/* <button
-          className={`text-xs md:text-md justify-self-start text-muted-foreground rounded-lg border border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 hover:text-white hover:shadow-md focus:outline-none font-normal dark:text-white
-          ${
-            table.getFilteredSelectedRowModel().rows.length > 0
-              ? "border-red-500"
-              : "border-gray-600"
-          }`}
-          onClick={deleteRows}
-        >
-          <FormattedMessage id="Delete" />{" "}
-          {table.getFilteredSelectedRowModel().rows.length}/
-          {table.getFilteredRowModel().rows.length}
-        </button> */}
         <Button
           variant="light"
           size="sm"
@@ -225,8 +231,8 @@ export function DataTable<TData, TValue>({
             <FormattedMessage id="page" />
           </div>
           <strong className="text-xs md:text-base whitespace-nowrap">
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
+            {table.getState().pagination.pageIndex + 1}{" "}
+            <FormattedMessage id="of" /> {table.getPageCount()}
           </strong>
         </span>
         <TbMinusVertical className="text-xl text-gray-700" />
