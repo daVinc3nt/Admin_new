@@ -68,7 +68,7 @@
     "order.Id": "Mã đơn hàng",
     "order.pickuplocation": "Điểm gửi",
     "order.receive": "Điểm đến",
-    "order.mass": "Khối lượng (kg)",
+    "order.mass": "Khối lượng (g)",
     "order.height": "Cao (m)",
     "order.length": "Dài (m)",
     "order.chooseexcel": "Vui lòng chọn file excel chứa thông tin đơn hàng",

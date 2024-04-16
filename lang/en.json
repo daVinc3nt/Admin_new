@@ -49,7 +49,7 @@
     "order.receiver": "Receiver",
     "order.sender": "Sender",
     "order.receive": "To",
-    "order.mass": "Mass (kg)",
+    "order.mass": "Mass (g)",
     "order.height": "Height (m)",
     "order.length": "Length (m)",
     "order.width": "Width (m)",
