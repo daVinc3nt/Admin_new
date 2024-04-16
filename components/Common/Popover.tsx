@@ -5,11 +5,13 @@ import { Button } from "@nextui-org/react";
 interface Props {
   children: ReactNode;
   icon: any;
+  name?: string;
+  className?: string
 }
 //reactNode is a dataType of react, its can be JSX,
 //component or any fragment
 
-export default function BasicPopover({ children, icon = null }: Props) {
+export default function BasicPopover({ children, icon = null, name, className }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -28,12 +30,12 @@ export default function BasicPopover({ children, icon = null }: Props) {
   return (
     <div>
       <Button
-        className="text-xs h-10 md:text-base  border border-gray-600 rounded ml-2 w-10 sm:w-24 text-center"
+        className={`text-xs h-10 md:text-sm border border-gray-600 rounded ml-2 px-2 text-center ${className}`}
         aria-describedby={id}
         onClick={handleClick}
       >
         {icon}
-        <span className='hidden sm:block'>Filter</span>
+        <span className='hidden sm:block'>{name ? name : 'Filter'}</span>
       </Button>
       <Popover
         id={id}

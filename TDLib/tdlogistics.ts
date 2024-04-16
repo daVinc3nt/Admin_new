@@ -18,10 +18,11 @@ import * as JSZip from 'jszip';
 //     // showing custome notification on UI
 // });
 
+
 class UserOperation {
     private baseUrl: string;
     constructor() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
 
     async getAuthenticatedUserInfo() {
@@ -43,8 +44,8 @@ class UserOperation {
 class UsersAuthenticate {
     private baseUrl: string;
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        // this.baseUrl = "http://localhost:5000/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
 
     async sendOTP(phoneNumber: string, email: string): Promise<any> {
@@ -87,8 +88,8 @@ class UsersAuthenticate {
 class StaffsAuthenticate {
     private baseUrl: string;
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
+        // this.baseUrl = "http://localhost:5000/api/v1/staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/staffs";
     }
 
     async login(username: string, password: string): Promise<any> {
@@ -150,8 +151,8 @@ class StaffsAuthenticate {
 class BusinessAuthenticate {
     private baseUrl: string;
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
+        // this.baseUrl = "http://localhost:5000/api/v1/business";
+        this.baseUrl = "http://localhost:5000/api/v1/business";
     }
 
     async login(username: string, password: string): Promise<any> {
@@ -177,8 +178,8 @@ class BusinessAuthenticate {
 class PartnerStaffAuthenticate {
     private baseUrl: string;
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
+        // this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
+        this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
     }
 
     async login(username: string, password: string) : Promise<any> {
@@ -230,8 +231,8 @@ class UsersOperation {
     private baseUrl: string;
 
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/users";
+        // this.baseUrl = "http://localhost:5000/api/v1/users";
+        this.baseUrl = "http://localhost:5000/api/v1/users";
     }
 
     async findByUser(condition: FindingUserByUserCondition) : Promise<any> {
@@ -382,8 +383,8 @@ export interface UpdatingLicenseInfo {
 class AgencyOperation {
     private baseUrl: string;
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/agencies";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/agencies";
+        // this.baseUrl = "http://localhost:5000/api/v1/agencies";
+        this.baseUrl = "http://localhost:5000/api/v1/agencies";
     }
 
     async checkExist(condition: CheckingExistAgencyCondition) {
@@ -631,8 +632,8 @@ class TransportPartnersOperation {
     private baseUrl: string;
 
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/transport_partners";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/transport_partners";
+        // this.baseUrl = "http://localhost:5000/api/v1/transport_partners";
+        this.baseUrl = "http://localhost:5000/api/v1/transport_partners";
     }
 
     async createByAdmin(info: CreatingTransportPartnerByAdminInfo) {
@@ -803,8 +804,8 @@ class VehicleOperation {
     private baseUrl: string;
 
     constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/vehicles";
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/vehicles";
+        // this.baseUrl = "http://localhost:5000/api/v1/vehicles";
+        this.baseUrl = "http://localhost:5000/api/v1/vehicles";
     }
 
     async checkExist(condition: CheckingExistVehicleCondition) {
@@ -1069,8 +1070,8 @@ class StaffsOperation {
 	private baseUrl: string;
 
 	constructor() {
-		// this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
-		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/staffs";
+		// this.baseUrl = "http://localhost:5000/api/v1/staffs";
+		this.baseUrl = "http://localhost:5000/api/v1/staffs";
 	}
 
 	// ROLE: any
@@ -1446,8 +1447,8 @@ class BusinessOperation {
 	private baseUrl: string;
 
 	constructor() {
-		// this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
-		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/business";
+		// this.baseUrl = "http://localhost:5000/api/v1/business";
+		this.baseUrl = "http://localhost:5000/api/v1/business";
 
 	}
 
@@ -1807,8 +1808,8 @@ class PartnerStaffOperation {
 	private baseUrl: string;
 
 	constructor() {
-		// this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
-		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/partner_staffs";
+		// this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
+		this.baseUrl = "http://localhost:5000/api/v1/partner_staffs";
 	}
 
 	// ROLE: PARTNER_DRIVER, PARTNER_SHIPPER
@@ -2075,7 +2076,7 @@ export interface GettingHistoryInfo {
 class ShippersOperation {
 	private baseUrl: string;
 	constructor() {
-		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shippers";
+		this.baseUrl = "http://localhost:5000/api/v1/shippers";
 	}
 
     // ROLE: AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
@@ -2129,7 +2130,7 @@ class ShippersOperation {
     // ROLE: AGENCY_SHIPPER
 	async confirmCompletedTask(condition: ConfirmingCompletedTaskCondition) {
 		try {
-			const response: AxiosResponse = await axios.patch(`${this.baseUrl}/confirm_completed?id=${condition.id}`, {
+			const response: AxiosResponse = await axios.patch(`${this.baseUrl}/confirm_completed?id=${condition.id}`, null, {
 				withCredentials: true,
 			});
 
@@ -2181,7 +2182,7 @@ export interface GettingHistoryInfo {
 class DriversOperation {
     private baseUrl: string;
 	constructor() {
-		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/drivers";
+		this.baseUrl = "http://localhost:5000/api/v1/drivers";
 	}
 
     // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER
@@ -2274,14 +2275,13 @@ export interface ShipmentID {
 
 export interface UndertakingShipmentInfo {
     shipment_id: string,
-    status_code: number
 }
 
 class ShipmentsOperation {
     private baseUrl: string;
 	constructor() {
-        // this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shipments";
-		this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/shipments";
+        // this.baseUrl = "http://localhost:5000/api/v1/shipments";
+		this.baseUrl = "http://localhost:5000/api/v1/shipments";
 	}
 
     async check(condition: ShipmentID) {
@@ -2476,7 +2476,7 @@ class ShipmentsOperation {
     // ROLE: ADMIN, MANAGER, TELLER
     async approve(condition: ShipmentID) {
         try {
-			const response = await axios.put(`${this.baseUrl}/accept?shipment_id=${condition.shipment_id}`, {
+			const response = await axios.put(`${this.baseUrl}/accept?shipment_id=${condition.shipment_id}`, null, {
 				withCredentials: true,
 			});
 
@@ -2606,7 +2606,7 @@ export interface UpdatingOrderSignatureInfo {
 class OrdersOperation {
     private baseUrl: string;
     constructor() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/orders";
+        this.baseUrl = "http://localhost:5000/api/v1/orders";
     }
 
     async get(conditions: GettingOrdersConditions) {
@@ -2719,7 +2719,7 @@ class OrdersOperation {
             });
 
             const data = response.data;
-            return { error: data.error, message: data.message };
+            return { error: data.error, data: data.data, message: data.message };
         } catch (error: any) {
             console.log("Error updating order: ", error?.response?.data);
             console.error("Request that caused the error: ", error?.request);
@@ -2870,7 +2870,7 @@ export interface TaskId {
 class ScheduleOperation {
     private baseUrl: string;
     constructor() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/schedules";
+        this.baseUrl = "http://localhost:5000/api/v1/schedules";
     }
 
     async get(conditions: GettingTasksConditions) {
@@ -2943,7 +2943,7 @@ export interface AdministrativeInfo {
 class AdministrativeOperation {
     private baseUrl: string;
     constructor() {
-        this.baseUrl = "https://api.tdlogistics.net.vn/api/v1/administrative";
+        this.baseUrl = "http://localhost:5000/api/v1/administrative";
     }
 
     async get(conditions: AdministrativeInfo) {
@@ -2956,6 +2956,103 @@ class AdministrativeOperation {
             return { error: data, data: data.data, message: data.message }
         } catch (error: any) {
             console.error("Error getting administrative: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
+}
+
+export interface GettingRoutesConditions {
+    vehicle_id?: string,
+    source?: string,
+    destination?: string,
+    from_departure_time?: string,
+    to_departure_time?: string,
+}
+
+export interface CreatingNewRouteInfo {
+    vehicle_id: string,
+    source: string,
+    destination: string,
+    departure_time: string,
+}
+
+export interface UpdatingRouteInfo {
+    vehicle_id?: string,
+    source?: string,
+    destination?: string,
+    departure_time?: string,
+}
+
+export interface RouteId {
+    id: number
+}
+
+class RoutesOperation {
+    private baseUrl: string;
+    constructor() {
+        this.baseUrl = "http://localhost:5000/api/v1/routes";
+    }
+
+    // ROLE: any
+    async get(conditions: GettingRoutesConditions) {
+        try {
+            const response: AxiosResponse = await axios.post(`${this.baseUrl}/search`, conditions, {
+                withCredentials: true
+            });
+
+            const data = response.data;
+            return { error: data, data: data.data, message: data.message }
+        } catch (error: any) {
+            console.error("Error getting routes: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
+
+    // ROLE: ADMIN, MANAGER
+    async create(info: CreatingNewRouteInfo) {
+        try {
+            const response: AxiosResponse = await axios.post(`${this.baseUrl}/create`, info, {
+                withCredentials: true
+            });
+
+            const data = response.data;
+            return { error: data, message: data.message }
+        } catch (error: any) {
+            console.error("Error creating new routes: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
+
+    // ROLE: ADMIN, MANAGER
+    async update(condition: RouteId, info: UpdatingRouteInfo) {
+        try {
+            const response: AxiosResponse = await axios.put(`${this.baseUrl}/update?id=${condition.id}`, info, {
+                withCredentials: true
+            });
+
+            const data = response.data;
+            return { error: data, message: data.message }
+        } catch (error: any) {
+            console.error("Error updating route: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+        }
+    }
+
+    // ROLE: ADMIN, MANAGER
+    async delete(condition: RouteId) {
+        try {
+            const response: AxiosResponse = await axios.delete(`${this.baseUrl}/delete?id=${condition.id}`, {
+                withCredentials: true
+            });
+
+            const data = response.data;
+            return { error: data, message: data.message }
+        } catch (error: any) {
+            console.error("Error deleting route: ", error?.response?.data);
             console.error("Request that caused the error: ", error?.request);
             return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
         }
@@ -2981,4 +3078,5 @@ export {
     OrdersOperation,
     ScheduleOperation,
     AdministrativeOperation,
+    RoutesOperation,
 }

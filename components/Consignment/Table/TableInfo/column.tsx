@@ -236,7 +236,7 @@ export async function createColumns(
           <div className="relative mr-2 w-full flex justify-center">
             <Button
               onClick={openModal}
-              className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full  text-center"
+              className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-2 border border-gray-600 hover:border-transparent rounded-full text-center"
             >
               ...
             </Button>

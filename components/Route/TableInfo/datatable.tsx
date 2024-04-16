@@ -1,6 +1,4 @@
-"use client";
-import React, { useState } from "react";
-import { TbMinusVertical } from "react-icons/tb";
+import React, { useContext } from "react";
 import {
   ColumnDef,
   SortingState,
@@ -21,24 +19,17 @@ import {
   TableHeader,
   TableRow,
 } from "./table";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-} from "@nextui-org/react";
-import AddNoti from "../Add/addNoti";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
 import { FormattedMessage, useIntl } from "react-intl";
-import BasicPopover from "@/components/Common/Popover";
-import Filter from "@/components/Common/Filters";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import DisassembleConsignment from "../Disassemble/disConsignment";
-import TaskMenu from "@/components/Task/TaskMenu";
+import { TbMinusVertical } from "react-icons/tb";
+import { RoutesOperation, ScheduleOperation } from "@/TDLib/tdlogistics";
+import { UserContext } from "@/Context/InfoContext/UserContext";
+import AddNoti from "../addRoute";
+
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<any>[];
   data: TData[];
-  reloadData: () => {};
+  reloadData: (info: any) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -46,14 +37,11 @@ export function DataTable<TData, TValue>({
   data,
   reloadData,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const intl = useIntl();
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const intl = useIntl()
+  const { info } = useContext(UserContext)
   const table = useReactTable({
     data,
     columns,
@@ -64,110 +52,62 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
   });
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalIsOpen2, setModalIsOpen2] = useState(false);
-  const [modalIsOpen3, setModalIsOpen3] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
 
   const openModal = () => {
     setModalIsOpen(true);
-  };
-
-  const openModal2 = () => {
-    setModalIsOpen2(true);
-  };
-
-  const openModal3 = () => {
-    setModalIsOpen3(true);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
   };
 
-  const closeModal2 = () => {
-    setModalIsOpen2(false);
-  };
+  const handleDeleteButtonClick = async () => {
+    try {
+      const selectedRows = table.getSelectedRowModel().rows;
+      const selectedRoutes = selectedRows.map((row) => row.original.id);
 
-  const closeModal3 = () => {
-    setModalIsOpen3(false);
-  };
-
-  const paginationButtons = [];
-  for (let i = 0; i < table.getPageCount(); i++) {
-    paginationButtons.push(
-      <Button key={i} onClick={() => table.setPageIndex(i)}>
-        {i + 1}
-      </Button>
-    );
-  }
-  const [shipment_id, setShipment_id] = useState<string[]>([]);
-  const handleAddRowsSelected = () => {
-    const selectedRows = table.getFilteredSelectedRowModel().rows;
-    const selectedShipment_id = selectedRows.map(
-      (row) => {
-        const a: any = row.original
-        return a.shipment_id
+      for (const Route of selectedRoutes) {
+        const scheduleOperation = new RoutesOperation();
+        await scheduleOperation.delete({ id: Route });
       }
-    );
-    setShipment_id(selectedShipment_id);
-  };
-  const confirmDelete = () => {
-    return window.confirm("Are you sure you want to delete?");
-  };
-  const deleteRows = () => {
-    // Gọi hàm confirmDelete và lưu kết quả vào biến result
-    const result = confirmDelete();
-    // Nếu result là true, tức là người dùng nhấn yes
-    if (result) {
-      // Gọi hàm handleDeleteRowsSelected để xóa các hàng đã chọn
-      handleAddRowsSelected();
-    }
-    // Nếu result là false, tức là người dùng nhấn no
-    else {
-      // Không làm gì cả
+      reloadData(info);
+    } catch (error) {
+      alert("Error deleting routes:" + error.message);
     }
   };
+
   return (
     <div>
-      <div className="flex items-center py-4">
-        <div className="w-full flex flex-col sm:flex-row">
+      <div className="flex items-center py-4 overflow-x-scroll;">
+        <div className="w-full flex flex-col sm:flex-row sm:gap-1">
           <div className="relative w-full lg:w-1/2 flex">
             <input
-              id="consSearch"
+              id="tasksSearch"
               type="text"
               value={
-                (table.getColumn("shipment_id")?.getFilterValue() as string) ??
-                ""
+                (table.getColumn("vehicle_id")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table
-                  .getColumn("shipment_id")
-                  ?.setFilterValue(event.target.value)
+                table.getColumn("vehicle_id")?.setFilterValue(event.target.value)
               }
               className={`peer h-10 self-center w-full border border-gray-600 rounded focus:outline-none focus:border-blue-500 truncate bg-transparent
               text-left placeholder-transparent pl-3 pt-2 pr-12 text-sm dark:text-white`}
               placeholder=""
             />
             <label
-              htmlFor="consSearch"
-              className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all w-full hidden xs:block
+              htmlFor="tasksSearch"
+              className={`absolute left-3 -top-0 text-xxs leading-5 text-gray-500 transition-all hidden xs:block
               peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2.5 
               peer-focus:-top-0.5 peer-focus:leading-5 peer-focus:text-blue-500 peer-focus:text-xxs`}
             >
-              <FormattedMessage id="Consignment.SearchBox" />
+              Tìm kiếm theo mã phương tiện
             </label>
             <Dropdown className="z-30">
               <DropdownTrigger>
                 <Button
-                  className="text-xs md:text-sm border border-gray-600 rounded ml-2 w-40 text-center text-black dark:text-white"
+                  className="text-xs md:text-sm border border-gray-600 rounded ml-2 w-40 text-center"
                   aria-label="Show items per page"
                 >
                   Show {table.getState().pagination.pageSize}
@@ -178,15 +118,12 @@ export function DataTable<TData, TValue>({
                 aria-labelledby="dropdownMenuButton"
               >
                 {[10, 20, 30, 40, 50].map((pageSize, index) => (
-                  <DropdownItem
-                    key={pageSize}
-                    textValue={`Show ${pageSize} items per page`}
-                  >
+                  <DropdownItem key={pageSize} textValue={`Show ${pageSize} items per page`}>
                     <Button
                       onClick={() => table.setPageSize(pageSize)}
                       variant="bordered"
                       aria-label={`Show ${pageSize}`}
-                      className="text-center text-black dark:text-white w-full"
+                      className="text-center  text-white w-full"
                     >
                       Show {pageSize}
                     </Button>
@@ -194,38 +131,22 @@ export function DataTable<TData, TValue>({
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <BasicPopover icon={<FilterAltIcon />}>
-              <Filter
-                type="range"
-                column={table.getColumn("mass")}
-                table={table}
-                title="Mass"
-              />
-            </BasicPopover>
           </div>
           <div className="h-10 grow hidden sm:block"></div>
-          <div className="h-10 flex mt-4 sm:mt-0 justify-center sm:justify-end">
-            <Button
-              className="text-xs md:text-sm border border-gray-600 rounded sm:ml-2 px-2 text-center h-full grow sm:flex-grow-0"
-              onClick={openModal2}
-            >
-              <FormattedMessage id="Consignment.DisButton" />
-            </Button>
-            <Button
-              className="text-xs md:text-sm border border-gray-600 rounded ml-2 px-2 text-center h-full grow sm:flex-grow-0"
-              onClick={openModal}
-            >
-              <FormattedMessage id="Consignment.AddButton" />
-            </Button>
-            {modalIsOpen && (
-              <AddNoti onClose={closeModal} reloadData={reloadData} />
+          <div className="h-10 flex mt-2 sm:mt-0 justify-center sm:justify-end">
+            {table.getSelectedRowModel().rows.length > 0 && (
+              <Button
+                className="text-xs md:text-sm border border-gray-600 rounded px-2 text-center h-full grow sm:flex-grow-0"
+                onClick={handleDeleteButtonClick}
+              >
+                <FormattedMessage id="Schedule.Delete" />
+              </Button>
             )}
-            {modalIsOpen2 && (
-              <DisassembleConsignment
-                onClose={closeModal2}
-                reloadData={reloadData}
-              />
-            )}
+            <Button className={`text-xs md:text-sm border border-gray-600 rounded ${table.getSelectedRowModel().rows.length > 0 && "ml-2"}  px-2 text-center h-full grow sm:flex-grow-0`}
+              onClick={openModal}>
+              Thêm tuyến đường
+            </Button>
+            {modalIsOpen && <AddNoti onClose={closeModal} reloadData={reloadData} />}
           </div>
         </div>
       </div>
@@ -254,7 +175,9 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`border-gray-700 ${row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
+                  className={`border-gray-700 ${row.getIsSelected()
+                    ? "bg-gray-300 dark:bg-gray-700"
+                    : ""
                     }`}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -280,25 +203,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {modalIsOpen3 && (
-        <TaskMenu onClose={closeModal3} DataInitial={shipment_id} />
-      )}
       <div className="flex flex-col sm:flex-row items-center gap-2 justify-between py-2 sm:py-4">
-        <button
-          className={`text-xs md:text-md justify-self-start flex flex-row gap-1 text-muted-foreground rounded-lg border border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 hover:text-white hover:shadow-md focus:outline-none font-normal dark:text-white
-          ${table.getFilteredSelectedRowModel().rows.length > 0
-              ? "border-green-500"
-              : "border-gray-600"
-            }`}
-          onClick={() => {
-            handleAddRowsSelected();
-            openModal3();
-          }}
-        >
-          <p>Thêm vào phương tiện</p>
-          {table.getFilteredSelectedRowModel().rows.length}/
-          {table.getFilteredRowModel().rows.length}
-        </button>
         <div className="flex place-items-center">
           <span className="flex items-center gap-1">
             <div className="text-xs md:text-base">

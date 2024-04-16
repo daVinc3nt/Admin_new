@@ -41,7 +41,7 @@ export function approve(
       <div className="relative mr-2 w-full flex justify-center">
         <Button
           onClick={handleConfirm}
-          className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full "
+          className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[8px] border border-gray-600 hover:border-transparent rounded-full "
         >
           ✔
         </Button>
