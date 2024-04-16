@@ -6,7 +6,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 import { ShipmentsOperation } from "@/TDLib/tdlogistics";
 import SubmitPopup from "@/components/Common/SubmitPopup";
-import NotiPopup from "@/components/Common/NotiPopup";
+import NotiPopup  from "@/components/Common/NotiPopup";
 
 interface AddNotificationProps {
   onClose: () => void;
@@ -54,7 +54,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
           reloadData();
         }
       } else {
-        const response = await shipmentsOperation.create(transportPartnerId ? { transport_partner_id: transportPartnerId } : {});
+        const response = await shipmentsOperation.create(transportPartnerId ? { agency_id_dest: transportPartnerId } : {});
         console.log(response)
         if (response.error) {
           setOpenConfirm(false)
