@@ -15,6 +15,7 @@ import {
   LogoutOutlined,
   Handshake,
   AccountBox,
+  TaskAlt,
   BusinessCenterOutlined,
   AddTask,
 } from "@mui/icons-material";
@@ -23,7 +24,7 @@ import MenuHambuger from "./MenuHambuger";
 const SideItemData = [
   {
     id: 0,
-    title:  <FormattedMessage id="Sidebar.option13" />,
+    title: <FormattedMessage id="Sidebar.option13" />,
     url: "/dashboard/account",
     icon: <AccountBox className="scale-75 lg:block" />,
   },
@@ -79,6 +80,12 @@ const SideItemData = [
         title: "Doanh nghiệp",
         url: "/dashboard/business",
         icon: <BusinessCenter className="scale-75 lg:block" />,
+      },
+      {
+        id: 13,
+        title: "Công việc",
+        url: "/dashboard/job",
+        icon: <TaskAlt className="scale-75 lg:block" />,
       },
     ],
   },
