@@ -368,6 +368,8 @@
     "Business.UpdateImg":"Tải ảnh lên",
     "Business.Confirm":"Xác nhận",
     "Business.Download":"Tải xuống",
-    "Business.AddBusinessTitle":"Thêm doanh nghiệp"
+    "Business.AddBusinessTitle":"Thêm doanh nghiệp",
+
+    "Job.Title":"Công việc"
 
 }
