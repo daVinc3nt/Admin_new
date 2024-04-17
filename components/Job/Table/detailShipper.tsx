@@ -11,6 +11,7 @@ import {
   ShippersOperation,
   CreatingNewShipperTasksInfo,
   GettingTasksCondition,
+  DeletingShipperTasksCondition,
 } from "@/TDLib/tdlogistics";
 import { set } from "date-fns";
 import { on } from "events";
@@ -66,14 +67,14 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
   const [dataShipments, setDataShipments] = useState<any>([]);
   const [dataShipmentsUpdate, setDataShipmentsUpdate] = useState<any>([]);
   const [shipmentcurrent, setShipmentcurrent] = useState<any>([]);
-  const [openModalId, setOpenModalId] = useState(null);
+  const [openModalId, setOpenModalId] = useState(false);
   const [openNoti, setOpenNoti] = useState(false);
   const [notiMessage, setNotiMessage] = useState("");
   const onClickNoti = (message: string) => {
     setNotiMessage(message);
     setOpenNoti(true);
   };
-  onClose = () => {
+  const onClose2 = () => {
     setOpenNoti(false);
   };
 
@@ -98,14 +99,18 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
       };
       // console.log("IDfind", IDfind);
       const response = await OJ2.getTask(IDfind);
-      if (response.error) {
-        alert(response.message);
+      console.log("Response Task", response);
+      if (response.error.error) {
+        alert(response.error.message);
+        onClose();
+        // console.log("heeloo");
         return;
       }
       // console.log("Response Task", response);
       setShipmentcurrent(response.data);
     } catch (e) {
-      onClickNoti("Error: " + e);
+      // console.log("Error: " + e);
+      alert("Error: " + e.message);
     }
   };
   const handleChangeOption = async (e: any) => {
@@ -173,7 +178,23 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
     }
   };
 
-  const handleDeleteShipment = async (id: number) => {};
+  const handleDeleteShipment = async (id: number) => {
+    const OJ = new ShippersOperation();
+    try {
+      const ID: DeletingShipperTasksCondition = {
+        id: id,
+      };
+      const response = await OJ.deleteTask(ID);
+      if (response.error) {
+        onClickNoti(response.message);
+        return;
+      }
+      onClickNoti(response.message);
+      fetchData();
+    } catch (e) {
+      onClickNoti("Error: " + e);
+    }
+  };
 
   return (
     <motion.div
@@ -271,7 +292,7 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
                       {item.parent === null ? "Chưa tiếp nhận" : "Đã tiếp nhận"}
                     </td>
                     <td className="text-center border border-gray-200">
-                      {item.shipment.mass} kg
+                      {item.mass} g
                     </td>
 
                     <td className="text-center border border-gray-200">
@@ -306,12 +327,12 @@ const DetailShipper: React.FC<DetailDriverProps> = ({
                     )}
                     {openModalId === item.shipment_id && (
                       <DetailShipment
-                        onClose={() => setOpenModalId(null)}
+                        onClose={() => setOpenModalId(true)}
                         dataInitial={item.shipment}
                       />
                     )}
                     {openNoti ? (
-                      <NotiPopup message={notiMessage} onClose={onClose} />
+                      <NotiPopup message={notiMessage} onClose={onClose2} />
                     ) : (
                       ""
                     )}
