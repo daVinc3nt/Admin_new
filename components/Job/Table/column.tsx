@@ -156,6 +156,7 @@ export async function createColumns(
 
         const closeModal = () => {
           setModalIsOpen(false);
+          console.log("Close");
         };
 
         return (
@@ -167,30 +168,26 @@ export async function createColumns(
               +
             </Button>
             {modalIsOpen &&
-            (info?.role === "ADMIN" ||
-              info?.role === "MANAGER" ||
-              info?.role === "HUMAN_RESOURCE_MANAGER") ? (
-              <DetailDriver
-                onClose={closeModal}
-                dataInitial={row.original}
-                reloadData={reloadData}
-                info={info}
-              />
-            ) : (
-              ""
-            )}
+              (info?.role === "ADMIN" ||
+                info?.role === "MANAGER" ||
+                info?.role === "HUMAN_RESOURCE_MANAGER") && (
+                <DetailDriver
+                  onClose={closeModal}
+                  dataInitial={row.original}
+                  reloadData={reloadData}
+                  info={info}
+                />
+              )}
             {modalIsOpen &&
-            (info?.role === "AGENCY_MANAGER" ||
-              info?.role === "AGENCY_HUMAN_RESOURCE_MANAGER") ? (
-              <DetailShipper
-                onClose={closeModal}
-                dataInitial={row.original}
-                reloadData={reloadData}
-                info={info}
-              />
-            ) : (
-              ""
-            )}
+              (info?.role === "AGENCY_MANAGER" ||
+                info?.role === "AGENCY_HUMAN_RESOURCE_MANAGER") && (
+                <DetailShipper
+                  onClose={closeModal}
+                  dataInitial={row.original}
+                  reloadData={reloadData}
+                  info={info}
+                />
+              )}
           </div>
         );
       },
