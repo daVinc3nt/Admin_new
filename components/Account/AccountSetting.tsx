@@ -296,14 +296,14 @@ const AccountSetting = (info) => {
         <div className="text-xl font-bold md:text-start text-center">
           <FormattedMessage id="Account.info" />
         </div>
-        <div className="flex flex-col text-xs font-base gap-3 mt-3 ">
-          <div>
-            <div className="text-base font-light">
+        <div className="grid grid-cols-1 sm:grid-cols-4">
+          <div className="flex flex-col text-xs font-base gap-3 mt-3 col-span-1 ">
+            <div className="text-base font-light text-start">
               <FormattedMessage id="Account.IMG" /> :
             </div>
-            <div className=" flex flex-row place place-content-center justify-center items-center  border-2 h-20 border-blue-200  rounded-lg mt-3">
+            <div className=" flex flex-col md:mr-6 gap-2 place-content-center place-items-center  rounded-lg mt-3">
               {avatar && (
-                <div className="pl-5 py-2 w-20 h-20 ">
+                <div className="pl-5  h-52 ">
                   <img
                     src={avatar}
                     alt="Avatar"
@@ -313,172 +313,177 @@ const AccountSetting = (info) => {
                 </div>
               )}
               {!avatar && (
-                <div className="pl-5 py-2 w-20 h-20 ">
+                <div className="pl-5  h-52 ">
                   <Person className=" h-16 bg-white border rounded-xl" />
                 </div>
               )}
 
-              <div className="flex-grow items-center justify-center ">
-                <label className="flex place-content-center  py-6">
-                  <BackupIcon className="ml-3 h-6 w-6" />
+              <div className="flex flex-col place-content-center items-center">
+                <div className="flex-grow items-center justify-center ">
+                  <label className="flex place-content-center  py-6">
+                    <BackupIcon className="ml-3 h-6 w-6" />
 
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      setAvaterUpload(file);
-                    }}
-                  />
-                  {avaterUpload && (
-                    <div className="ml-3 font-bold text-base">
-                      {avaterUpload.name}
-                    </div>
-                  )}
-                  {!avaterUpload && (
-                    <div className="ml-3 font-bold text-base">
-                      <FormattedMessage id="Account.UpdateImg" />
-                    </div>
-                  )}
-                </label>
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        setAvaterUpload(file);
+                      }}
+                    />
+                    {avaterUpload && (
+                      <div className="ml-3 font-bold text-base">
+                        {avaterUpload.name}
+                      </div>
+                    )}
+                    {!avaterUpload && (
+                      <div className="ml-3 font-bold text-base">
+                        <FormattedMessage id="Account.UpdateImg" />
+                      </div>
+                    )}
+                  </label>
+                </div>
+                <button
+                  onClick={handleUpdateAvatar}
+                  className="text-white place-items-center h-10 w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
+                >
+                  <FormattedMessage id="Account.Confirm" />
+                </button>
               </div>
+            </div>
+          </div>
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            contentLabel="Example Modal"
+            className={`fixed top-0 left-0 right-0 bg-black bottom-0 flex items-center justify-center bg-opacity-60 z-50 text-[#545e7b] rounded-md`}
+          >
+            <div className={`relative  h-168 rounded-xl p-4 overflow-y-auto`}>
               <button
-                onClick={handleUpdateAvatar}
-                className="text-white place-items-center h-full w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
+                onClick={closeModal}
+                className="absolute right-2 top-2 text-red-400 hover:text-red-600 rounded-sm font-bold text-lg bg-white hover:bg-gray-100 p-1 w-8 h-8 flex place-content-center place-items-center z"
               >
-                <FormattedMessage id="Account.Confirm" />
+                X
               </button>
+              <img src={avatar} alt="Avatar" className="h-full rounded-sm" />
             </div>
-          </div>
-        </div>
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          contentLabel="Example Modal"
-          className={`fixed top-0 left-0 right-0 bg-black bottom-0 flex items-center justify-center bg-opacity-60 z-50 text-[#545e7b] rounded-md`}
-        >
-          <div className={`relative  h-168 rounded-xl p-4 overflow-y-auto`}>
-            <button
-              onClick={closeModal}
-              className="absolute right-2 top-2 text-red-400 hover:text-red-600 rounded-sm font-bold text-lg bg-white hover:bg-gray-100 p-1 w-8 h-8 flex place-content-center place-items-center z"
-            >
-              X
-            </button>
-            <img src={avatar} alt="Avatar" className="h-full rounded-sm" />
-          </div>
-        </Modal>
-        {NotiIsOpen && <NotiPopup onClose={closeNoti} message={message} />}
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mt-3">
-          <div className="flex flex-col text-xs font-base gap-3 ">
-            <div>
-              <div className="text-base font-light">
-                <FormattedMessage id="Account.fullname" /> :
-              </div>
-            </div>
-            {!isEditInfo ? (
-              <input
-                type="text"
-                className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md   border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 "
-                placeholder={intl.formatMessage({
-                  id: "Account.inputfullname",
-                })}
-                value={Update.fullname}
-                onChange={(e) => handleInputChange("fullname", e.target.value)}
-              />
-            ) : (
-              <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md  border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
-                {Update.fullname}{" "}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col text-xs font-base gap-3">
-            <div>
-              <div className="text-base font-light">
-                <FormattedMessage id="Account.phonenumber" /> :
-              </div>
-            </div>
-            {!isEditInfo ? (
-              <input
-                type="text"
-                className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
-                placeholder={intl.formatMessage({
-                  id: "Account.inputphonenumber",
-                })}
-                value={Update.phone_number}
-                onChange={(e) =>
-                  handleInputChange("phone_number", e.target.value)
-                }
-              />
-            ) : (
-              <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
-                {Update.phone_number}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col text-xs font-base gap-3 ">
-            <div>
-              <div className="text-base font-light">
-                <FormattedMessage id="Account.CCCD" /> :
-              </div>
-            </div>
-            {!isEditInfo ? (
+          </Modal>
+          {NotiIsOpen && <NotiPopup onClose={closeNoti} message={message} />}
+          <div className="sm:col-span-3 grid sm:grid-cols-2 grid-cols-1 gap-3 mt-3">
+            <div className="flex flex-col text-xs font-base gap-3 ">
               <div>
+                <div className="text-base font-light">
+                  <FormattedMessage id="Account.fullname" /> :
+                </div>
+              </div>
+              {!isEditInfo ? (
+                <input
+                  type="text"
+                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md   border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 "
+                  placeholder={intl.formatMessage({
+                    id: "Account.inputfullname",
+                  })}
+                  value={Update.fullname}
+                  onChange={(e) =>
+                    handleInputChange("fullname", e.target.value)
+                  }
+                />
+              ) : (
+                <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md  border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+                  {Update.fullname}{" "}
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col text-xs font-base gap-3">
+              <div>
+                <div className="text-base font-light">
+                  <FormattedMessage id="Account.phonenumber" /> :
+                </div>
+              </div>
+              {!isEditInfo ? (
                 <input
                   type="text"
                   className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
-                  placeholder={intl.formatMessage({ id: "Account.inputCCCD" })}
-                  value={staffInfo.cccd}
-                  onChange={(e) => handleInputChange("cccd", e.target.value)}
+                  placeholder={intl.formatMessage({
+                    id: "Account.inputphonenumber",
+                  })}
+                  value={Update.phone_number}
+                  onChange={(e) =>
+                    handleInputChange("phone_number", e.target.value)
+                  }
                 />
+              ) : (
+                <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+                  {Update.phone_number}
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col text-xs font-base gap-3 ">
+              <div>
+                <div className="text-base font-light">
+                  <FormattedMessage id="Account.CCCD" /> :
+                </div>
               </div>
-            ) : (
-              <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 ">
-                {staffInfo.cccd}
-              </div>
-            )}
-          </div>
+              {!isEditInfo ? (
+                <div>
+                  <input
+                    type="text"
+                    className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
+                    placeholder={intl.formatMessage({
+                      id: "Account.inputCCCD",
+                    })}
+                    value={staffInfo.cccd}
+                    onChange={(e) => handleInputChange("cccd", e.target.value)}
+                  />
+                </div>
+              ) : (
+                <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 ">
+                  {staffInfo.cccd}
+                </div>
+              )}
+            </div>
 
-          <div className="flex flex-col text-xs font-base gap-3">
-            <div>
-              <div className="text-base font-light">
-                <FormattedMessage id="Account.position" /> :
+            <div className="flex flex-col text-xs font-base gap-3">
+              <div>
+                <div className="text-base font-light">
+                  <FormattedMessage id="Account.position" /> :
+                </div>
               </div>
-            </div>
-            <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
-              {Update.role}
-            </div>
-          </div>
-          <div className="flex flex-col text-xs font-base gap-3">
-            <div>
-              <div className="text-base font-light">Email :</div>
-            </div>
-            {!isEditInfo ? (
-              <input
-                type="text"
-                className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
-                placeholder={intl.formatMessage({ id: "Account.inputEmail" })}
-                value={Update.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-              />
-            ) : (
               <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
-                {Update.email}
+                {Update.role}
               </div>
-            )}
-          </div>
-          <div className="flex flex-col text-xs font-base gap-3">
-            <div>
-              <div className="text-base font-light">
-                <FormattedMessage id="Account.dateofbirth" /> :
+            </div>
+            <div className="flex flex-col text-xs font-base gap-3">
+              <div>
+                <div className="text-base font-light">Email :</div>
+              </div>
+              {!isEditInfo ? (
+                <input
+                  type="text"
+                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
+                  placeholder={intl.formatMessage({ id: "Account.inputEmail" })}
+                  value={Update.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                />
+              ) : (
+                <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+                  {Update.email}
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col text-xs font-base gap-3">
+              <div>
+                <div className="text-base font-light">
+                  <FormattedMessage id="Account.dateofbirth" /> :
+                </div>
+              </div>
+
+              <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+                {new Date(Update.date_of_birth).toLocaleDateString("vi-VN")}
               </div>
             </div>
 
-            <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
-              {new Date(Update.date_of_birth).toLocaleDateString("vi-VN")}
-            </div>
-          </div>
-
-          {/* <div className="flex flex-col text-xs font-base gap-3">
+            {/* <div className="flex flex-col text-xs font-base gap-3">
             <div>
               <div className="text-base font-light">Giới tính :</div>
             </div>
@@ -508,87 +513,88 @@ const AccountSetting = (info) => {
               </div>
             )}
           </div> */}
-        </div>
-        <div className="flex flex-row text-xs font-base h-10 mt-5 mb-3">
-          <div className="text-base font-light w-20">
-            <FormattedMessage id="Account.address" />:
-          </div>
+            <div className="flex flex-row text-xs font-base h-10 mt-5 mb-3 col-span-2">
+              <div className="text-base font-light w-20">
+                <FormattedMessage id="Account.address" />:
+              </div>
 
-          {!isEditInfo ? (
-            <div className="md:flex md:flex-row grid grid-cols-2 gap-3 w-full">
-              <select
-                className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
+              {!isEditInfo ? (
+                <div className="md:flex md:flex-row grid grid-cols-2 gap-3 w-full">
+                  <select
+                    className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
                 `}
-                id="city"
-                aria-label=".form-select-sm"
-                value={selectedProvince}
-                onChange={handleProvinceChange}
-              >
-                <option value="Bình Định">
-                  {intl.formatMessage({ id: "Choose Province" })}
-                </option>
-                {provinces.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
-              <select
-                className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
+                    id="city"
+                    aria-label=".form-select-sm"
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
+                  >
+                    <option value="Bình Định">
+                      {intl.formatMessage({ id: "Choose Province" })}
+                    </option>
+                    {provinces.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
                 
                 `}
-                id="user_district"
-                aria-label=".form-select-sm"
-                value={selectedDistrict}
-                onChange={handleDistrictChange}
-              >
-                <option value="Hoài Ân">
-                  {intl.formatMessage({ id: "Choose District" })}
-                </option>
-                {districts.map((user_district) => (
-                  <option key={user_district} value={user_district}>
-                    {user_district}
-                  </option>
-                ))}
-              </select>
-              <select
-                className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
+                    id="user_district"
+                    aria-label=".form-select-sm"
+                    value={selectedDistrict}
+                    onChange={handleDistrictChange}
+                  >
+                    <option value="Hoài Ân">
+                      {intl.formatMessage({ id: "Choose District" })}
+                    </option>
+                    {districts.map((user_district) => (
+                      <option key={user_district} value={user_district}>
+                        {user_district}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
                 `}
-                id="ward"
-                aria-label=".form-select-sm"
-                value={selectedWard}
-                onChange={(e) => handleWardChange(e)}
-              >
-                <option value="Tăng Bạt Hổ">
-                  {intl.formatMessage({ id: "Choose Ward" })}
-                </option>
-                {wards.map((ward) => (
-                  <option key={ward} value={ward}>
-                    {ward}
-                  </option>
-                ))}
-              </select>
+                    id="ward"
+                    aria-label=".form-select-sm"
+                    value={selectedWard}
+                    onChange={(e) => handleWardChange(e)}
+                  >
+                    <option value="Tăng Bạt Hổ">
+                      {intl.formatMessage({ id: "Choose Ward" })}
+                    </option>
+                    {wards.map((ward) => (
+                      <option key={ward} value={ward}>
+                        {ward}
+                      </option>
+                    ))}
+                  </select>
 
-              <input
-                type=""
-                className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
+                  <input
+                    type=""
+                    className={` text-xs md:text-base  border border-gray-600 rounded  dark:bg-[#14141a] h-7  w-full
                 `}
-                placeholder={intl.formatMessage({
-                  id: "Account.detailaddress",
-                })}
-                onChange={(e) =>
-                  handleInputChange("user_detail_address", e.target.value)
-                }
-              />
+                    placeholder={intl.formatMessage({
+                      id: "Account.detailaddress",
+                    })}
+                    onChange={(e) =>
+                      handleInputChange("user_detail_address", e.target.value)
+                    }
+                  />
+                </div>
+              ) : (
+                <div className="text-base font-base w-full ">
+                  {Update.detail_address}
+                  {Update.town}
+                  {Update.district}
+                  {Update.province}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="text-base font-base w-full ">
-              {Update.detail_address}
-              {Update.town}
-              {Update.district}
-              {Update.province}
-            </div>
-          )}
+          </div>
         </div>
         {!isEditInfo ? (
           <div className="flex place-content-center mt-4 ">
