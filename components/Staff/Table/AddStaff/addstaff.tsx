@@ -8,6 +8,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import PasswordToggle from "./PasswordToggle";
 import axios from "axios";
 import { AdministrativeOperation, CreatingStaffByAdminInfo, CreatingStaffByAgencyInfo, StaffsOperation } from "@/TDLib/tdlogistics";
+import Select from "react-select";
+import { useTheme } from "next-themes";
 interface AddStaffProps {
   onClose: () => void;
   info: any;
@@ -29,12 +31,12 @@ interface Ward {
   Id: string;
   Name: string;
 }
-const validValue= ["ADMIN", "MANAGER", "HUMAN_RESOURCE_MANAGER"]
+const validValue = ["ADMIN", "MANAGER", "HUMAN_RESOURCE_MANAGER"]
 const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   const role = info.role
   const [city, setCity] = useState([])
   const [district, setDistrict] = useState([])
-  const [town, setWard] =useState([])
+  const [town, setWard] = useState([])
 
   const isAdmin = validValue.includes(role)
   const openModal = (type) => {
@@ -51,6 +53,14 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [type, setType] = useState();
   const intl = useIntl();
+  const adminOperation = new AdministrativeOperation();
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
+  const [selectedProvince, setSelectedProvince] = useState({ value: "" });
+  const [selectedDistrict, setSelectedDistrict] = useState({ value: "" });
+  const [selectedWard, setSelectedWard] = useState({ value: "" });
   const [Staffdata, setStaffdata] = useState<CreatingStaffByAdminInfo>({
     agency_id: "",
     fullname: "",
@@ -62,13 +72,51 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
     phone_number: "",
     role: "",
     position: "",
-    salary: 0, 
+    salary: 0,
     paid_salary: 0,
     province: "",
     district: "",
     town: "",
     detail_address: "",
   });
+  const { systemTheme, theme, setTheme } = useTheme();
+
+  const sortData = (data: any) => {
+    const cities = data.filter((item) => item.startsWith("Thành phố"));
+    const provinces = data.filter((item) => !item.startsWith("Thành phố"));
+    return cities.concat(provinces);
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await adminOperation.get({});
+      // console.log("Data City", response.data);
+      const data = sortData(response.data);
+      // console.log("Data City", data);
+      setProvinces(data);
+    };
+    fetchData();
+  }, []);
+
+  const handleProvinceChange = async (selectedOption) => {
+    setSelectedProvince(selectedOption);
+    const a = { province: selectedOption.value };
+    const response = await adminOperation.get(a);
+    setSelectedDistrict({ value: "" })
+    setSelectedWard({ value: "" })
+    setDistricts(response.data);
+  };
+
+  const handleDistrictChange = async (selectedOption) => {
+    setSelectedDistrict(selectedOption);
+    const a = { province: selectedProvince.value, district: selectedOption.value }
+    const response = await adminOperation.get(a);
+    setSelectedWard({ value: "" })
+    setWards(response.data);
+  };
+  const handleWardChange = (selectedOption) => {
+    setSelectedWard(selectedOption);
+  };
+
   const fetch_city_ward_district = new AdministrativeOperation()
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -117,9 +165,8 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   }, []);
   useEffect(() => {
     const fetchDistrict = async () => {
-      if (Staffdata.province !== "")
-      {
-        const get = await fetch_city_ward_district.get({province: Staffdata.province})
+      if (Staffdata.province !== "") {
+        const get = await fetch_city_ward_district.get({ province: Staffdata.province })
         setDistrict(get.data)
       }
     };
@@ -127,9 +174,8 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   }, [Staffdata.province]);
   useEffect(() => {
     const fetchWard = async () => {
-    if (Staffdata.district)
-      {
-        const get = await fetch_city_ward_district.get({province: Staffdata.province, district: Staffdata.district})
+      if (Staffdata.district) {
+        const get = await fetch_city_ward_district.get({ province: Staffdata.province, district: Staffdata.district })
         setWard(get.data)
       }
     };
@@ -215,7 +261,10 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
     district: false,
     town: false,
     detail_address: false,
-    paid_salary: false
+    paid_salary: false,
+    province2: false,
+    district2: false,
+    town2: false,
   });
   const handleCheckMissing = (key: string, value: boolean) => {
     setCheckmissing((prevState) => ({
@@ -225,16 +274,18 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
   };
   const [error, setError] = useState("");
   const handleSubmit = () => {
-    const staff =new StaffsOperation()
+    const staff = new StaffsOperation()
+    if ((Staffdata.role == "SHIPPER" || Staffdata.role == "AGENCY_SHIPPER") && !selectedWard.value) return;
+    let dataSubmit = (Staffdata.role == "SHIPPER" || Staffdata.role == "AGENCY_SHIPPER") ? { ...Staffdata, managed_wards: [selectedWard.value] } : Staffdata
     if (isAdmin)
-    staff.createByAgency(Staffdata)
+      staff.createByAgency(dataSubmit)
     else {
-    staff.createByAdmin(Staffdata)
+      staff.createByAdmin(dataSubmit)
     }
   };
 
   return (
-    
+
     <motion.div
       className={`fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-60 z-50 `}
       initial={{ opacity: 0 }}
@@ -246,9 +297,8 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
     >
       <motion.div
         ref={notificationRef}
-        className={`relative w-[98%] sm:w-9/12 lg:w-1/2 bg-[#14141a] rounded-xl p-4 overflow-y-auto ${
-          isShaking ? "animate-shake" : ""
-        }`}
+        className={`relative w-[98%] sm:w-9/12 lg:w-1/2 bg-[#14141a] rounded-xl p-4 overflow-y-auto ${isShaking ? "animate-shake" : ""
+          }`}
         initial={{ scale: 0 }}
         animate={{ scale: isVisible ? 1 : 0 }}
         exit={{ scale: 0 }}
@@ -328,7 +378,7 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   id="city"
                   aria-label=".form-select-sm"
                   value={Staffdata.province}
-                  onChange={e =>  setStaffdata({ ...Staffdata, province: e.target.value })}
+                  onChange={e => setStaffdata({ ...Staffdata, province: e.target.value })}
                 >
                   <option value="">
                     <FormattedMessage id="Staff.PersonalDetail.SelectProvince" />
@@ -346,15 +396,15 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   id="district"
                   aria-label=".form-select-sm"
                   value={Staffdata.district}
-                  onChange={e =>  setStaffdata({ ...Staffdata, district: e.target.value })}
+                  onChange={e => setStaffdata({ ...Staffdata, district: e.target.value })}
                 >
                   <option value="">
                     <FormattedMessage id="Staff.PersonalDetail.SelectDistrict" />
                   </option>
                   {district.map((district) => (
-                            <option key={district} value={district}>
-                              {district}
-                            </option>
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
                   ))}
                 </select>
                 <select
@@ -362,7 +412,7 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   ${checkmissing.town ? "border-red-500" : ""}`}
                   id="ward"
                   aria-label=".form-select-sm"
-                  onChange={e =>  setStaffdata({ ...Staffdata, town: e.target.value })}
+                  onChange={e => setStaffdata({ ...Staffdata, town: e.target.value })}
                 >
                   <option value="">
                     <FormattedMessage id="Staff.PersonalDetail.SelectWard" />
@@ -470,6 +520,7 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                     options={roleSelect()}
                     selectedOption={Staffdata.role}
                     onSelectOption={(option) => handleInputChange("role", option)}
+                    classname="w-full h-full"
                   />
                 </div>
                 <input
@@ -487,7 +538,7 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   ${checkmissing.position ? "border-red-500" : ""}`}
                   placeholder={"Mã bưu cục"}
                   onChange={(e) => handleInputChange("agency_id", e.target.value)}
-                  /> : <></>}
+                /> : <></>}
                 <input
                   type="number"
                   className={`text-xs md:text-sm border border-gray-600 rounded  bg-[#14141a] h-10 p-2 w-full
@@ -495,9 +546,225 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   placeholder={"test"}
                   onChange={(e) => handleInputChange("salary", parseInt(e.target.value))}
                 />
-                
+
               </div>
+
+
             </div>
+            {(Staffdata.role == "SHIPPER" || Staffdata.role == "AGENCY_SHIPPER") && <div className="w-[98%] sm:w-10/12 mt-5 mb-10">
+              <h1 className="font-semibold pb-2 text-center">
+                Chọn khu vực đảm nhận
+              </h1>
+              <div className="flex gap-3">
+                <Select
+                  id="city"
+                  placeholder={intl.formatMessage({
+                    id: "OrderForm.LocationForm.SelectProvince",
+                  })}
+                  aria-label=".form-select-sm"
+                  className={`text-xs md:text-sm text-black border border-gray-300 rounded-md focus:outline-none w-full  text-center`}
+                  value={selectedProvince}
+                  onChange={handleProvinceChange}
+                  options={provinces?.map((city) => ({ value: city, label: city }))}
+                  isSearchable
+                  styles={{
+                    control: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      border: "none",
+                      boxShadow: state.isFocused ? "none" : provided.boxShadow,
+                      "&:hover": {
+                        border: "none",
+                      },
+                      color: "#4a5568",
+                    }),
+                    placeholder: (provided) => ({
+                      ...provided,
+                      color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                      fontSize: "0.875rem",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                    input: (provided) => ({
+                      ...provided,
+                      color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                    clearIndicator: (provided) => ({
+                      ...provided,
+                      color: theme === "dark" ? "#D1D5DB" : "#374151",
+                    }),
+                    singleValue: (provided) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      color: theme === "dark" ? "#D1D5DB" : "#374151",
+                      marginTop: "2px"
+                    }),
+                    menu: (provided) => ({
+                      ...provided,
+                      backgroundColor: theme === "dark" ? "#0B1437" : "#FFFFFF",
+                    }),
+                    menuList: (provided) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      color: theme === "dark" ? "#ffffff" : "#374151",
+                      marginTop: "2px",
+                    }),
+                    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                      return {
+                        ...styles,
+                        backgroundColor: isFocused ? (theme === "dark" ? '#707EAE' : "#d1d5db") : "transparent",
+                      }
+                    },
+                    container: (provided, state) => ({
+                      ...provided,
+                      color: "#4a5568",
+                    }),
+                  }}
+                />
+                <Select
+                  id="district"
+                  placeholder={intl.formatMessage({
+                    id: "OrderForm.LocationForm.SelectDistrict",
+                  })}
+                  aria-label=".form-select-sm"
+                  className={`text-xs md:text-sm text-black border border-gray-300 rounded-md focus:outline-none w-full  text-center`}
+                  value={selectedDistrict}
+                  onChange={handleDistrictChange}
+                  options={districts?.map((district) => ({
+                    value: district,
+                    label: district,
+                  }))}
+                  isSearchable
+                  styles={{
+                    control: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      border: "none",
+                      boxShadow: state.isFocused ? "none" : provided.boxShadow,
+                      "&:hover": {
+                        border: "none",
+                      },
+                      color: "#4a5568",
+                    }),
+                    placeholder: (provided) => ({
+                      ...provided,
+                      color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                      fontSize: "0.875rem",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                    input: (provided) => ({
+                      ...provided,
+                      color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                    clearIndicator: (provided) => ({
+                      ...provided,
+                      color: theme === "dark" ? "#D1D5DB" : "#374151",
+                    }),
+                    singleValue: (provided) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      color: theme === "dark" ? "#D1D5DB" : "#374151",
+                      marginTop: "2px"
+                    }),
+                    menu: (provided) => ({
+                      ...provided,
+                      backgroundColor: theme === "dark" ? "#0B1437" : "#FFFFFF",
+                    }),
+                    menuList: (provided) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      color: theme === "dark" ? "#ffffff" : "#374151",
+                      marginTop: "2px",
+                    }),
+                    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                      return {
+                        ...styles,
+                        backgroundColor: isFocused ? (theme === "dark" ? '#707EAE' : "#d1d5db") : "transparent",
+                      }
+                    },
+                    container: (provided, state) => ({
+                      ...provided,
+                      color: "#4a5568",
+                    }),
+                  }}
+                />
+                <Select
+                  id="ward"
+                  placeholder={intl.formatMessage({
+                    id: "OrderForm.LocationForm.SelectWard",
+                  })}
+                  aria-label=".form-select-sm"
+                  className={`text-xs md:text-sm text-black border border-gray-300 rounded-md focus:outline-none w-full  text-center `}
+                  value={selectedWard}
+                  onChange={handleWardChange}
+                  options={wards?.map((ward) => ({ value: ward, label: ward }))}
+                  isSearchable
+                  styles={{
+                    control: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      border: "none",
+                      boxShadow: state.isFocused ? "none" : provided.boxShadow,
+                      "&:hover": {
+                        border: "none",
+                      },
+                      color: "#4a5568",
+                    }),
+                    placeholder: (provided) => ({
+                      ...provided,
+                      color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                      fontSize: "0.875rem",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                    input: (provided) => ({
+                      ...provided,
+                      color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }),
+                    clearIndicator: (provided) => ({
+                      ...provided,
+                      color: theme === "dark" ? "#D1D5DB" : "#374151",
+                    }),
+                    singleValue: (provided) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      color: theme === "dark" ? "#D1D5DB" : "#374151",
+                      marginTop: "2px"
+                    }),
+                    menu: (provided) => ({
+                      ...provided,
+                      backgroundColor: theme === "dark" ? "#0B1437" : "#FFFFFF",
+                    }),
+                    menuList: (provided) => ({
+                      ...provided,
+                      backgroundColor: "transparent",
+                      color: theme === "dark" ? "#ffffff" : "#374151",
+                      marginTop: "2px",
+                    }),
+                    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                      return {
+                        ...styles,
+                        backgroundColor: isFocused ? (theme === "dark" ? '#707EAE' : "#d1d5db") : "transparent",
+                      }
+                    },
+                    container: (provided, state) => ({
+                      ...provided,
+                      color: "#4a5568",
+                    }),
+                  }}
+                />
+              </div>
+            </div>}
           </div>
           <Button
             className="w-full rounded-lg mt-5 mb-1 py-3 border-green-700 hover:bg-green-700 text-green-500

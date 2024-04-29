@@ -6,7 +6,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 import { ShipmentsOperation } from "@/TDLib/tdlogistics";
 import SubmitPopup from "@/components/Common/SubmitPopup";
-import NotiPopup  from "@/components/Common/NotiPopup";
+import NotiPopup from "@/components/Common/NotiPopup";
 
 interface AddNotificationProps {
   onClose: () => void;
@@ -25,7 +25,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
   const [openError, setOpenError] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [message, setMessage] = useState("")
-
+  const [openPrint, setOpenPrint] = useState(false);
   const handleClose = () => {
     setIsVisible(false);
   };
@@ -132,7 +132,7 @@ const AddNotification: React.FC<AddNotificationProps> = ({ onClose, reloadData }
                   className={`h-10 rounded-lg mt-2 mb-1 p-3 w-36 border-green-700 hover:bg-green-700 text-green-500
                   bg-transparent drop-shadow-md hover:drop-shadow-xl hover:text-white border 
                   hover:shadow-md`}
-                  onClick={() => { }}
+                // onClick={() => { setOpenPrint(true) }}
                 >
                   <IoIosBarcode className="hidden sm:block mr-2 h-5 w-5" />
                   <span className="block"><FormattedMessage id="Consignment.Add.Add2" /></span>

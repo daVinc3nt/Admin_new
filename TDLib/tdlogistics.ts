@@ -227,6 +227,10 @@ export interface UpdatingUserCondition {
     user_id: string,
 }
 
+export interface UpdatingUserAvatarInfo {
+    avatar: File,
+}
+
 class UsersOperation {
     private baseUrl: string;
 
@@ -294,6 +298,43 @@ class UsersOperation {
             return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
         }
     }
+
+    async updateAvatar(info: UpdatingUserAvatarInfo) {
+		try {       
+			// Tạo FormData object và thêm hình ảnh vào đó
+			const formData = new FormData();
+			formData.append('avatar', info.avatar);
+	
+			// Gửi yêu cầu PUT để tải lên hình ảnh
+			const response: AxiosResponse = await axios.put(`${this.baseUrl}/update_avatar`, formData , {
+				withCredentials: true,
+			});
+	
+			const data = response.data;
+            return { error: data.error, message: data.message };
+		} catch (error: any) {
+			console.error('Error uploading image:', error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null }; // Ném lỗi để xử lý bên ngoài
+		}   
+	}
+
+    async getAvatar () {
+		try {
+            const response = await axios.get(`${this.baseUrl}/get_avatar`, {
+                withCredentials: true,
+                responseType: 'arraybuffer',
+            });
+    
+            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+            const imgUrl = URL.createObjectURL(blob);
+    
+            return imgUrl;
+        } catch (error: any) {
+            console.error("Error getting avatar: ", error);
+            return error.response.data;
+        }
+	}
 }
 
 export interface CheckingExistAgencyCondition {
@@ -991,6 +1032,7 @@ export interface CreatingStaffByAgencyInfo {
     district: string,
     town: string,
     detail_address: string,
+    managed_wards?: Array<String>
 }
 
 export interface CreatingStaffByAdminInfo {
@@ -1010,6 +1052,7 @@ export interface CreatingStaffByAdminInfo {
     district: string,
     town: string,
     detail_address: string,
+    managed_wards?: Array<String>
 }
   
 export interface FindingStaffByStaffCondition {
@@ -1043,6 +1086,7 @@ export interface UpdatingStaffInfo {
     district?: string,
     town?: string,
     detail_address?: string,
+    managed_wards?: Array<String>
 }
   
 export interface UpdatingStaffCondition {
@@ -2073,6 +2117,10 @@ export interface GettingHistoryInfo {
 	option?: number,
 }
 
+export interface DeletingShipperTasksCondition {
+    id: number,
+}
+
 class ShippersOperation {
 	private baseUrl: string;
 	constructor() {
@@ -2158,6 +2206,22 @@ class ShippersOperation {
             return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
 		}
 	}
+
+    // ROLE: AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
+    async deleteTask(condition: DeletingShipperTasksCondition) {
+        try {
+			const response: AxiosResponse = await axios.post(`${this.baseUrl}/delete`, condition, {
+				withCredentials: true,
+			});
+
+			const data = response.data;
+			return { error: data.error, message: data.message };
+		} catch (error: any) {
+			console.log("Error deleting task: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+		}
+    }
 }
 
 export interface CreatingNewDriverTasksInfo {
@@ -2174,6 +2238,10 @@ export interface ConfirmingCompletedTaskCondition {
 	id: number,
 }
 
+export interface DeletingDriverTaskCondition {
+    id: number,
+}
+
 export interface GettingHistoryInfo {
 	option?: number,
 }
@@ -2185,7 +2253,7 @@ class DriversOperation {
 		this.baseUrl = "http://localhost:5000/api/v1/drivers";
 	}
 
-    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER
+    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER, AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
     async getObjectsCanHandleTask() {
         try {
             const response: AxiosResponse = await axios.get(`${this.baseUrl}/get_objects`, {
@@ -2201,7 +2269,7 @@ class DriversOperation {
         }
     }
 
-    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER 
+    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER, AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
     async createNewTasks(info: CreatingNewDriverTasksInfo) {
         try {
             const response: AxiosResponse = await axios.post(`${this.baseUrl}/create_tasks`, info, {
@@ -2217,7 +2285,7 @@ class DriversOperation {
         }
     }
 
-    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER, PARTNER_DRIVER
+    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER, AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER, PARTNER_DRIVER
 	async getTask(condition: GettingTasksCondition) {
 		try {
 			const response: AxiosResponse = await axios.post(`${this.baseUrl}/get_tasks`, condition, {
@@ -2248,6 +2316,22 @@ class DriversOperation {
             return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
 		}
 	}
+
+    // ROLE: ADMIN, MANAGER, HUMAN_RESOURCE_MANAGER, AGENCY_MANAGER, AGENCY_HUMAN_RESOURCE_MANAGER
+    async deleteTask(condition: DeletingDriverTaskCondition) {
+        try {
+			const response: AxiosResponse = await axios.post(`${this.baseUrl}/delete`, condition, {
+				withCredentials: true,
+			});
+
+			const data = response.data;
+			return { error: data.error, message: data.message };
+		} catch (error: any) {
+			console.log("Error deleting task: ", error?.response?.data);
+            console.error("Request that caused the error: ", error?.request);
+            return { error: error?.response?.data, request: error?.request, status: error.response ? error.response.status : null };
+		}
+    }
 }
 
 //Shipment Operation
@@ -2495,6 +2579,7 @@ export interface CheckingExistOrderCondition {
 }
 
 export interface GettingOrdersConditions {
+    order_id: string,
     name_receiver?: string,
     phone_receiver?: string,
     province_source?: string,

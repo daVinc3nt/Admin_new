@@ -12,6 +12,7 @@ interface CustomDropdownProps {
   options: string[];
   selectedOption: string;
   onSelectOption: (option: string) => void;
+  classname?: string
 }
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({
@@ -19,11 +20,12 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
   options,
   selectedOption,
   onSelectOption,
+  classname
 }) => {
   return (
     <Dropdown className="z-30">
       <DropdownTrigger>
-        <Button aria-label={label}>{selectedOption || label}</Button>
+        <Button className={`${classname}`} aria-label={label}>{selectedOption || label}</Button>
       </DropdownTrigger>
       <DropdownMenu
         className="bg-[#1a1b23] border border-gray-300 no-scrollbar rounded w-full max-h-80 overflow-y-auto"
