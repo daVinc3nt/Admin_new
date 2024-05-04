@@ -36,7 +36,7 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
   const intl = useIntl();
 
   const handleWardChange = (selectedOption) => {
-    setSelectedWard(selectedOption);
+    if (isEditing) setSelectedWard(selectedOption);
   };
   const handleUpdateData = (e, key: string, input: string = "string") => {
     if (input == "number")
@@ -95,27 +95,26 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
   const handleSaveClick = async () => {
     // Gửi API về server để cập nhật dữ liệu
     // Sau khi hoàn thành, có thể tắt chế độ chỉnh sửa
-    await setupdateData({
+    let updateData2 = {
       fullname: data.fullname,
       username: data.username,
-      date_of_birth: data.date_of_birth,
       email: data.email,
       phone_number: data.phone_number,
       role: data.role,
       salary: data.salary,
-      paid_salary: data.paid_salary,
+      paid_salary: data.paid_salary.toString(),
       province: data.province,
       district: data.district,
       town: data.town,
       detail_address: data.detail_address,
-    })
-    console.log(updateData.role)
+    }
     const condition: UpdatingStaffCondition = {
       staff_id: dataInitial.staff_id,
     };
-    if (updateData.role == "SHIPPER" || updateData.role == "AGENCY_SHIPPER") {
+    if (data.role == "SHIPPER" || data.role == "AGENCY_SHIPPER") {
       const staff = new StaffsOperation();
-      const response = await staff.update({ ...updateData, managed_wards: selectedWard.map(option => option.value) }, condition);
+      const response = await staff.update({ ...updateData2, managed_wards: selectedWard.map(option => option.value) }, condition);
+      console.log({ ...updateData2, managed_wards: selectedWard.map(option => option.value) })
       console.log(response)
     }
     else {
@@ -406,9 +405,7 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                       <div className="flex gap-3">
                         <Select
                           id="ward"
-                          placeholder={intl.formatMessage({
-                            id: "OrderForm.LocationForm.SelectWard",
-                          })}
+                          placeholder={"Chọn khu vực đảm nhận."}
                           isMulti={true}
                           aria-label=".form-select-sm"
                           className={`text-xs md:text-sm text-black border border-gray-600 rounded-md focus:outline-none w-full  text-center `}
@@ -419,6 +416,7 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                             label: ward,
                           }))}
                           isSearchable
+                          isClearable={isEditing ? true : false}
                           styles={{
                             control: (provided, state) => ({
                               ...provided,
