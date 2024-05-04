@@ -36,7 +36,8 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
   const intl = useIntl();
 
   const handleWardChange = (selectedOption) => {
-    if (isEditing) setSelectedWard(selectedOption);
+    setIsEditing(true)
+    setSelectedWard(selectedOption);
   };
   const handleUpdateData = (e, key: string, input: string = "string") => {
     if (input == "number")
@@ -416,7 +417,6 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                             label: ward,
                           }))}
                           isSearchable
-                          isClearable={isEditing ? true : false}
                           styles={{
                             control: (provided, state) => ({
                               ...provided,
