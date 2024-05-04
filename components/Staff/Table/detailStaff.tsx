@@ -7,6 +7,7 @@ import { User, Pencil } from "lucide-react";
 import { FormattedMessage, useIntl } from "react-intl";
 import {
   AdministrativeOperation,
+  AgencyOperation,
   StaffsOperation,
   UpdatingStaffCondition,
   UpdatingStaffInfo,
@@ -27,50 +28,13 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
   const [data, setData] = useState(dataInitial);
   const [updateData, setupdateData] = useState<any>({});
   const adminOperation = new AdministrativeOperation();
-  const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
+  const staffsOperation = new StaffsOperation();
+  const agencyOperation = new AgencyOperation();
   const [wards, setWards] = useState([]);
-
-  const [selectedProvince, setSelectedProvince] = useState({ value: "" });
-  const [selectedDistrict, setSelectedDistrict] = useState({ value: "" });
-  const [selectedWard, setSelectedWard] = useState({ value: "" });
+  const [selectedWard, setSelectedWard] = useState([]);
   const { systemTheme, theme, setTheme } = useTheme();
   const intl = useIntl();
-  const sortData = (data: any) => {
-    const cities = data.filter((item) => item.startsWith("Thành phố"));
-    const provinces = data.filter((item) => !item.startsWith("Thành phố"));
-    return cities.concat(provinces);
-  };
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await adminOperation.get({});
-      // console.log("Data City", response.data);
-      const data = sortData(response.data);
-      // console.log("Data City", data);
-      setProvinces(data);
-    };
-    fetchData();
-  }, []);
 
-  const handleProvinceChange = async (selectedOption) => {
-    setSelectedProvince(selectedOption);
-    const a = { province: selectedOption.value };
-    const response = await adminOperation.get(a);
-    setSelectedDistrict({ value: "" });
-    setSelectedWard({ value: "" });
-    setDistricts(response.data);
-  };
-
-  const handleDistrictChange = async (selectedOption) => {
-    setSelectedDistrict(selectedOption);
-    const a = {
-      province: selectedProvince.value,
-      district: selectedOption.value,
-    };
-    const response = await adminOperation.get(a);
-    setSelectedWard({ value: "" });
-    setWards(response.data);
-  };
   const handleWardChange = (selectedOption) => {
     setSelectedWard(selectedOption);
   };
@@ -100,6 +64,21 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
     };
   }, [onClose]);
 
+  useEffect(() => {
+    const fetch = async () => {
+      const response2 = await agencyOperation.findManagedWards({ agency_id: dataInitial.agency_id })
+      if (!response2.error) setWards(response2.data)
+      if (dataInitial.staff_id) {
+        const response = await staffsOperation.getShipperManagedWard({ staff_id: dataInitial.staff_id })
+        if (!response.error) setSelectedWard(response.data?.map((ward) => ({
+          value: ward,
+          label: ward,
+        })))
+      }
+    }
+    fetch()
+  }, []);
+
   const handleClose = () => {
     setIsVisible(false);
   };
@@ -113,26 +92,38 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
   const handleEditClick = () => {
     setIsEditing(true);
   };
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     // Gửi API về server để cập nhật dữ liệu
     // Sau khi hoàn thành, có thể tắt chế độ chỉnh sửa
-    const x = "staff_id";
-    console.log("click", updateData);
-    console.log(dataInitial);
+    await setupdateData({
+      fullname: data.fullname,
+      username: data.username,
+      date_of_birth: data.date_of_birth,
+      email: data.email,
+      phone_number: data.phone_number,
+      role: data.role,
+      salary: data.salary,
+      paid_salary: data.paid_salary,
+      province: data.province,
+      district: data.district,
+      town: data.town,
+      detail_address: data.detail_address,
+    })
+    console.log(updateData.role)
     const condition: UpdatingStaffCondition = {
       staff_id: dataInitial.staff_id,
     };
-    if (
-      (updateData.role == "SHIPPER" || updateData.role == "AGENCY_SHIPPER") &&
-      !selectedWard.value
-    )
-      return;
-    let dataSubmit =
-      updateData.role == "SHIPPER" || updateData.role == "AGENCY_SHIPPER"
-        ? { ...updateData, managed_wards: [selectedWard.value] }
-        : updateData;
-    const staff = new StaffsOperation();
-    staff.update(updateData, condition);
+    if (updateData.role == "SHIPPER" || updateData.role == "AGENCY_SHIPPER") {
+      const staff = new StaffsOperation();
+      const response = await staff.update({ ...updateData, managed_wards: selectedWard.map(option => option.value) }, condition);
+      console.log(response)
+    }
+    else {
+      const staff = new StaffsOperation();
+      const response = await staff.update(updateData, condition);
+      console.log(response)
+    }
+
     setIsEditing(false);
   };
 
@@ -397,7 +388,7 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                     <div>{data.salary} vnđ</div>
                   )}
                 </div>
-                {data?.role == "SHIPPER" && !isEditing && (
+                {(data.role == "SHIPPER" || data.role == "AGENCY_SHIPPER") && !isEditing && (
                   <div className="flex">
                     <div className="w-1/2 font-bold text-base">
                       Khu vực đảm nhận
@@ -407,259 +398,98 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                   </div>
                 )}
                 <div className="flex">
-                  {(data.role == "SHIPPER" || data.role == "AGENCY_SHIPPER") &&
-                    isEditing && (
-                      <div className="w-[98%] mt-2 mb-10">
-                        <h1 className="font-semibold pb-2 text-center">
-                          Chọn khu vực đảm nhận
-                        </h1>
-                        <div className="flex gap-3">
-                          <Select
-                            id="city"
-                            placeholder={intl.formatMessage({
-                              id: "OrderForm.LocationForm.SelectProvince",
-                            })}
-                            aria-label=".form-select-sm"
-                            className={`text-xs md:text-sm text-black border border-gray-300 rounded-md focus:outline-none w-full  text-center`}
-                            value={selectedProvince}
-                            onChange={handleProvinceChange}
-                            options={provinces?.map((city) => ({
-                              value: city,
-                              label: city,
-                            }))}
-                            isSearchable
-                            styles={{
-                              control: (provided, state) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
+                  {(data.role == "SHIPPER" || data.role == "AGENCY_SHIPPER") && wards && (
+                    <div className="w-[98%] mt-2">
+                      <h1 className="font-semibold pb-2 text-center">
+                        Chọn khu vực đảm nhận
+                      </h1>
+                      <div className="flex gap-3">
+                        <Select
+                          id="ward"
+                          placeholder={intl.formatMessage({
+                            id: "OrderForm.LocationForm.SelectWard",
+                          })}
+                          isMulti={true}
+                          aria-label=".form-select-sm"
+                          className={`text-xs md:text-sm text-black border border-gray-600 rounded-md focus:outline-none w-full  text-center `}
+                          value={selectedWard}
+                          onChange={handleWardChange}
+                          options={wards?.map((ward) => ({
+                            value: ward,
+                            label: ward,
+                          }))}
+                          isSearchable
+                          styles={{
+                            control: (provided, state) => ({
+                              ...provided,
+                              backgroundColor: "transparent",
+                              border: "none",
+                              boxShadow: state.isFocused
+                                ? "none"
+                                : provided.boxShadow,
+                              "&:hover": {
                                 border: "none",
-                                boxShadow: state.isFocused
-                                  ? "none"
-                                  : provided.boxShadow,
-                                "&:hover": {
-                                  border: "none",
-                                },
-                                color: "#4a5568",
-                              }),
-                              placeholder: (provided) => ({
-                                ...provided,
-                                color: theme == "dark" ? "#a0aec0" : "#a0aec0",
-                                fontSize: "0.875rem",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }),
-                              input: (provided) => ({
-                                ...provided,
-                                color: theme == "dark" ? "#a0aec0" : "#a0aec0",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }),
-                              clearIndicator: (provided) => ({
-                                ...provided,
-                                color: theme === "dark" ? "#D1D5DB" : "#374151",
-                              }),
-                              singleValue: (provided) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                color: theme === "dark" ? "#D1D5DB" : "#374151",
-                                marginTop: "2px",
-                              }),
-                              menu: (provided) => ({
-                                ...provided,
-                                backgroundColor:
-                                  theme === "dark" ? "#0B1437" : "#FFFFFF",
-                              }),
-                              menuList: (provided) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                color: theme === "dark" ? "#ffffff" : "#374151",
-                                marginTop: "2px",
-                              }),
-                              option: (
-                                styles,
-                                { data, isDisabled, isFocused, isSelected }
-                              ) => {
-                                return {
-                                  ...styles,
-                                  backgroundColor: isFocused
-                                    ? theme === "dark"
-                                      ? "#707EAE"
-                                      : "#d1d5db"
-                                    : "transparent",
-                                };
                               },
-                              container: (provided, state) => ({
-                                ...provided,
-                                color: "#4a5568",
-                              }),
-                            }}
-                          />
-                          <Select
-                            id="district"
-                            placeholder={intl.formatMessage({
-                              id: "OrderForm.LocationForm.SelectDistrict",
-                            })}
-                            aria-label=".form-select-sm"
-                            className={`text-xs md:text-sm text-black border border-gray-300 rounded-md focus:outline-none w-full  text-center`}
-                            value={selectedDistrict}
-                            onChange={handleDistrictChange}
-                            options={districts?.map((district) => ({
-                              value: district,
-                              label: district,
-                            }))}
-                            isSearchable
-                            styles={{
-                              control: (provided, state) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                border: "none",
-                                boxShadow: state.isFocused
-                                  ? "none"
-                                  : provided.boxShadow,
-                                "&:hover": {
-                                  border: "none",
-                                },
-                                color: "#4a5568",
-                              }),
-                              placeholder: (provided) => ({
-                                ...provided,
-                                color: theme == "dark" ? "#a0aec0" : "#a0aec0",
-                                fontSize: "0.875rem",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }),
-                              input: (provided) => ({
-                                ...provided,
-                                color: theme == "dark" ? "#a0aec0" : "#a0aec0",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }),
-                              clearIndicator: (provided) => ({
-                                ...provided,
-                                color: theme === "dark" ? "#D1D5DB" : "#374151",
-                              }),
-                              singleValue: (provided) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                color: theme === "dark" ? "#D1D5DB" : "#374151",
-                                marginTop: "2px",
-                              }),
-                              menu: (provided) => ({
-                                ...provided,
-                                backgroundColor:
-                                  theme === "dark" ? "#0B1437" : "#FFFFFF",
-                              }),
-                              menuList: (provided) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                color: theme === "dark" ? "#ffffff" : "#374151",
-                                marginTop: "2px",
-                              }),
-                              option: (
-                                styles,
-                                { data, isDisabled, isFocused, isSelected }
-                              ) => {
-                                return {
-                                  ...styles,
-                                  backgroundColor: isFocused
-                                    ? theme === "dark"
-                                      ? "#707EAE"
-                                      : "#d1d5db"
-                                    : "transparent",
-                                };
-                              },
-                              container: (provided, state) => ({
-                                ...provided,
-                                color: "#4a5568",
-                              }),
-                            }}
-                          />
-                          <Select
-                            id="ward"
-                            placeholder={intl.formatMessage({
-                              id: "OrderForm.LocationForm.SelectWard",
-                            })}
-                            aria-label=".form-select-sm"
-                            className={`text-xs md:text-sm text-black border border-gray-300 rounded-md focus:outline-none w-full  text-center `}
-                            value={selectedWard}
-                            onChange={handleWardChange}
-                            options={wards?.map((ward) => ({
-                              value: ward,
-                              label: ward,
-                            }))}
-                            isSearchable
-                            styles={{
-                              control: (provided, state) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                border: "none",
-                                boxShadow: state.isFocused
-                                  ? "none"
-                                  : provided.boxShadow,
-                                "&:hover": {
-                                  border: "none",
-                                },
-                                color: "#4a5568",
-                              }),
-                              placeholder: (provided) => ({
-                                ...provided,
-                                color: theme == "dark" ? "#a0aec0" : "#a0aec0",
-                                fontSize: "0.875rem",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }),
-                              input: (provided) => ({
-                                ...provided,
-                                color: theme == "dark" ? "#a0aec0" : "#a0aec0",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }),
-                              clearIndicator: (provided) => ({
-                                ...provided,
-                                color: theme === "dark" ? "#D1D5DB" : "#374151",
-                              }),
-                              singleValue: (provided) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                color: theme === "dark" ? "#D1D5DB" : "#374151",
-                                marginTop: "2px",
-                              }),
-                              menu: (provided) => ({
-                                ...provided,
-                                backgroundColor:
-                                  theme === "dark" ? "#0B1437" : "#FFFFFF",
-                              }),
-                              menuList: (provided) => ({
-                                ...provided,
-                                backgroundColor: "transparent",
-                                color: theme === "dark" ? "#ffffff" : "#374151",
-                                marginTop: "2px",
-                              }),
-                              option: (
-                                styles,
-                                { data, isDisabled, isFocused, isSelected }
-                              ) => {
-                                return {
-                                  ...styles,
-                                  backgroundColor: isFocused
-                                    ? theme === "dark"
-                                      ? "#707EAE"
-                                      : "#d1d5db"
-                                    : "transparent",
-                                };
-                              },
-                              container: (provided, state) => ({
-                                ...provided,
-                                color: "#4a5568",
-                              }),
-                            }}
-                          />
-                        </div>
+                              color: "#4a5568",
+                            }),
+                            placeholder: (provided) => ({
+                              ...provided,
+                              color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                              fontSize: "0.875rem",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }),
+                            input: (provided) => ({
+                              ...provided,
+                              color: theme == "dark" ? "#a0aec0" : "#a0aec0",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }),
+                            clearIndicator: (provided) => ({
+                              ...provided,
+                              color: theme === "dark" ? "#D1D5DB" : "#374151",
+                            }),
+                            singleValue: (provided) => ({
+                              ...provided,
+                              backgroundColor: "transparent",
+                              color: theme === "dark" ? "#D1D5DB" : "#374151",
+                              marginTop: "2px",
+                            }),
+                            menu: (provided) => ({
+                              ...provided,
+                              backgroundColor:
+                                theme === "dark" ? "#0B1437" : "#FFFFFF",
+                            }),
+                            menuList: (provided) => ({
+                              ...provided,
+                              backgroundColor: "transparent",
+                              color: theme === "dark" ? "#ffffff" : "#374151",
+                              marginTop: "2px",
+                            }),
+                            option: (
+                              styles,
+                              { data, isDisabled, isFocused, isSelected }
+                            ) => {
+                              return {
+                                ...styles,
+                                backgroundColor: isFocused
+                                  ? theme === "dark"
+                                    ? "#707EAE"
+                                    : "#d1d5db"
+                                  : "transparent",
+                              };
+                            },
+                            container: (provided, state) => ({
+                              ...provided,
+                              color: "#4a5568",
+                            }),
+                          }}
+                        />
                       </div>
-                    )}
+                    </div>
+                  )}
+
                 </div>
                 {/* <div className="flex">
                   <div className="w-1/2 font-bold text-base">
