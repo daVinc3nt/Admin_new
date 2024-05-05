@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { IntlProvider, useIntl } from "react-intl";
-
+import { MdLanguage } from "react-icons/md";
 const LangSelector = () => {
   const Name2CountryCode: { [key: string]: string } = {
     "English": "en",
@@ -19,10 +19,10 @@ const LangSelector = () => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const locale: string = router.locale === "en" ? "English" : "Tiếng Việt"
-  const [display, setDisplay]= useState<string>(locale)
-  const handleOnClick= (text: string) => {
-    setDisplay(text); 
-    router.push(router.asPath, router.asPath, { locale: Name2CountryCode[text]})
+  const [display, setDisplay] = useState<string>(locale)
+  const handleOnClick = (text: string) => {
+    setDisplay(text);
+    router.push(router.asPath, router.asPath, { locale: Name2CountryCode[text] })
   }
   const langRef = useRef();
   useEffect(() => {
@@ -35,37 +35,34 @@ const LangSelector = () => {
         setOpen(false);
       }
     };
-  
+
     document.addEventListener('mousedown', handleClickOutside);
-  
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [langRef]);
   return (
-      <motion.div animate={open ? "open" : "closed"} className="relative z-10">
-        <button
-          id="langRefButton" ref={langRef} onClick={() => setOpen((pv) => !pv)}
-          className="flex items-center h-5/6 mt-[0.23rem] z-50 gap-4 px-3 rounded-lg w-20 text-indigo-50 bg-red-600 hover:bg-red-700 transition-colors relative"
-        >
-          <div id="langRefButton" className="absolute bg-transparent w-full h-full"></div>
-          <FiGlobe size={30} />
-          <motion.span variants={iconVariants}>
-            <FiChevronDown />
-          </motion.span>
-        </button>
+    <motion.div animate={open ? "open" : "closed"} className="relative z-10">
+      <button
+        id="langRefButton" ref={langRef} onClick={() => setOpen((pv) => !pv)}
+        className="flex items-center z-50 gap-4 rounded-full p-1 text-white dark:bg-red-500 dark:text-none transition-colors relative"
+      >
+        <div id="langRefButton" className="absolute bg-transparent w-full h-full"></div>
+        <MdLanguage size={25} />
+      </button>
 
-        <motion.ul
-          initial={wrapperVariants.closed}
-          variants={wrapperVariants}
-          style={{ originY: "top", translateX: "-50%" }}  
-          transition={{ duration: 0.1 }}
-          className="flex flex-col gap-2 p-1 z-50 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-full overflow-hidden"
-        >
-          <Option handle={handleOnClick} Icon={FiEdit} text="English" />
-          <Option handle={handleOnClick} Icon={FiPlusSquare} text="Tiếng Việt" />
-        </motion.ul>
-      </motion.div>
+      <motion.ul
+        initial={wrapperVariants.closed}
+        variants={wrapperVariants}
+        style={{ originY: "top", translateX: "-50%" }}
+        transition={{ duration: 0.1 }}
+        className="flex flex-col gap-2 p-1 z-50 rounded-lg w-20 bg-white shadow-xl absolute top-[120%] left-0 w-full overflow-hidden"
+      >
+        <Option handle={handleOnClick} Icon={FiEdit} text="English" />
+        <Option handle={handleOnClick} Icon={FiPlusSquare} text="Tiếng Việt" />
+      </motion.ul>
+    </motion.div>
   );
 };
 

@@ -135,228 +135,237 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
         </div>
         <div className="h-screen_3/5 border border-[#545e7b] mt-4 flex flex-col bg-white
          dark:bg-[#14141a] p-2 rounded-md text-black dark:text-white place-content-center">
-          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-5 overflow-y-scroll">
-            {/* order id và hình ảnh */}
-            <div className="flex flex-col">
-              <div className="flex flex-col gap-5 pl-4">
-                <div className="pr-10">
-                  <div className="flex flex-col gap-1 place-items-center w-full justify-center ">
-                    <Button className="flex items-center rounded-xl w-full bg-inherit p-2 border-2 border-gray-300" onClick={() => setOption(0)}>
-                      {option === 0 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
-                      <span className="pl-1 font-bold text-base">Ảnh nhận hàng</span>
-                    </Button>
-                    <Button className="flex items-center rounded-xl w-full bg-inherit p-2 border-2 border-gray-300" onClick={() => setOption(1)}>
-                      {option === 1 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
-                      <span className="pl-1 font-bold text-base">Ảnh giao hàng</span>
-                    </Button>
+          <div className="overflow-y-scroll p-2 mt-4">
+            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-5">
+              {/* order id và hình ảnh */}
+              <div className="flex flex-col">
+                <div className="flex flex-col gap-5 pl-4">
+                  <div className="pr-10">
+                    <div className="flex flex-col gap-1 place-items-center w-full justify-center ">
+                      <Button className="flex items-center rounded-xl w-full bg-inherit p-2 border-2 border-gray-300" onClick={() => setOption(0)}>
+                        {option === 0 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
+                        <span className="pl-1 font-bold text-base">Ảnh nhận hàng</span>
+                      </Button>
+                      <Button className="flex items-center rounded-xl w-full bg-inherit p-2 border-2 border-gray-300" onClick={() => setOption(1)}>
+                        {option === 1 ? <MdRadioButtonChecked /> : <MdRadioButtonUnchecked />}
+                        <span className="pl-1 font-bold text-base">Ảnh giao hàng</span>
+                      </Button>
+                    </div>
+                    <div className="relative">
+                      {option == 0 && <CarouselSlider urls={imageUrls} />}
+                      {option == 1 && <CarouselSlider urls={imageUrls2} />}
+                    </div>
                   </div>
-                  <div className="relative">
-                    {imageUrls.length && option == 0 && <CarouselSlider urls={imageUrls} />}
-                    {imageUrls2.length && option == 1 && <CarouselSlider urls={imageUrls2} />}
-                  </div>
-                </div>
 
-                <div id="order_id" className="flex gap-5">
-                  <div className="font-bold text-base">
-                    <FormattedMessage id="order.Id" />
+                  <div id="order_id" className="flex gap-5">
+                    <div className="font-bold text-base">
+                      <FormattedMessage id="order.Id" />
+                    </div>
+                    <div>{data.order_id}</div>
                   </div>
-                  <div>{data.order_id}</div>
-                </div>
 
-                <div id="service_type" className="flex gap-5">
-                  <div className="font-bold text-base">
-                    <FormattedMessage id="order.type" />
+                  <div id="service_type" className="flex gap-5">
+                    <div className="font-bold text-base">
+                      <FormattedMessage id="order.type" />
+                    </div>
+                    <div>{data.service_type}</div>
                   </div>
-                  <div>{data.service_type}</div>
-                </div>
 
-                <div id="order_time" className="flex gap-5">
-                  <div className="font-bold text-base">
-                    <FormattedMessage id="order.sendtime" />
+                  <div id="order_time" className="flex gap-5">
+                    <div className="font-bold text-base">
+                      <FormattedMessage id="order.sendtime" />
+                    </div>
+                    <div>{data.order_time}</div>
                   </div>
-                  <div>{data.order_time}</div>
                 </div>
               </div>
+
+              <div className="flex flex-col">
+                {/* thông tin order, được chỉnh */}
+                <div className="pl-4">
+                  <div className="flex flex-col gap-4">
+                    <div id="mass" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.mass" />
+                      </div>
+                      {isEditing ? (
+                        <input
+                          className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
+                          type="number"
+                          value={data.mass}
+                          onChange={(e) => {
+                            setData({ ...data, mass: parseFloat(e.target.value) });
+                            handleUpdateData(e, "mass");
+                          }
+                          }
+                        />
+                      ) : (
+                        <div>{data.mass} g</div>
+                      )}
+                    </div>
+
+                    <div id="length" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.length" />
+                      </div>
+                      {isEditing ? (
+                        <input
+                          className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
+                          type="number"
+                          value={data.length}
+                          onChange={(e) => {
+                            setData({ ...data, height: parseFloat(e.target.value) });
+                            handleUpdateData(e, "length");
+                          }
+                          }
+                        />
+                      ) : (
+                        <div>{data.length} m</div>
+                      )}
+                    </div>
+
+                    <div id="width" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.width" />
+                      </div>
+                      {isEditing ? (
+                        <input
+                          className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
+                          type="number"
+                          value={data.width}
+                          onChange={(e) => {
+                            setData({ ...data, width: parseFloat(e.target.value) });
+                            handleUpdateData(e, "width");
+                          }
+                          }
+                        />
+                      ) : (
+                        <div>{data.width} m</div>
+                      )}
+                    </div>
+
+                    <div id="height" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.height" />
+                      </div>
+                      {isEditing ? (
+                        <input
+                          className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
+                          type="number"
+                          value={data.height}
+                          onChange={(e) => {
+                            setData({ ...data, height: parseFloat(e.target.value) });
+                            handleUpdateData(e, "height");
+                          }
+                          }
+                        />
+                      ) : (
+                        <div>{data.height} m</div>
+                      )}
+                    </div>
+
+                    <div id="fee" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.fee" />
+                      </div>
+                      {isEditing ? (
+                        <input
+                          className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
+                          type="number"
+                          value={data.fee}
+                          onChange={(e) => {
+                            setData({ ...data, fee: parseFloat(e.target.value) });
+                            handleUpdateData(e, "fee");
+                          }
+                          }
+                        />
+                      ) : (
+                        <div>{data.fee} vnd</div>
+                      )}
+                    </div>
+
+                    <div id="COD" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        COD
+                      </div>
+                      {isEditing ? (
+                        <input
+                          className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
+                          type="number"
+                          value={data.COD}
+                          onChange={(e) => {
+                            setData({ ...data, COD: parseFloat(e.target.value) });
+                            handleUpdateData(e, "COD");
+                          }
+                          }
+                        />
+                      ) : (
+                        <div>{data.COD} vnd</div>
+                      )}
+                    </div>
+
+                    <div id="agency_id" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.service_type" />
+                      </div>
+                      <div>{data.agency_id}</div>
+                    </div>
+
+                    <div id="Container" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        Container
+                      </div>
+                      <div>{data.container}</div>
+                    </div>
+
+                    <div id="name_receiver" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.receiver" />
+                      </div>
+                      <div>{data.name_receiver}</div>
+                    </div>
+
+                    <div id="name_sender" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.sender" />
+                      </div>
+                      <div>{data.name_sender}</div>
+                    </div>
+
+                    <div id="source" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.pickuplocation" />
+                      </div>
+                      <div className="w-8/12">
+                        {data.detail_source}, {data.ward_source}, {data.district_source}, {data.province_source}
+                      </div>
+                    </div>
+
+                    <div id="destination" className="flex ">
+                      <div className=" w-1/3 font-bold text-base">
+                        <FormattedMessage id="order.receive" />
+                      </div>
+                      <div className="w-8/12">
+                        {data.detail_dest}, {data.ward_dest}, {data.district_dest}, {data.province_dest}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
-
-            <div className="flex flex-col">
-              {/* thông tin order, được chỉnh */}
-              <div className="pl-4">
-                <div className="flex flex-col gap-4">
-                  <div id="mass" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.mass" />
-                    </div>
-                    {isEditing ? (
-                      <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b] text-black dark:text-white"
-                        type="number"
-                        value={data.mass}
-                        onChange={(e) => {
-                          setData({ ...data, mass: parseFloat(e.target.value) });
-                          handleUpdateData(e, "mass");
-                        }
-                        }
-                      />
-                    ) : (
-                      <div>{data.mass} g</div>
-                    )}
-                  </div>
-
-                  <div id="length" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.length" />
-                    </div>
-                    {isEditing ? (
-                      <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
-                        type="number"
-                        value={data.length}
-                        onChange={(e) => {
-                          setData({ ...data, height: parseFloat(e.target.value) });
-                          handleUpdateData(e, "length");
-                        }
-                        }
-                      />
-                    ) : (
-                      <div>{data.length} m</div>
-                    )}
-                  </div>
-
-                  <div id="width" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.width" />
-                    </div>
-                    {isEditing ? (
-                      <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
-                        type="number"
-                        value={data.width}
-                        onChange={(e) => {
-                          setData({ ...data, width: parseFloat(e.target.value) });
-                          handleUpdateData(e, "width");
-                        }
-                        }
-                      />
-                    ) : (
-                      <div>{data.width} m</div>
-                    )}
-                  </div>
-
-                  <div id="height" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.height" />
-                    </div>
-                    {isEditing ? (
-                      <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
-                        type="number"
-                        value={data.height}
-                        onChange={(e) => {
-                          setData({ ...data, height: parseFloat(e.target.value) });
-                          handleUpdateData(e, "height");
-                        }
-                        }
-                      />
-                    ) : (
-                      <div>{data.height} m</div>
-                    )}
-                  </div>
-
-                  <div id="fee" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.fee" />
-                    </div>
-                    {isEditing ? (
-                      <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
-                        type="number"
-                        value={data.fee}
-                        onChange={(e) => {
-                          setData({ ...data, fee: parseFloat(e.target.value) });
-                          handleUpdateData(e, "fee");
-                        }
-                        }
-                      />
-                    ) : (
-                      <div>{data.fee} vnd</div>
-                    )}
-                  </div>
-
-                  <div id="COD" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      COD
-                    </div>
-                    {isEditing ? (
-                      <input
-                        className="w-1/2 bg-transparent border-b-2 border-[#545e7b]  text-black dark:text-white"
-                        type="number"
-                        value={data.COD}
-                        onChange={(e) => {
-                          setData({ ...data, COD: parseFloat(e.target.value) });
-                          handleUpdateData(e, "COD");
-                        }
-                        }
-                      />
-                    ) : (
-                      <div>{data.COD} vnd</div>
-                    )}
-                  </div>
-
-                  <div id="agency_id" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.service_type" />
-                    </div>
-                    <div>{data.agency_id}</div>
-                  </div>
-
-                  <div id="Container" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      Container
-                    </div>
-                    <div>{data.container}</div>
-                  </div>
-
-                  <div id="name_receiver" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.receiver" />
-                    </div>
-                    <div>{data.name_receiver}</div>
-                  </div>
-
-                  <div id="name_sender" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.sender" />
-                    </div>
-                    <div>{data.name_sender}</div>
-                  </div>
-
-                  <div id="source" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.pickuplocation" />
-                    </div>
-                    <div className="w-8/12">
-                      {data.detail_source}, {data.ward_source}, {data.district_source}, {data.province_source}
-                    </div>
-                  </div>
-
-                  <div id="destination" className="flex ">
-                    <div className=" w-1/3 font-bold text-base">
-                      <FormattedMessage id="order.receive" />
-                    </div>
-                    <div className="w-8/12">
-                      {data.detail_dest}, {data.ward_dest}, {data.district_dest}, {data.province_dest}
-                    </div>
-                  </div>
-                </div>
+            <div className="w-full p-4 mt-4">
+              <div className="font-bold text-lg text-center">
+                Lịch sử
               </div>
+              {data.journey.length !== 0 ?
+                <div className="mt-4">
+                  <HorizontalLinearAlternativeLabelStepper stage={data.journey} />
+                </div>
+                : <div className="text-center mt-4">Hiện chưa có lịch sử.</div>}
             </div>
           </div>
-          {data.journey.length !== 0 ?
-            <div className="p-10">
-              <HorizontalLinearAlternativeLabelStepper stage={data.journey} />
-            </div>
-            : <></>}
+
         </div>
 
         <div className="w-full flex">

@@ -11,7 +11,7 @@ import LangSelector from "@/components/LangSelector/LangSelector";
 import { FaCarSide } from "react-icons/fa";
 interface LayoutProps {
   children: ReactNode;
-} 
+}
 //reactNode is a dataType of react, its can be JSX, 
 //component or any fragment
 
@@ -21,33 +21,33 @@ const Wrapper = ({ children }: LayoutProps) => {
     setToggleCollapseMobile(!toggleCollapseMobile);
   };
   return (
-  <Provider>
-   <div className="flex overflow-hidden">
-      <SideBar toggleCollapseMobile={toggleCollapseMobile}/>
-      <div className="flex-1 flex  flex-col h-screen ">
-      <div className="flex flex-col">
-        <header className="h-14 flex justify-end w-full bg-red-800 dark:bg-[#111319] items-center px-4 xl:px-2 border-b  dark:border-gray-700">
-          <div className="flex items-center">
+    <Provider>
+      <div className="flex overflow-hidden">
+        <SideBar toggleCollapseMobile={toggleCollapseMobile} />
+        <div className="flex-1 flex  flex-col h-screen ">
+          <div className="flex flex-col">
+            <header className="h-14 flex justify-end w-full bg-red-800 dark:bg-[#111319] items-center px-4 xl:px-2 border-b  dark:border-gray-700">
               <div className="flex items-center">
-                <div className="flex flex-row gap-2 items-center">
-                  <LangSelector/>
-                  <NotifyIcon/>
-                  <ThemeSwitcher/>
+                <div className="flex items-center">
+                  <div className="flex flex-row gap-4 items-center">
+                    <ThemeSwitcher />
+                    <LangSelector />
+                    {/* <NotifyIcon /> */}
+                  </div>
+                  <MenuHambuger toggle={handleSidebarToggleMobile} />
                 </div>
-                  <MenuHambuger toggle ={handleSidebarToggleMobile}/>
               </div>
+            </header>
           </div>
-        </header>
+          {!toggleCollapseMobile &&
+            <div className="lg:hidden flex-1 flex z-40 fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm">
+            </div>}
+          <div className="bg-gray-200 dark:bg-[#111319] flex flex-1">
+            {children}
+          </div>
+        </div>
       </div>
-      {!toggleCollapseMobile && 
-        <div className="lg:hidden flex-1 flex z-40 fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm">
-        </div>}
-      <div className="bg-gray-200 dark:bg-[#111319] flex flex-1 ">
-          {children}
-      </div>
-      </div>
-    </div>
-  </Provider>
+    </Provider>
   );
 };
 

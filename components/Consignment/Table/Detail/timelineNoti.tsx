@@ -23,6 +23,10 @@ const timelineNoti = ({ onClose, dataInitial }) => {
         };
     }, [onClose]);
 
+    useEffect(() => {
+        console.log(dataInitial.journey)
+    }, []);
+
     const handleClickOutside = (event: MouseEvent) => {
         if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
             setIsShaking(true);

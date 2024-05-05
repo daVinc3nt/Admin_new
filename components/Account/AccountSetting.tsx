@@ -291,7 +291,7 @@ const AccountSetting = (info) => {
     }
   };
   return (
-    <div className="flex flex-col gap-5  h-full bg-white dark:bg-[#1a1b23] pb-5">
+    <div className="flex flex-col gap-5  h-full bg-white dark:bg-[#1a1b23] pb-5 px-2">
       <div className="flex flex-col place-content-center mt-3">
         <div className="text-xl font-bold md:text-start text-center">
           <FormattedMessage id="Account.info" />
@@ -345,7 +345,7 @@ const AccountSetting = (info) => {
                 </div>
                 <button
                   onClick={handleUpdateAvatar}
-                  className="text-white place-items-center h-10 w-20 font-bold rounded-lg bg-blue-500 hover:bg-blue-400"
+                  className="text-white place-items-center h-10 w-20 font-semibold rounded-lg bg-blue-500 hover:bg-blue-400"
                 >
                   <FormattedMessage id="Account.Confirm" />
                 </button>
@@ -379,7 +379,7 @@ const AccountSetting = (info) => {
               {!isEditInfo ? (
                 <input
                   type="text"
-                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md   border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 "
+                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md   border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  pt-0.5 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 "
                   placeholder={intl.formatMessage({
                     id: "Account.inputfullname",
                   })}
@@ -389,7 +389,7 @@ const AccountSetting = (info) => {
                   }
                 />
               ) : (
-                <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md  border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+                <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md  border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-1 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
                   {Update.fullname}{" "}
                 </div>
               )}
@@ -403,7 +403,7 @@ const AccountSetting = (info) => {
               {!isEditInfo ? (
                 <input
                   type="text"
-                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
+                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-0.5 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
                   placeholder={intl.formatMessage({
                     id: "Account.inputphonenumber",
                   })}
@@ -413,7 +413,7 @@ const AccountSetting = (info) => {
                   }
                 />
               ) : (
-                <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+                <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-1 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
                   {Update.phone_number}
                 </div>
               )}
@@ -428,7 +428,7 @@ const AccountSetting = (info) => {
                 <div>
                   <input
                     type="text"
-                    className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
+                    className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-0.5 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
                     placeholder={intl.formatMessage({
                       id: "Account.inputCCCD",
                     })}
@@ -437,7 +437,7 @@ const AccountSetting = (info) => {
                   />
                 </div>
               ) : (
-                <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 ">
+                <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-1 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2 ">
                   {staffInfo.cccd}
                 </div>
               )}
@@ -449,7 +449,7 @@ const AccountSetting = (info) => {
                   <FormattedMessage id="Account.position" /> :
                 </div>
               </div>
-              <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+              <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-1 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
                 {Update.role}
               </div>
             </div>
@@ -460,13 +460,13 @@ const AccountSetting = (info) => {
               {!isEditInfo ? (
                 <input
                   type="text"
-                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
+                  className="flex place-content-center text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-0.5 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2"
                   placeholder={intl.formatMessage({ id: "Account.inputEmail" })}
                   value={Update.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                 />
               ) : (
-                <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+                <div className="flex  text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-0.5 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
                   {Update.email}
                 </div>
               )}
@@ -478,7 +478,7 @@ const AccountSetting = (info) => {
                 </div>
               </div>
 
-              <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full  py-2 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
+              <div className="flex text-base h-8 font-normal border-b-blue-600  dark:border-b-indigo-800 dark:hover:bg-gray-600 dark:focus:bg-gray-700 rounded-md border-b  hover:bg-blue-50 focus:bg-blue-100 shadow-sm w-full pt-1 hover:border-blue-500 hover:shadow-md focus:outline-none pl-2">
                 {new Date(Update.date_of_birth).toLocaleDateString("vi-VN")}
               </div>
             </div>
@@ -597,25 +597,25 @@ const AccountSetting = (info) => {
           </div>
         </div>
         {!isEditInfo ? (
-          <div className="flex place-content-center mt-4 ">
+          <div className="flex place-content-center mt-4 gap-2">
             <button
               onClick={handleUpdateInfo}
-              className="mt-3 flex place-content-center bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded w-1/2 md:w-1/6"
+              className="mt-3 flex place-content-center bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded w-1/2 md:w-1/6"
             >
               <FormattedMessage id="Account.Update" />
             </button>
             <button
               onClick={handleEditInfo}
-              className="mt-3 flex place-content-center bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded w-1/2 md:w-1/6"
+              className="mt-3 flex place-content-center bg-gray-500 hover:bg-gray-400 text-white font-semibold py-2 px-4 rounded w-1/2 md:w-1/6"
             >
-              <FormattedMessage id="Account.Cantel" />
+              <FormattedMessage id="Account.Cancel" />
             </button>
           </div>
         ) : (
           <div className=" w-full  flex place-content-center mt-4">
             <button
               onClick={handleEditInfo}
-              className="w-full md:w-1/3 mt-3 flex place-content-center bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+              className="w-full md:w-1/3 mt-3 flex place-content-center bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded"
             >
               <FormattedMessage id="Account.AdjustInfomation" />
             </button>
@@ -630,13 +630,14 @@ const AccountSetting = (info) => {
           <div>
             <div className="flex flex-col text-xs font-base gap-3">
               <div>
-                <div className="text-base font-light">
+                <div className="text-base font-light flex gap-1">
                   <FormattedMessage id="Account.UserName" /> :
+                  <div className="text-base font-medium">
+                    {staffInfo.username}
+                  </div>
                 </div>
               </div>
-              <div className="text-base font-base w-1/2 pb-2 pl-2">
-                {staffInfo.username}
-              </div>
+
             </div>
             <div className="flex flex-col text-xs font-base gap-3">
               <div>
@@ -655,7 +656,7 @@ const AccountSetting = (info) => {
                     new_password: e.target.value,
                   })
                 }
-                className="w-full flex place-content-center h-8 border pl-2  hover:bg-gray-100 dark:hover:bg-gray-600 dark:focus:bg-gray-700 focus:bg-slate-200 rounded-md md:w-1/2 py-2 hover:border-gray-500 hover:shadow-md focus:outline-none "
+                className="w-full flex place-content-center h-8 border pl-2  hover:bg-gray-100 dark:hover:bg-gray-600 dark:focus:bg-gray-700 focus:bg-slate-200 rounded-md py-2 hover:border-gray-500 hover:shadow-md focus:outline-none "
               />
               <div>
                 <FormattedMessage id="Account.ConfirmNewPassword" />
@@ -668,10 +669,10 @@ const AccountSetting = (info) => {
                     confirm_password: e.target.value,
                   })
                 }
-                className="w-full flex place-content-center h-8 border pl-2  hover:bg-gray-100 dark:hover:bg-gray-600 dark:focus:bg-gray-700 focus:bg-slate-200 rounded-md md:w-1/2 py-2 hover:border-gray-500 hover:shadow-md focus:outline-none "
+                className="w-full flex place-content-center h-8 border pl-2  hover:bg-gray-100 dark:hover:bg-gray-600 dark:focus:bg-gray-700 focus:bg-slate-200 rounded-md py-2 hover:border-gray-500 hover:shadow-md focus:outline-none "
               />
             </div>
-            <div className="flex  mt-3 w-full md:w-1/2 place-content-center">
+            <div className="flex mt-3 w-full place-content-center">
               <button
                 onClick={handleChangePassword}
                 className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"

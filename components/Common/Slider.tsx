@@ -56,7 +56,7 @@ export function CarouselSlider(ObjUrls) {
             responsive={{
                 res1: { breakpoint: { max: 40000, min: 0 }, items: 1, partialVisibilityGutter: 0 },
             }}
-            containerClass="w-full h-40 md:h-52 lg:h-96 rounded-2xl mt-2 outline outline-[1px] outline-gray-300 bg-white"
+            containerClass="w-full h-40 md:h-52 lg:h-96 rounded-2xl mt-2 outline outline-[1px] outline-gray-300 bg-white dark:bg-transparent"
             rewind={true}
             rewindWithAnimation={true}
             arrows={false}
@@ -70,13 +70,13 @@ export function CarouselSlider(ObjUrls) {
                         onClick={() => handleOpenImgClick(url)}
                         src={url}
                         alt={`Order Image ${index}`}
-                        width={100}
-                        height={100}
+                        width={10000}
+                        height={10000}
                         className='w-full h-40 lg:h-96 rounded-md object-contain'
                     />
                 </div>
             )) : (
-                <div className="flex justify-center text-center">
+                <div className="flex justify-center text-center dark:bg-transparent">
                     <p>No image uploaded</p>
                 </div>
             )}

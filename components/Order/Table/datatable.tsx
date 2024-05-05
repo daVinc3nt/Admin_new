@@ -193,7 +193,7 @@ export function DataTable<TData, TValue>({
       </div>
       <div className=" flex flex-col gap-2 bg-inherit">
         {/* dàn nút trên */}
-        <div className="flex items-centerf flex-col sm:flex-row py-4 gap-3 px-4">
+        <div className="flex items-centerf flex-col sm:flex-row py-4 gap-3">
           <div className="w-full flex">
             <div className="relative w-full sm:w-1/2 lg:w-1/3">
               <input
@@ -277,7 +277,7 @@ export function DataTable<TData, TValue>({
           <Dropdown className="z-30 ">
             <DropdownTrigger>
               <Button
-                className="text-xs md:text-base border border-gray-600 rounded ml-2 w-36 h-10 text-center"
+                className="text-xs md:text-base border border-gray-600 rounded ml-2 h-10 text-center px-6"
                 aria-label="Show items per page"
               >
                 Thêm đơn hàng
@@ -356,9 +356,8 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`border-gray-700 ${
-                    row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
-                  }`}
+                  className={`border-gray-700 ${row.getIsSelected() ? "bg-gray-300 dark:bg-gray-700" : ""
+                    }`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -390,11 +389,10 @@ export function DataTable<TData, TValue>({
               className={`text-xs md:text-sm justify-self-start rounded-lg border
               border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
               hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-              ${
-                table.getFilteredSelectedRowModel().rows.length > 0
+              ${table.getFilteredSelectedRowModel().rows.length > 0
                   ? "border-green-500"
                   : "border-gray-600"
-              }`}
+                }`}
               onClick={change_status_to_inprogress}
             >
               <FormattedMessage id="processing" />{" "}
@@ -403,11 +401,10 @@ export function DataTable<TData, TValue>({
               className={`text-xs md:text-sm justify-self-start rounded-lg border
               border-gray-600 px-4 py-2 bg-transparent hover:bg-gray-700 
               hover:text-white hover:shadow-md focus:outline-none font-normal text-black dark:text-white
-              ${
-                table.getFilteredSelectedRowModel().rows.length > 0
+              ${table.getFilteredSelectedRowModel().rows.length > 0
                   ? "border-red-500"
                   : "border-gray-600"
-              }`}
+                }`}
               onClick={deleteRows}
             >
               <FormattedMessage id="Delete" />{" "}

@@ -19,32 +19,32 @@ const LangSelector = () => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const locale: string = router.locale === "en" ? "English" : "Tiếng Việt"
-  const [display, setDisplay]= useState<string>("Tiếng Việt")
-  const handleOnClick= (text: string) => {
-    setOpen(false); 
-    setDisplay(text); 
-    router.push(router.asPath, router.asPath, { locale: Name2CountryCode[text]})
+  const [display, setDisplay] = useState<string>("Tiếng Việt")
+  const handleOnClick = (text: string) => {
+    setOpen(false);
+    setDisplay(text);
+    router.push(router.asPath, router.asPath, { locale: Name2CountryCode[text] })
   }
   return (
-      <motion.div animate={open ? "open" : "closed"} className="flex">
-        <button
-          onClick={() => setOpen((pv) => !pv)}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl active:scale-85 text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors"
-        >
-          <FiGlobe size={20}/>
-        </button>
-        <div>
+    <motion.div animate={open ? "open" : "closed"} className="flex w-12">
+      <button
+        onClick={() => setOpen((pv) => !pv)}
+        className="flex items-center gap-2 px-3.5 py-2 rounded-full active:scale-85 text-indigo-50 bg-indigo-600 hover:bg-indigo-500 transition-colors"
+      >
+        <FiGlobe size={20} />
+      </button>
+      <div>
         <motion.ul
           initial={wrapperVariants.closed}
           variants={wrapperVariants}
-          style={{ originY: "left", translateX: "-50%" }}
-          className="flex gap-2 p-2  z-50 rounded-lg bg-white shadow-xl top-[120%] left-[50%] w-full overflow-hidden"
+          style={{ translateY: "100%", translateX: "-25%" }}
+          className="flex gap-2 p-2  z-50 rounded-lg bg-white shadow-xl top-[80%] left-[70%] overflow-hidden"
         >
           <Option handle={handleOnClick} Icon={FiEdit} text="English" />
           <Option handle={handleOnClick} Icon={FiPlusSquare} text="Tiếng Việt" />
         </motion.ul>
-        </div>
-      </motion.div>
+      </div>
+    </motion.div>
   );
 };
 

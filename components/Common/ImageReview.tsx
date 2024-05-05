@@ -46,8 +46,8 @@ const ImageView: React.FC<ImageViewProps> = ({ onClose, url }) => {
                     <Image
                         src={url}
                         alt={`Image full`}
-                        width={100}
-                        height={100}
+                        width={10000}
+                        height={10000}
                         className='h-full w-full rounded-md object-contain'
                     />
                 </div>

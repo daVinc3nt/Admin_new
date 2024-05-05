@@ -1,49 +1,50 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineOppositeContent, {
+  timelineOppositeContentClasses,
+} from '@mui/lab/TimelineOppositeContent';
+import { MdRadioButtonChecked, MdRadioButtonUnchecked } from 'react-icons/md';
 
-const steps = [
-  'Select master blaster campaign settings',
-  'Create an ad group',
-  'Create an ad',
-];
-function IconHover({manged_by, date, shipment_id} )
-{
-    return (
-        <div className="hidden hover:block ">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{shipment_id}</h3>
-            <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{date}</time>
-            <p className="text-base font-normal text-gray-500 dark:text-gray-400">{manged_by}</p>
-        </div>
-    )
-}
-export default function HorizontalLinearAlternativeLabelStepper({stage}:any) {
-    return (
-        
-    <ol className="items-center sm:flex">
-        {
-        stage?.map( (time) =>
-        <li className="relative mb-6 sm:mb-0">
-            <div className="flex items-center">
-                <div className="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
-                    <svg className="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                    </svg>
-                </div>
-                <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
-            </div>
-            <div className="mt-3 sm:pe-8 ml-10">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{time.shipment_id}</h3>
-                <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{time.date}</time>
-                <p className="text-base font-normal text-gray-500 dark:text-gray-400">{time.manged_by}</p>
-            </div>
-        </li>
-        )
-        }
-    </ol>
+const CustomTimeline = ({ stage }) => {
+  console.log(stage);
+  return (
+    <Timeline
+      sx={{
+        [`& .${timelineOppositeContentClasses.root}`]: {
+          flex: 0.2,
+        },
+      }}
+    >
+      {stage.reverse().map((item, index) => {
+        const [dateTime, message] = item.split(': ');
+        const [date, time] = dateTime.split(' ');
 
+        return (
+          <TimelineItem key={index}>
+            <TimelineOppositeContent>
+              <p className={`p-2 flex flex-col sm:gap-2 justify-end mb-4 ${index === 0 ? 'font-bold text-black dark:text-white' : 'text-gray-400 dark:text-gray-500'}`}>
+                <span className="date whitespace-nowrap">{date}</span>
+                <span className="time whitespace-nowrap">{time}</span>
+              </p>
+            </TimelineOppositeContent>
+            <TimelineSeparator className='mt-5'>
+              {index === 0 ? <MdRadioButtonChecked className='mb-2 text-blue-500 w-4 h-4' /> : <MdRadioButtonUnchecked className='mb-2 w-3.5 h-3.5 text-gray-400' />}
+              {index < stage.length - 1 && <TimelineConnector />}
+            </TimelineSeparator>
 
-    );
-}
+            <TimelineContent>
+              <p className={`border rounded p-2 flex flex-col mb-4  ${index === 0 ? 'font-medium text-black dark:text-white shadow-md' : 'text-gray-400 dark:text-gray-500 shadow'}`}>{message}</p>
+            </TimelineContent>
+          </TimelineItem>
+        );
+      })}
+    </Timeline>
+  );
+};
+
+export default CustomTimeline;

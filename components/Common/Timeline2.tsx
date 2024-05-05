@@ -50,7 +50,7 @@ const CustomTimeline = ({ data }) => {
                         <TimelineOppositeContent>
                             <p className={`p-2 flex flex-col sm:gap-2 justify-end mb-4 ${index == 0 ? 'font-bold text-black dark:text-white' : 'text-gray-400 dark:text-gray-500'}`}>
                                 <span className="date whitespace-nowrap">{date}</span>
-                                <span className="time">{time}</span>
+                                <span className="time whitespace-nowrap">{time}</span>
                             </p>
                         </TimelineOppositeContent>
                         <TimelineSeparator className='mt-5'>

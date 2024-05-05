@@ -56,14 +56,14 @@ const NotiPopup: React.FC<NotiPopupProps> = ({ onClose, message, ref }) => {
         >
             <motion.div
                 ref={ref ? ref : notificationRef}
-                className="relative max-w-full sm:min-w-[300px] sm:max-w-screen-sm max-h-44 xs:max-h-64 bg-white rounded-xl p-4 flex flex-col"
+                className="relative max-w-full min-w-[250px] sm:min-w-[300px] sm:max-w-screen-sm max-h-44 xs:max-h-64 dark:bg-[#111319] bg-white rounded-xl p-4 flex flex-col"
                 initial={{ scale: 0 }}
                 animate={{ scale: isVisible ? 1 : 0 }}
                 exit={{ scale: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <h2 className="text-gray-600 text-xl font-bold mb-2 text-center">Thông báo</h2>
-                <div className="overflow-scroll max-h-full w-full no-scrollbar"><p className="text-gray-600 w-full text-center">{message}</p></div>
+                <h2 className="text-gray-600 text-xl font-bold mb-2 text-center dark:text-white">Thông báo</h2>
+                <div className="overflow-scroll max-h-full w-full no-scrollbar"><p className="text-gray-600 w-full text-center dark:text-white">{message}</p></div>
 
                 <div className="flex w-full justify-end gap-2">
                     <motion.button

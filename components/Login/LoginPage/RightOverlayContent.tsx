@@ -14,8 +14,8 @@ const RightOverlayContent: React.FC<RightOverlayContentProps> = ({
 }) => {
   return (
     <div className="p-4 lg:p-8 text-center" data-aos="fade-up">
-      <div className="border-spacing-1 border-2 border-white rounded-full bg-white">
-        <img src={Logo_name.src} alt="logo" className="h-20 mx-auto " />
+      <div className="border-spacing-1 border-2 border-white rounded-full bg-white pb-2">
+        <img src={Logo_name.src} alt="logo" className="h-20 mx-auto" />
       </div>
       {/* 
       <h1 className="text-xl sm:text-5xl font-bold text-white mb-2 sm:mb-5">
