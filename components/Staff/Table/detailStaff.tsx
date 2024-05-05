@@ -34,7 +34,7 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
   const [selectedWard, setSelectedWard] = useState([]);
   const { systemTheme, theme, setTheme } = useTheme();
   const intl = useIntl();
-
+  let 
   const handleWardChange = (selectedOption) => {
     setSelectedWard(selectedOption);
   };
@@ -116,12 +116,11 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
     if (updateData.role == "SHIPPER" || updateData.role == "AGENCY_SHIPPER") {
       const staff = new StaffsOperation();
       const response = await staff.update({ ...updateData, managed_wards: selectedWard.map(option => option.value) }, condition);
-      console.log(response)
+      // console.log(response)
     }
     else {
       const staff = new StaffsOperation();
       const response = await staff.update(updateData, condition);
-      console.log(response)
     }
 
     setIsEditing(false);
@@ -301,7 +300,7 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                   )}
                 </div>
                 <div className="flex">
-                  <div className="w-1/2 font-bold text-base">
+                  <div className="w-1/2 font-bold my-5 text-base">
                     <FormattedMessage id="Staff.District" />
                   </div>
                   {isEditing ? (
@@ -336,40 +335,7 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                     <div>{data.province}</div>
                   )}
                 </div>
-                {/* <div className="flex">
-                  <div className="w-1/2 font-bold text-base">Ngân hàng</div>
-                  {isEditing ? (
-                    <input
-                      className="w-1/2 bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                      type="text"
-                      value={data.phone_number}
-                      onChange={(e) =>
-                        setData({ ...data, phone_number: e.target.value })
-                      }
-                    />
-                  ) : (
-                    <div>{data.phone_number}</div>
-                  )}
-                </div> */}
-
-                {/* <div className="flex">
-                  <div className="w-1/2 font-bold text-base">KPI</div>
-                  {isEditing ? (
-                    <input
-                      className="w-1/2 bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                      type="number"
-                      value={data.staffKPI}
-                      onChange={(e) =>
-                        setData({
-                          ...data,
-                          staffKPI: parseFloat(e.target.value),
-                        })
-                      }
-                    />
-                  ) : (
-                    <div>{data.staffKPI}</div>
-                  )}
-                </div> */}
+               
                 <div className="flex">
                   <div className="w-1/2 font-bold text-base">
                     <FormattedMessage id="Staff.Salary" />
@@ -420,6 +386,8 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                           }))}
                           isSearchable
                           styles={{
+                      
+                            menuPortal: base => ({ ...base, zIndex: 9999 }),
                             control: (provided, state) => ({
                               ...provided,
                               backgroundColor: "transparent",
