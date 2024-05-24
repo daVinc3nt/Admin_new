@@ -119,7 +119,9 @@ export function DataTable<TData, TValue>({
       const error = await order.cancel(condition);
       if (error) {
         alert(error.message);
+        reloadData();
       }
+      
     });
   };
   const handleChange_statusRowsSelected = async () => {
@@ -130,6 +132,7 @@ export function DataTable<TData, TValue>({
       const error = await order.update({ status_code: 15 }, condition);
       if (error) {
         alert(error.message);
+        reloadData();
       }
     });
   };
@@ -147,7 +150,6 @@ export function DataTable<TData, TValue>({
     if (result) {
       // Gọi hàm handleDeleteRowsSelected để xóa các hàng đã chọn
       handleChange_statusRowsSelected();
-      reloadData();
     }
     // Nếu result là false, tức là người dùng nhấn no
     else {
@@ -161,7 +163,6 @@ export function DataTable<TData, TValue>({
     if (result) {
       // Gọi hàm handleDeleteRowsSelected để xóa các hàng đã chọn
       handleDeleteRowsSelected();
-      reloadData();
     }
     // Nếu result là false, tức là người dùng nhấn no
     else {

@@ -336,7 +336,7 @@
   "Business.ErrorDelete": "Xóa không thành công",
   "Business.SuccessDelete": "Xóa thành công",
   "Business.NoPermission": "Bạn không có quyền xóa doanh nghiệp",
-  "Business.Taxnumber": "Mã số thuế",
+  "Business.TaxNtdumber": "Mã số thuế",
   "Business.Phonenumber": "Số điện thoại",
   "Business.Detail/Edit": "Chi tiết/Sửa đổi",
   "Business.Information": "Thông tin",
