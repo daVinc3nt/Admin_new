@@ -37,145 +37,152 @@ export type Staff = {
   town: string;
   username: string;
 };
+type MyColumnDef<T> = ColumnDef<T> & {
+  reloadData?: () => void;
+};
 
-export const columns: ColumnDef<Staff>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "staff_id",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <FormattedMessage id="Staff.Number" />
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+export async function columns(
+  reloadData: () => void,
+): Promise<MyColumnDef<any>[]> {
+    return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-  },
-  {
-    accessorKey: "fullname",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <FormattedMessage id="Staff.Name" />
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "phone_number",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <FormattedMessage id="Staff.Phone" />
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "role",
-
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <FormattedMessage id="Staff.Position" />
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "active",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <FormattedMessage id="Staff.Status" />
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-center">
-          {row.original.active ? (
-            <span className=" text-green-500">
-              <FormattedMessage id="isActive" />
-            </span>
-          ) : (
-            <span className=" text-red-500">
-              <FormattedMessage id="isInActive" />
-            </span>
-          )}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "Chi tiết/Sửa đổi",
-    header: () => {
-      return <FormattedMessage id="Staff.Detail" />;
-    },
-    cell: ({ row }) => {
-      const [modalIsOpen, setModalIsOpen] = useState(false);
-
-      const openModal = () => {
-        setModalIsOpen(true);
-      };
-
-      const closeModal = () => {
-        setModalIsOpen(false);
-      };
-
-      return (
-        <div className="relative flex  mr-2">
+    {
+      accessorKey: "staff_id",
+      header: ({ column }) => {
+        return (
           <Button
-            onClick={openModal}
-            className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            +
+            <FormattedMessage id="Staff.Number" />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-          {modalIsOpen && (
-            <DetailStaff onClose={closeModal} dataInitial={row.original} />
-          )}
-        </div>
-      );
+        );
+      },
     },
-  },
-];
+    {
+      accessorKey: "fullname",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <FormattedMessage id="Staff.Name" />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "phone_number",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <FormattedMessage id="Staff.Phone" />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "role",
+
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <FormattedMessage id="Staff.Position" />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "active",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <FormattedMessage id="Staff.Status" />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <div className="flex items-center">
+            {row.original.active ? (
+              <span className=" text-green-500">
+                <FormattedMessage id="isActive" />
+              </span>
+            ) : (
+              <span className=" text-red-500">
+                <FormattedMessage id="isInActive" />
+              </span>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "Chi tiết/Sửa đổi",
+      header: () => {
+        return <FormattedMessage id="Staff.Detail" />;
+      },
+      cell: ({ row }) => {
+        const [modalIsOpen, setModalIsOpen] = useState(false);
+
+        const openModal = () => {
+          setModalIsOpen(true);
+        };
+
+        const closeModal = () => {
+          setModalIsOpen(false);
+        };
+
+        return (
+          <div className="relative flex  mr-2">
+            <Button
+              onClick={openModal}
+              className="bg-transparent hover:bg-white font-bold hover:text-black py-1 px-[0.65rem] border border-gray-600 hover:border-transparent rounded-full"
+            >
+              +
+            </Button>
+            {modalIsOpen && (
+              <DetailStaff onClose={closeModal} dataInitial={row.original} />
+            )}
+          </div>
+        );
+      },
+    },
+  ]
+}

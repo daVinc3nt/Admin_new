@@ -299,7 +299,7 @@
   "Business.ErrorDelete": "Delete unsuccessful",
   "Business.SuccessDelete": "Delete successful",
   "Business.NoPermission": "You do not have permission to delete the business",
-  "Business.Taxnumber": "Tax number",
+  "Business.TaxNumber": "Tax number",
   "Business.Phonenumber": "Phone number",
   "Business.Detail/Edit": "Detail/Edit",
   "Business.Information": "Information",

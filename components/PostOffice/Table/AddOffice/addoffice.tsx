@@ -602,6 +602,22 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
                 onChange={(e) => handleInputChange("email", e.target.value)}
               />
             </div>
+            <div className="flex gap-3 mt-3">
+              <input
+                type=""
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.bank ? "border-red-500" : ""}`}
+                placeholder={intl.formatMessage({ id: "BankName" })}
+                onChange={(e) => handleInputChange("bank", e.target.value)}
+              />
+              <input
+                type=""
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.bin ? "border-red-500" : ""}`}
+                placeholder={intl.formatMessage({ id: "BankNumber" })}
+                onChange={(e) => handleInputChange("bin", e.target.value)}
+              />
+            </div>
             <div className="flex gap-3 my-3">
               <select
                 className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
@@ -676,24 +692,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
                 onUpdateLocation={handleUpdateLocation}
               />
             )}
+            
             <div className="flex gap-3 mt-3">
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.bank ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankName" })}
-                onChange={(e) => handleInputChange("bank", e.target.value)}
-              />
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.bin ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankNumber" })}
-                onChange={(e) => handleInputChange("bin", e.target.value)}
-              />
-            </div>
-            <div className="flex gap-3 mt-3">
-              <select
+            <select
                 className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
   ${checkmissing.managed_wards ? "border-red-500" : ""}`}
                 id="ward"
@@ -710,7 +711,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
                   </option>
                 ))}
               </select>
-
               <button
                 className="text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full bg-green-500 text-white"
                 onClick={() => {

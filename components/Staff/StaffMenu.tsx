@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useState, useEffect } from "react";
 import DemoPage from "./Table/export";
 import LoadingSkeleton from "../LoadingSkeleton/loadingSkeleton";
@@ -11,14 +11,18 @@ const StaffMenu = () => {
   const {info} = useContext(UserContext)
   const [demoPage, setDemoPage] = useState(<LoadingSkeleton />);
   useEffect(() => {
-    const fetchDemoPage = async () => {
-      const result = await DemoPage(info);
-      setDemoPage(result);
-    };
-    console.log("staff", info)
-    if (info)
     fetchDemoPage();
   }, [info]);
+
+  const reloadData = useCallback(() => {
+    fetchDemoPage();
+  }, [info]);
+
+  const fetchDemoPage = async () => {
+    const result = await DemoPage( info, reloadData);
+    setDemoPage(result);
+  };
+  
   return (
     <div className="h-[calc(100vh-3rem)] content-center overflow-y-hidden flex flex-col w-full">
       <div className="h-full  items-center w-full left-0 right-0 overflow-y-scroll no-scrollbar">

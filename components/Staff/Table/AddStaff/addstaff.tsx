@@ -566,7 +566,7 @@ const AddStaff: React.FC<AddStaffProps> = ({ onClose, info }) => {
                   type="number"
                   className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
                   ${checkmissing.salary ? "border-red-500" : ""}`}
-                  placeholder={"test"}
+                  placeholder={"Lương"}
                   onChange={(e) =>
                     handleInputChange("salary", parseInt(e.target.value))
                   }

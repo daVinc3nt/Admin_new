@@ -25,7 +25,6 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageUrls2, setImageUrls2] = useState<string[]>([]);
   const [option, setOption] = useState(0)
-  console.log(data)
   const handleUpdateData = (e, key: string) => {
     setupdateData({ ...updateData, [key]: parseInt(e.target.value) });
   }
@@ -64,7 +63,6 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
   };
   const handleSaveClick = () => {
     const x = "staff_id"
-    console.log("click", updateData)
     const condition: UpdatingOrderCondition = { order_id: dataInitial.order_id }
     ordersOperation.update(updateData, condition)
     setIsEditing(false);
@@ -79,6 +77,8 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
         };
         const urls = await ordersOperation.getImage(condition);
         setImageUrls(urls);
+        console.log(urls)
+
       } catch (error) {
         console.error("Error fetching images:", error);
       }
@@ -91,6 +91,8 @@ const DetailStaff: React.FC<Props> = ({ onClose, dataInitial }) => {
         };
         const urls2 = await ordersOperation.getImage(condition);
         setImageUrls2(urls2);
+        console.log(urls2)
+
       } catch (error) {
         console.error("Error fetching images:", error);
       }

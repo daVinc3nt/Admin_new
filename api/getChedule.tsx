@@ -198,6 +198,7 @@ export default async function DemoPage(reloadData, setOpenError, setMessage) {
             },
         },
     ];
+    console.log(data)
     try {
         const data = await getData();
         if (!data.error.error) return <DataTable columns={columns} data={data.data} reloadData={reloadData} />;

@@ -257,12 +257,12 @@ const AccountSetting = (info) => {
     try {
       const reponse = await userOp2.updatePassword(passwordInfo, up);
       // console.log("reponse", reponse);
-      if (reponse.error.error === false) {
+      if (reponse.error === false) {
         setMessage("Đổi mật khẩu thành công");
         openNoti();
         reloadData();
       } else {
-        setMessage("Đổi mật khẩu thất bại \n" + reponse.error.message);
+        setMessage("Đổi mật khẩu thất bại \n" + reponse.message);
         openNoti();
       }
     } catch (e) {

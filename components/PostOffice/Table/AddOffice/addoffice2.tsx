@@ -633,6 +633,23 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
                 placeholder="Email"
                 onChange={(e) => handleInputChange("email", e.target.value)}
               />
+              
+            </div>
+            <div className="flex gap-3 mt-3">
+              <input
+                type=""
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.bank ? "border-red-500" : ""}`}
+                placeholder={intl.formatMessage({ id: "BankName" })}
+                onChange={(e) => handleInputChange("bank", e.target.value)}
+              />
+              <input
+                type=""
+                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
+                ${checkmissing.bin ? "border-red-500" : ""}`}
+                placeholder={intl.formatMessage({ id: "BankNumber" })}
+                onChange={(e) => handleInputChange("bin", e.target.value)}
+              />
             </div>
             <div className="flex gap-3 my-3">
               <select
@@ -708,39 +725,7 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
                 onUpdateLocation={handleUpdateLocation}
               />
             )}
-            <div className="flex gap-3 mt-3">
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.bank ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankName" })}
-                onChange={(e) => handleInputChange("bank", e.target.value)}
-              />
-              <input
-                type=""
-                className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-                ${checkmissing.bin ? "border-red-500" : ""}`}
-                placeholder={intl.formatMessage({ id: "BankNumber" })}
-                onChange={(e) => handleInputChange("bin", e.target.value)}
-              />
-            </div>
-            <select
-              className={`text-xs mt-3 md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
-  ${checkmissing.managed_wards ? "border-red-500" : ""}`}
-              id="ward"
-              aria-label=".form-select-sm"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            >
-              <option value="">
-                {intl.formatMessage({ id: "Choose Ward" })}
-              </option>
-              {wardsPartner.map((ward) => (
-                <option key={ward} value={ward}>
-                  {ward}
-                </option>
-              ))}
-            </select>
+            
 
             <button
               className="text-xs mt-3 md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-1/4 bg-green-500 text-white"

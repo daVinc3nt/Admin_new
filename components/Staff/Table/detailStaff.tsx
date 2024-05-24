@@ -15,6 +15,7 @@ import {
 import { Staff } from "./column";
 import { useTheme } from "next-themes";
 import Select from "react-select";
+import CustomDropdown from "./AddStaff/dropdown";
 
 interface DetailStaffProps {
   onClose: () => void;
@@ -251,14 +252,15 @@ const DetailStaff: React.FC<DetailStaffProps> = ({ onClose, dataInitial }) => {
                     <FormattedMessage id="Staff.Position" />
                   </div>
                   {isEditing ? (
-                    <input
-                      className="w-1/2 bg-transparent border-b-2 border-[#545e7b] dark:text-white"
-                      type="text"
-                      value={data.role}
-                      onChange={(e) => {
-                        setData({ ...data, role: e.target.value });
-                        handleUpdateData(e, "role");
+                    <CustomDropdown
+                      label={"Chọn"}
+                      options={["SHIPPER", "DRIVER", ""]}
+                      selectedOption={data.role}
+                      onSelectOption={(options) => {
+                        setData({ ...data, role: options });
+                        setupdateData({ ...updateData, role: options })                      
                       }}
+                      classname="dark:bg-black dark:text-white bg-white text-black border border-xl rounded-xl px-3 py-2"
                     />
                   ) : (
                     <div>{data.role}</div>
