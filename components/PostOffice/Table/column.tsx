@@ -27,9 +27,7 @@ interface Postdetail2 {
   detail_address: string;
   district: string;
   email: string;
-  latitude: string;
   level: string;
-  longitude: string;
   managed_wards: string[];
   phone_number: string;
   postal_code: string;

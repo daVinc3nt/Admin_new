@@ -30,9 +30,7 @@ interface Postdetail2 {
   detail_address: string;
   district: string;
   email: string;
-  latitude: string;
   level: string;
-  longitude: string;
   managed_wards: string[];
   phone_number: string;
   postal_code: string;
@@ -180,9 +178,7 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({
     detail_address: dataInitial.detail_address,
     district: dataInitial.district,
     email: dataInitial.email,
-    latitude: dataInitial.latitude,
     level: dataInitial.level,
-    longitude: dataInitial.longitude,
     managed_wards: dataInitial.managed_wards,
     phone_number: dataInitial.phone_number,
     postal_code: dataInitial.postal_code,
@@ -240,8 +236,6 @@ const DetailPost2: React.FC<DetailAgencyProps> = ({
       district: Agencydata.district,
       town: Agencydata.town,
       detail_address: Agencydata.detail_address,
-      latitude: Agencydata.latitude,
-      longitude: Agencydata.longitude,
       email: Agencydata.email,
       phone_number: Agencydata.phone_number,
       revenue: Agencydata.revenue,

@@ -4,7 +4,6 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FormattedMessage, useIntl } from "react-intl";
 import axios from "axios";
-import MapExport from "@/components/Maprender/Mapexport";
 import {
   StaffsOperation,
   CreatingAgencyInfo,
@@ -82,8 +81,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
     bank: "",
     bin: "",
     commission_rate: 0,
-    latitude: 0,
-    longitude: 0,
     managed_wards: [],
     agency_name: "",
     // revenue: 0,
@@ -249,8 +246,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
     bank: false,
     bin: false,
     commission_rate: false,
-    latitude: false,
-    longitude: false,
     managed_wards: false,
     agency_name: false,
     // revenue: false,
@@ -329,8 +324,6 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
           bank: "",
           bin: "",
           commission_rate: 0,
-          latitude: 0,
-          longitude: 0,
           managed_wards: [],
           agency_name: "",
           // revenue: 0,
@@ -338,15 +331,7 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
       }
     }
   };
-  const handleUpdateLocation = (lat: number, lng: number) => {
-    setOfficeData((prevAddressInfo) => ({
-      ...prevAddressInfo,
-      latitude: lat,
-      longitude: lng,
-    }));
-    handleInputChange("latitude", lat);
-    handleInputChange("longitude", lng);
-  };
+
   const [inputValue, setInputValue] = useState("");
 
   return (
@@ -681,20 +666,9 @@ const AddOffice: React.FC<AddOfficeProps> = ({ onClose, reloadData, info }) => {
                 }
               />
             </div>
-            {checkvalidaddress() && (
-              <MapExport
-                province={OfficeData.province}
-                district={OfficeData.district}
-                town={OfficeData.town}
-                detailadress={OfficeData.detail_address}
-                latitude={OfficeData.latitude}
-                longitude={OfficeData.longitude}
-                onUpdateLocation={handleUpdateLocation}
-              />
-            )}
-            
+
             <div className="flex gap-3 mt-3">
-            <select
+              <select
                 className={`text-xs md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-full
   ${checkmissing.managed_wards ? "border-red-500" : ""}`}
                 id="ward"

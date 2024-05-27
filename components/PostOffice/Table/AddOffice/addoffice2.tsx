@@ -4,7 +4,6 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from "@nextui-org/react";
 import { FormattedMessage, useIntl } from "react-intl";
 import axios from "axios";
-import MapExport from "@/components/Maprender/Mapexport";
 import {
   StaffsOperation,
   CreatingAgencyInfo,
@@ -77,8 +76,6 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
     bank: "",
     bin: "",
     commission_rate: 0,
-    latitude: 0,
-    longitude: 0,
     managed_wards: [],
     agency_name: "",
     // revenue: 0,
@@ -245,8 +242,6 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
     bank: false,
     bin: false,
     commission_rate: false,
-    latitude: false,
-    longitude: false,
     managed_wards: false,
     agency_name: false,
     // revenue: false,
@@ -329,8 +324,6 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
             bank: "",
             bin: "",
             commission_rate: 0,
-            latitude: 0,
-            longitude: 0,
             managed_wards: [],
             agency_name: "",
             // revenue: 0,
@@ -341,15 +334,6 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
         alert("Tạo thất bại");
       }
     }
-  };
-  const handleUpdateLocation = (lat: number, lng: number) => {
-    setOfficeData((prevAddressInfo) => ({
-      ...prevAddressInfo,
-      latitude: lat,
-      longitude: lng,
-    }));
-    handleInputChange("latitude", lat);
-    handleInputChange("longitude", lng);
   };
   const [inputValue, setInputValue] = useState("");
 
@@ -633,7 +617,6 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
                 placeholder="Email"
                 onChange={(e) => handleInputChange("email", e.target.value)}
               />
-              
             </div>
             <div className="flex gap-3 mt-3">
               <input
@@ -714,18 +697,6 @@ const AddOffice2: React.FC<AddOfficeProps> = ({
                 }
               />
             </div>
-            {checkvalidaddress() && (
-              <MapExport
-                province={OfficeData.province}
-                district={OfficeData.district}
-                town={OfficeData.town}
-                detailadress={OfficeData.detail_address}
-                latitude={OfficeData.latitude}
-                longitude={OfficeData.longitude}
-                onUpdateLocation={handleUpdateLocation}
-              />
-            )}
-            
 
             <button
               className="text-xs mt-3 md:text-sm border border-gray-600 rounded  dark:bg-[#14141a] h-10 p-2 w-1/4 bg-green-500 text-white"
